@@ -6,11 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by shell on 08/27/2019.
+ * Created by shell on 09/10/2019.
  */
 
-@TeleOp
-
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Basic Linear Opmode", group="Manual")
 public class ManualMode extends LinearOpMode {
 
     // Declare motors/servos/variables
