@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by shell on 09/10/2019.
  */
 
-@Autonomous
 
 public class AutonomousMode extends LinearOpMode {
 
