@@ -33,6 +33,7 @@ public class AutonomousMode extends LinearOpMode {
         // Step 1
         telemetry.addData("Status", "Step 1");
         telemetry.update();
+
         // Take Action
         sleep(1000); // Sleep for 1 second
 
