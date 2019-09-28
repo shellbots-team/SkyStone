@@ -15,13 +15,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AutonomousMode extends LinearOpMode {
 
     // Declare motors/servos
-    private DcMotor myMotor;
+    Robot robot = new Robot();
 
     @Override
     public void runOpMode() {
 
         // Initialize motors/servos
-        myMotor = hardwareMap.get(DcMotor.class, "myMotor");
+        robot.init(hardwareMap);
 
         // Setting status to "Ready to run"
         telemetry.addData("Status", "Ready To Run");

@@ -8,17 +8,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by shell on 09/24/2019.
  */
 
-@Autonomous(group="Basic", name="Basic-Baseplate")
+@Autonomous(group="Basic", name="Basic: Baseplate")
 public class BasicBaseplate extends LinearOpMode {
 
-    // Declare motors/servos
-    private DcMotor myMotor;
+    Robot robot = new Robot();
 
     @Override
     public void runOpMode() {
 
         // Initialize motors/servos
-        myMotor = hardwareMap.get(DcMotor.class, "myMotor");
+        robot.init(hardwareMap);
 
         // Setting status to "Ready to run"
         telemetry.addData("Status", "Ready To Run");
