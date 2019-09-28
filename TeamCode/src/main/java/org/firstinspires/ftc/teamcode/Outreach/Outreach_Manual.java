@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Outreach Manual", group="Outreach")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Outreach: Manual", group="Outreach")
 public class Outreach_Manual extends LinearOpMode {
 
     // Declare motors/servos/variables

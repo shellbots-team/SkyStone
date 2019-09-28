@@ -9,13 +9,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 @Autonomous(group="Basic", name="Basic-SkyStone")
-public class BasicSkyStone extends LinearOpMode {
+public class BasicSkyStone extends BaseSkystone {
 
     // Declare motors/servos
     private DcMotor myMotor;
 
     @Override
     public void runOpMode() {
+
+        super.runOpMode();
 
         // Initialize motors/servos
         myMotor = hardwareMap.get(DcMotor.class, "myMotor");
