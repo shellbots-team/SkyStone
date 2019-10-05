@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+/**
+ * Created by shell on 09/28/2019.
+ */
+
 @Autonomous
-public class BaseSkystone extends LinearOpMode {
+public class BaseSkystone extends BaseAutonomous {
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
@@ -22,6 +25,8 @@ public class BaseSkystone extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        super.runOpMode();
+
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {

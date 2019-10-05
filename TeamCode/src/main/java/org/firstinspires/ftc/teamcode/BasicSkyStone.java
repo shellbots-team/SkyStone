@@ -1,25 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by shell on 09/24/2019.
  */
 
-@Autonomous(group="Basic", name="Basic: SkyStone")
+@Autonomous(group = "Basic", name = "Basic: SkyStone")
 public class BasicSkyStone extends BaseSkystone {
 
-    // Declare motors/servos
-    Robot robot = new Robot();
+//    Robot robot = new Robot();
 
     @Override
     public void runOpMode() {
 
         super.runOpMode();
 
-        robot.init(hardwareMap);
+//      robot.init(hardwareMap);
 
         // Setting status to "Ready to run"
         telemetry.addData("Status", "Ready To Run");

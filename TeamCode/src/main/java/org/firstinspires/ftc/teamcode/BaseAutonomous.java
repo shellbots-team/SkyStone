@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * Created by shell on 09/28/2019.
+ * Created by shell on 10/05/2019.
  */
 
-@Autonomous(group="Autonomous", name="Test: Encoders")
-@Disabled
-public class TestEncoders extends LinearOpMode {
+@Autonomous(group = "Base", name = "Base: Autonomous")
+public class BaseAutonomous extends LinearOpMode {
 
-    // Declare motors/servos
     Robot robot = new Robot();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -26,49 +23,10 @@ public class TestEncoders extends LinearOpMode {
     static final double DEFAULT_DRIVE_SPEED = 1.0;
     static final double DEFAULT_TURN_SPEED = 0.5;
 
-
     @Override
     public void runOpMode() {
-
         // Initialize motors/servos
         robot.init(hardwareMap);
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d and %7d :%7d",
-                robot.frontLeft.getCurrentPosition(),
-                robot.frontRight.getCurrentPosition(),
-                robot.backLeft.getCurrentPosition(),
-                robot.backRight.getCurrentPosition());
-        telemetry.update();
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        runMotors(6,  6, 10.0, DEFAULT_DRIVE_SPEED);  // S1: Forward 47 Inches with 5 Sec timeout
-        //runMotors(12, -12, 4.0, DEFAULT_TURN_SPEED);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //runMotors(-24, -24, 4.0, DEFAULT_DRIVE_SPEED);  // S3: Reverse 24 Inches with 4 Sec timeout
-
-        sleep(1000);     // pause for servos to move
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
     }
 
     private void turn(double degrees, boolean goClockwise) {
@@ -85,10 +43,12 @@ public class TestEncoders extends LinearOpMode {
     }
 
     private void runMotors(double leftInches, double rightInches, double maxTime, double speed) {
-        if(!opModeIsActive()) { return; }
+        if (!opModeIsActive()) {
+            return;
+        }
 
-        int newLeftTarget = robot.frontLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-        int newRightTarget = robot.frontRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+        int newLeftTarget = robot.frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        int newRightTarget = robot.frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
         robot.frontLeft.setTargetPosition(newLeftTarget);
         robot.backLeft.setTargetPosition(newLeftTarget);
         robot.frontRight.setTargetPosition(newRightTarget);
@@ -116,11 +76,11 @@ public class TestEncoders extends LinearOpMode {
         while (opModeIsActive() &&
                 (runtime.seconds() < maxTime) &&
                 (robot.frontLeft.isBusy() && robot.backLeft.isBusy() &&
-                 robot.frontRight.isBusy() && robot.backRight.isBusy())) {
+                        robot.frontRight.isBusy() && robot.backRight.isBusy())) {
 
             // Display it for the driver.
-            telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-            telemetry.addData("Path2",  "Running at %7d :%7d and %7d :%7d",
+            telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            telemetry.addData("Path2", "Running at %7d :%7d and %7d :%7d",
                     robot.frontLeft.getCurrentPosition(),
                     robot.frontRight.getCurrentPosition(),
                     robot.backLeft.getCurrentPosition(),

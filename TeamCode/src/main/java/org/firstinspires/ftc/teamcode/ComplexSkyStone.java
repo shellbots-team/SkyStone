@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by shell on 09/24/2019.
  */
 
-@Autonomous(group="Complex", name="Complex: SkyStone")
+@Autonomous(group = "Complex", name = "Complex: SkyStone")
 public class ComplexSkyStone extends BaseSkystone {
 
     // Declare motors/servos

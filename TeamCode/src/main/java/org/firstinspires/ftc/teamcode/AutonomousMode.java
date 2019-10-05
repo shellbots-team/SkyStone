@@ -3,14 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by shell on 09/10/2019.
  */
 
-@Autonomous(group="Autonomous", name="Autonomous")
+@Autonomous(group = "Autonomous", name = "Autonomous")
 @Disabled
 public class AutonomousMode extends LinearOpMode {
 
