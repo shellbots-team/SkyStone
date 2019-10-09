@@ -9,14 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(group = "Basic", name = "Basic: Baseplate")
 public class BasicBaseplate extends BaseBaseplate {
 
-//    Robot robot = new Robot();
-
     @Override
     public void runOpMode() {
 
         super.runOpMode();
-
-//      robot.init(hardwareMap);
 
         // Setting status to "Ready to run"
         telemetry.addData("Status", "Ready To Run");

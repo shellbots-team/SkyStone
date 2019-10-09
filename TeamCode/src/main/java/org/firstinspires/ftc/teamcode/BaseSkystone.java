@@ -25,6 +25,7 @@ public class BaseSkystone extends BaseAutonomous {
 
     @Override
     public void runOpMode() {
+
         super.runOpMode();
 
         initVuforia();

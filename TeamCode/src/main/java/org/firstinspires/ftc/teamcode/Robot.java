@@ -29,11 +29,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * This is NOT an opmode.
@@ -66,8 +69,19 @@ public class Robot {
 //    public static final double ARM_DOWN_POWER  = -0.45 ;
 
     /* local OpMode members. */
-    HardwareMap hwMap           = null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hardwareMap           = null;
+    Telemetry telemetry         = null;
+    LinearOpMode opmode         = null;
+
+    private ElapsedTime runtime = new ElapsedTime();
+
+    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double DEFAULT_DRIVE_SPEED = 1.0;
+    static final double DEFAULT_TURN_SPEED = 0.5;
 
     /* Constructor */
     public Robot(){
@@ -75,15 +89,17 @@ public class Robot {
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode opmode) {
         // Save reference to Hardware map
-        hwMap = ahwMap;
+        this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
+        this.opmode = opmode;
 
         // Define and Initialize Motors
-        frontLeft  = hwMap.get(DcMotor.class, "frontLeft");
-        frontRight = hwMap.get(DcMotor.class, "frontRight");
-        backLeft   = hwMap.get(DcMotor.class, "backLeft");
-        backRight  = hwMap.get(DcMotor.class, "backRight");
+        frontLeft  = this.hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRight = this.hardwareMap.get(DcMotor.class, "frontRight");
+        backLeft   = this.hardwareMap.get(DcMotor.class, "backLeft");
+        backRight  = this.hardwareMap.get(DcMotor.class, "backRight");
         //leftArm    = hwMap.get(DcMotor.class, "left_arm");
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -105,10 +121,89 @@ public class Robot {
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Define and initialize ALL installed servos.
-        leftHolder  = hwMap.get(Servo.class, "left_hand");
-        rightHolder = hwMap.get(Servo.class, "right_hand");
+        leftHolder  = this.hardwareMap.get(Servo.class, "left_hand");
+        rightHolder = this.hardwareMap.get(Servo.class, "right_hand");
         leftHolder.setPosition(MID_SERVO);
         rightHolder.setPosition(MID_SERVO);
+    }
+
+    public void turnDegreesWithEncoders(double degrees, boolean goClockwise) {
+        int inchTurn = (int) (degrees * 1); // Math goes here
+        if (goClockwise) {
+            runInchesWithEncoders(inchTurn, -inchTurn);
+        } else {
+            runInchesWithEncoders(-inchTurn, inchTurn);
+        }
+
+    }
+
+    public void runInchesWithEncoders(int leftInches, int rightInches) {
+        runInchesWithEncoders(leftInches, rightInches, 999, 1);
+    }
+
+    public void runInchesWithEncoders(int leftInches, int rightInches, int maxTime) {
+        runInchesWithEncoders(leftInches, rightInches, maxTime, 1);
+    }
+
+    public void runInchesWithEncoders(double leftInches, double rightInches, double maxTime, double speed) {
+        if (!opmode.opModeIsActive()) {
+            return;
+        }
+
+        int newLeftTarget = frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        int newRightTarget = frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        frontLeft.setTargetPosition(newLeftTarget);
+        backLeft.setTargetPosition(newLeftTarget);
+        frontRight.setTargetPosition(newRightTarget);
+        backRight.setTargetPosition(newRightTarget);
+
+        // Turn On RUN_TO_POSITION
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // reset the timeout time and start motion.
+        runtime.reset();
+        frontLeft.setPower(Math.abs(speed));
+        frontRight.setPower(Math.abs(speed));
+        backLeft.setPower(Math.abs(speed));
+        backRight.setPower(Math.abs(speed));
+
+        // keep looping while we are still active, and there is time left, and all motors are running.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+        // its target position, the motion will stop.  This is "safer" in the event that the robot will
+        // always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues
+        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        while (opmode.opModeIsActive() &&
+                (runtime.seconds() < maxTime) &&
+                (frontLeft.isBusy() && backLeft.isBusy() &&
+                 frontRight.isBusy() && backRight.isBusy())) {
+
+            // Display it for the driver.
+            telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            telemetry.addData("Path2", "Running at %7d :%7d and %7d :%7d",
+                    frontLeft.getCurrentPosition(),
+                    frontRight.getCurrentPosition(),
+                    backLeft.getCurrentPosition(),
+                    backRight.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opmode.sleep(250);   // optional pause after each move
     }
 }
 

@@ -8,8 +8,9 @@ public class BaseBaseplate extends BaseAutonomous {
 
     @Override
     public void runOpMode() {
+
         super.runOpMode();
-        // Other things
+
     }
 
     private void grabBaseplate() {

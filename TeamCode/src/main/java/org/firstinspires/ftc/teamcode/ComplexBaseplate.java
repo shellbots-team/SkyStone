@@ -8,16 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 
 @Autonomous(group = "Complex", name = "Complex: Baseplate")
-public class ComplexBaseplate extends LinearOpMode {
-
-    // Declare motors/servos
-    Robot robot = new Robot();
+public class ComplexBaseplate extends BaseBaseplate {
 
     @Override
     public void runOpMode() {
 
-        // Initialize motors/servos
-        robot.init(hardwareMap);
+        super.runOpMode();
 
         // Setting status to "Ready to run"
         telemetry.addData("Status", "Ready To Run");

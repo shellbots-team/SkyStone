@@ -9,16 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(group = "Complex", name = "Complex: SkyStone")
 public class ComplexSkyStone extends BaseSkystone {
 
-    // Declare motors/servos
-    Robot robot = new Robot();
-
     @Override
     public void runOpMode() {
 
         super.runOpMode();
-
-        // Initialize motors/servos
-        robot.init(hardwareMap);
 
         // Setting status to "Ready to run"
         telemetry.addData("Status", "Ready To Run");
