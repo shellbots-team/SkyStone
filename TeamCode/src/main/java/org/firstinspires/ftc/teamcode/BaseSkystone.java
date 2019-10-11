@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -11,7 +12,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
  * Created by shell on 09/28/2019.
  */
 
-@Autonomous
+@Autonomous(group = "Base", name = "Base: Skystone")
+@Disabled
 public class BaseSkystone extends BaseAutonomous {
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
