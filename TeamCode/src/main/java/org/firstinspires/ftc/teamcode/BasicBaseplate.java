@@ -7,29 +7,60 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 
 @Autonomous(group = "Basic", name = "Basic: Baseplate")
-public class BasicBaseplate extends BaseBaseplate {
+public class BasicBaseplate extends BaseAutonomous {
 
     @Override
     public void runOpMode() {
 
         super.runOpMode();
 
-        // Setting status to "Ready to run"
-        telemetry.addData("Status", "Ready To Run");
-        telemetry.update();
+        // Step 0 - Ready to run
+        robot.fullLog("Status", "Ready To Run");
 
         // Waiting until user presses start
         waitForStart();
 
-        // Step 1
-        telemetry.addData("Status", "Step 1");
-        telemetry.update();
+        // Step 1 - Move to the baseplate
+        robot.fullLog("Status", "Step 1");
+        robot.runInchesWithEncoders(4, 4);
 
-        // Take Action
-        sleep(1000); // Sleep for 1 second
+        // Step 2 - grab onto the baseplate
+        robot.fullLog("Status", "Step 2");
+        robot.grabBaseplate();
+        sleep(100);
 
-        telemetry.addData("Status", "Finished");
-        telemetry.update();
+        // Step 3 - Drag baseplate to corner
+        robot.fullLog("Status", "Step 3");
+        robot.runInchesWithEncoders(-4, -4);
+
+        // Step 4 - Release the baseplate
+        robot.fullLog("Status", "Step 4");
+        robot.releaseBaseplate();
+        sleep(100);
+
+        // Step 5 - Turning to look at the midline
+        robot.fullLog("Status", "Step 5");
+        robot.turnDegreesWithEncoders(90, true);
+
+        // Step 6 - Move until on the line
+        robot.fullLog("Status", "Step 6");
+        while (!robot.isOnLine()) {
+            robot.setMotorPowers(1);
+        }
+        sleep(25);
+        robot.setMotorPowers(0);
+
+        // Step 7 - Turn to middle
+        robot.fullLog("Status", "Step 7");
+        robot.turnDegreesWithEncoders(90, true);
+
+        // Step 8 - Drive to middle
+        robot.fullLog("Status", "Step 8");
+        robot.runInchesWithEncoders(2, 2);
+
+        // Step X - Finished
+        robot.fullLog("Status", "Finished");
+        robot.setMotorPowers(0);
 
     }
 }

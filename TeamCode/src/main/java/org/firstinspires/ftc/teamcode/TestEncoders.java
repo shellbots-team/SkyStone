@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by shell on 09/28/2019.
  */
 
-@Autonomous(group="Autonomous", name="Test: Encoders")
+@Autonomous(group = "Autonomous", name = "Test: Encoders")
 @Disabled
 public class TestEncoders extends LinearOpMode {
 
@@ -31,7 +31,7 @@ public class TestEncoders extends LinearOpMode {
     public void runOpMode() {
 
         // Initialize motors/servos
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, telemetry, this);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -48,7 +48,7 @@ public class TestEncoders extends LinearOpMode {
         robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d and %7d :%7d",
+        telemetry.addData("Path0", "Starting at %7d :%7d and %7d :%7d",
                 robot.frontLeft.getCurrentPosition(),
                 robot.frontRight.getCurrentPosition(),
                 robot.backLeft.getCurrentPosition(),
@@ -60,7 +60,7 @@ public class TestEncoders extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        runMotors(6,  6, 10.0, DEFAULT_DRIVE_SPEED);  // S1: Forward 47 Inches with 5 Sec timeout
+        runMotors(6, 6, 10.0, DEFAULT_DRIVE_SPEED);  // S1: Forward 47 Inches with 5 Sec timeout
         //runMotors(12, -12, 4.0, DEFAULT_TURN_SPEED);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //runMotors(-24, -24, 4.0, DEFAULT_DRIVE_SPEED);  // S3: Reverse 24 Inches with 4 Sec timeout
 
@@ -85,10 +85,12 @@ public class TestEncoders extends LinearOpMode {
     }
 
     private void runMotors(double leftInches, double rightInches, double maxTime, double speed) {
-        if(!opModeIsActive()) { return; }
+        if (!opModeIsActive()) {
+            return;
+        }
 
-        int newLeftTarget = robot.frontLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-        int newRightTarget = robot.frontRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+        int newLeftTarget = robot.frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        int newRightTarget = robot.frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
         robot.frontLeft.setTargetPosition(newLeftTarget);
         robot.backLeft.setTargetPosition(newLeftTarget);
         robot.frontRight.setTargetPosition(newRightTarget);
@@ -116,11 +118,11 @@ public class TestEncoders extends LinearOpMode {
         while (opModeIsActive() &&
                 (runtime.seconds() < maxTime) &&
                 (robot.frontLeft.isBusy() && robot.backLeft.isBusy() &&
-                 robot.frontRight.isBusy() && robot.backRight.isBusy())) {
+                        robot.frontRight.isBusy() && robot.backRight.isBusy())) {
 
             // Display it for the driver.
-            telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-            telemetry.addData("Path2",  "Running at %7d :%7d and %7d :%7d",
+            telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            telemetry.addData("Path2", "Running at %7d :%7d and %7d :%7d",
                     robot.frontLeft.getCurrentPosition(),
                     robot.frontRight.getCurrentPosition(),
                     robot.backLeft.getCurrentPosition(),

@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by shell on 09/24/2019.
  */
 
 @Autonomous(group = "Complex", name = "Complex: Baseplate")
-public class ComplexBaseplate extends BaseBaseplate {
+public class ComplexBaseplate extends BaseAutonomous {
 
     @Override
     public void runOpMode() {
