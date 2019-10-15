@@ -1,22 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by shell on 09/10/2019.
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Basic Iterative Opmode", group="Manual")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Basic Iterative Opmode", group = "Manual")
 public class TeleOp extends OpMode {
 
-    // Declare motors/servos/variables
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    // private DcMotor backLeft;
-    // private DcMotor backRight;
+    Robot robot = new Robot();
 
     // Creating a speed variable
     private double speed = 1.0;
@@ -30,16 +23,8 @@ public class TeleOp extends OpMode {
      */
     @Override
     public void init() {
-
-        // Initialize motors/servos
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        // backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        // backRight = hardwareMap.get(DcMotor.class, "backRight");
-
-        // Set status
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        robot.init(hardwareMap, telemetry, this);
+        robot.fullLog("Status", "Initialized");
 
     }
 
@@ -56,8 +41,7 @@ public class TeleOp extends OpMode {
      */
     @Override
     public void start() {
-        telemetry.addData("Status", "Playing");
-        telemetry.update();
+        robot.fullLog("Status", "Playing");
     }
 
     @Override
@@ -66,7 +50,9 @@ public class TeleOp extends OpMode {
         powerMotors();
 
         if (this.gamepad1.x) {
+            robot.grabBaseplate();
         } else if (this.gamepad1.b) {
+            robot.releaseBaseplate();
         } else if (this.gamepad1.y) {
         } else if (this.gamepad1.a) {
         }
@@ -103,12 +89,14 @@ public class TeleOp extends OpMode {
         }
 
         // Display information about the motors
-        telemetry.addData("Frontleft power is ", frontLeft.getPower());
-        telemetry.addData("Frontright power is ", frontRight.getPower());
-       // telemetry.addData("Backleft power is ", backLeft.getPower());
-       // telemetry.addData("Backright power is ", backRight.getPower());
-        telemetry.addData("Status", "Running");
-        telemetry.update();
+        boolean isFullLog = getRuntime() % 250 == 0;
+
+        robot.fullLog(isFullLog, "FrontLeft", robot.frontLeft.getPower());
+        robot.fullLog(isFullLog, "FrontRight", robot.frontRight.getPower());
+        robot.fullLog(isFullLog, "BackLeft", robot.backLeft.getPower());
+        robot.fullLog(isFullLog, "BackRight", robot.backRight.getPower());
+
+        robot.fullLog(isFullLog, "Status", "Running");
 
     }
 
@@ -117,39 +105,13 @@ public class TeleOp extends OpMode {
      */
     @Override
     public void stop() {
-
+        robot.fullLog("Status", "Stopped");
     }
 
     private void powerMotors() {
-        double leftPower = this.gamepad1.left_stick_y;
-        double rightPower = this.gamepad1.right_stick_y;
+        // New robot powering math...
 
-        if(leftPower < 0.05 && leftPower > -0.05) {
-            leftPower = 0;
-        }
-
-        if(rightPower < 0.05 && rightPower > -0.05) {
-            rightPower = 0;
-        }
-
-        leftPower *= speed;
-        rightPower *= speed;
-
-        if (leftPower > 1) { leftPower = 1; }
-        if (leftPower < -1) { leftPower = -1; }
-        if (rightPower > 1) { rightPower = 1; }
-        if (rightPower < -1) { rightPower = -1; }
-
-        rightPower *= -1.0;
-
-        frontLeft.setPower(leftPower);
-        //backLeft.setPower(leftPower);
-
-        frontRight.setPower(rightPower);
-        //backRight.setPower(rightPower);
-
-//        Log.d("Power", "Left: " + leftPower);
-//        Log.d("Power", "Right: " + rightPower);
+        robot.setMotorPowers(0, 0, 0, 0); // fL, fR, bL, bR
     }
 
 }
