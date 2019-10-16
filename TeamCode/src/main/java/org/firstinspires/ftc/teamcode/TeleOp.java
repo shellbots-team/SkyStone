@@ -62,15 +62,15 @@ public class TeleOp extends OpMode {
         }
 
         if (this.gamepad1.dpad_left) {
-            robot.setServoPosition(robot.rightHand, 0.65);
+            //robot.setServoPosition(robot.rightHand, 0.65);
         } else if (this.gamepad1.dpad_right) {
-            robot.setServoPosition(robot.rightHand, 1);
+            //robot.setServoPosition(robot.rightHand, 1);
         } else if (this.gamepad1.dpad_up) {
-            robot.leftArm.setPower(-0.33);
-            robot.rightArm.setPower(-0.33);
+            robot.leftArm.setPower(-0.25);
+            robot.rightArm.setPower(-0.25);
         } else if(this.gamepad1.dpad_down) {
-            robot.leftArm.setPower(0.33);
-            robot.rightArm.setPower(0.33);
+            robot.leftArm.setPower(0.25);
+            robot.rightArm.setPower(0.25);
         } else {
             robot.rightArm.setPower(0);
             robot.leftArm.setPower(0);
@@ -115,6 +115,7 @@ public class TeleOp extends OpMode {
         robot.fullLog(isFullLog, "FrontRight", robot.frontRight.getPower());
         robot.fullLog(isFullLog, "BackLeft", robot.backLeft.getPower());
         robot.fullLog(isFullLog, "BackRight", robot.backRight.getPower());
+        robot.fullLog(isFullLog, "Speed", speed);
 
         robot.fullLog(isFullLog, "Status", "Running");
 

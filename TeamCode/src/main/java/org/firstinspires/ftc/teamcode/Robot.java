@@ -72,12 +72,12 @@ public class Robot {
     public DcMotor rightArm = null;
     public DcMotor extendArm = null;
 
-    public CRServo leftGrip = null;
-    public CRServo rightGrip = null;
-    public CRServo leftHand = null;
-    public CRServo rightHand = null;
+    //public CRServo leftGrip = null;
+    //public CRServo rightGrip = null;
+    //public CRServo leftHand = null;
+    //public CRServo rightHand = null;
 
-    public ColorSensor colorSensor = null;
+    //public ColorSensor colorSensor = null;
 
     public static final double MID_SERVO = 0.5;
 
@@ -85,7 +85,13 @@ public class Robot {
     HardwareMap hardwareMap = null;
     Telemetry telemetry = null;
     OpMode opmode = null;
+/*
 
+port 0 - 4
+port 1 - 5
+port 2 - 6
+
+ */
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
@@ -149,13 +155,13 @@ public class Robot {
         extendArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Define and initialize ALL installed servos.
-        leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
-        rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
-        leftHand = this.hardwareMap.get(CRServo.class, "leftHand");
-        rightHand = this.hardwareMap.get(CRServo.class, "rightHand");
+        //leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
+        //rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
+        //leftHand = this.hardwareMap.get(CRServo.class, "leftHand");
+        //rightHand = this.hardwareMap.get(CRServo.class, "rightHand");
 
         // Define and initialize ALL sensors
-        colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
+        //colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
     }
 
     public void fullLog(boolean isFullLog, String caption, double value) {
@@ -210,11 +216,11 @@ public class Robot {
         rightArm.setPower(Math.abs(speed));
 
         while ((!(opmode instanceof LinearOpMode) || ((LinearOpMode) opmode).opModeIsActive()) &&
-                (leftArm.isBusy() && rightArm.isBusy())) {
+            (leftArm.isBusy() && rightArm.isBusy())) {
             boolean isFullLog = runtime.milliseconds() % 250 == 0;
 
-            fullLog(isFullLog, "ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
-            fullLog(isFullLog, "ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
+            //fullLog(isFullLog, "ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
+            //fullLog(isFullLog, "ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
         }
 
         leftArm.setPower(0);
@@ -241,13 +247,13 @@ public class Robot {
     }
 
     public void grabBaseplate() {
-        setServoPosition(leftGrip, 1);
-        setServoPosition(rightGrip, 0.5);
+        //setServoPosition(leftGrip, 1);
+        //setServoPosition(rightGrip, 0.5);
     }
 
     public void releaseBaseplate() {
-        setServoPosition(leftGrip, 0);
-        setServoPosition(rightGrip, 1);
+        //setServoPosition(leftGrip, 0);
+        //setServoPosition(rightGrip, 1);
     }
 
     public void turnDegreesWithEncoders(double degrees, boolean goClockwise) {
@@ -310,16 +316,13 @@ public class Robot {
             // Display it for the driver.
             boolean isFullLog = runtime.milliseconds() % 250 == 0;
 
-            fullLog(isFullLog, "Path1", String.format(Locale.US, "Running to %7d :%7d", newLeftTarget, newRightTarget));
-            fullLog(isFullLog, "Path2", String.format(Locale.US, "Running at %7d :%7d and %7d :%7d",
+            fullLog( "Path1", String.format(Locale.US, "Running to %7d :%7d", newLeftTarget, newRightTarget));
+            fullLog( "Path2", String.format(Locale.US, "Running at %7d :%7d and %7d :%7d",
                     frontLeft.getCurrentPosition(),
                     frontRight.getCurrentPosition(),
                     backLeft.getCurrentPosition(),
                     backRight.getCurrentPosition()));
         }
-
-        // Stop all motion;
-        setMotorPowers(0);
 
         // Turn off RUN_TO_POSITION
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -327,8 +330,11 @@ public class Robot {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        // Stop all motion;
+        setMotorPowers(0);
+
         if (opmode instanceof LinearOpMode) {
-            ((LinearOpMode) opmode).sleep(250);   // optional pause after each move
+            ((LinearOpMode) opmode).sleep(2000);   // optional pause after each move
         }
     }
 
@@ -344,7 +350,8 @@ public class Robot {
     }
 
     public boolean isOnLine() {
-        return (colorSensor.red() > 150 || colorSensor.blue() > 150);
+        return true;
+        //return (colorSensor.red() > 150 || colorSensor.blue() > 150);
     }
 }
 

@@ -16,9 +16,9 @@ public class BasicBaseplate extends BaseAutonomous {
 
         waitForStart();
 
-        robot.setServoPosition(robot.leftGrip, 0.9);
-        sleep(5000);
-        /*
+        //robot.setServoPosition(robot.leftGrip, 0.9);
+        sleep(1000);
+
         // Step 0 - Ready to run
         robot.fullLog("Status", "Ready To Run");
 
@@ -27,8 +27,11 @@ public class BasicBaseplate extends BaseAutonomous {
 
         // Step 1 - Move to the baseplate
         robot.fullLog("Status", "Step 1");
-        robot.runInchesWithEncoders(4, 4);
-
+        robot.runInchesWithEncoders(3, 3);
+        robot.fullLog("Status", "Finished");
+        sleep(3000);
+        robot.setMotorPowers(0);
+/*
         // Step 2 - grab onto the baseplate
         robot.fullLog("Status", "Step 2");
         robot.grabBaseplate();
