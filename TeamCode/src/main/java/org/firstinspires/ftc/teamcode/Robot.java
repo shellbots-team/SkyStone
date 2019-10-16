@@ -29,11 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -42,18 +39,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import java.util.Locale;
-
 /**
  * This is NOT an opmode.
- * <p>
+ *
  * This class can be used to define all the specific hardware for a single robot.
  * In this case that robot is a Pushbot.
  * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- * <p>
+ *
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
- * <p>
+ *
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
  * Motor channel:  Manipulator drive motor:  "left_arm"
@@ -62,25 +57,24 @@ import java.util.Locale;
  */
 public class Robot {
     /* Public OpMode members. */
-    public DcMotor frontLeft = null;
-    public DcMotor frontRight = null;
-    public DcMotor backLeft = null;
-    public DcMotor backRight = null;
-    public DcMotor leftArm = null;
-    public DcMotor rightArm = null;
-    //public DcMotor  leftArm     = null;
-    public Servo leftHolder = null;
-    public Servo rightHolder = null;
-    public ColorSensor colorSensor = null;
+    public DcMotor  frontLeft   = null;
+    public DcMotor  frontRight  = null;
+    public DcMotor  backLeft    = null;
+    public DcMotor  backRight   = null;
+    public DcMotor  leftArm     = null;
+    public DcMotor  rightArm    = null;
+    public DcMotor  extendArm   = null;
+    public Servo    leftHolder  = null;
+    public Servo    rightHolder = null;
 
-    public static final double MID_SERVO = 0.5;
+    public static final double MID_SERVO       =  0.5 ;
 //    public static final double ARM_UP_POWER    =  0.45 ;
 //    public static final double ARM_DOWN_POWER  = -0.45 ;
 
     /* local OpMode members. */
-    HardwareMap hardwareMap = null;
-    Telemetry telemetry = null;
-    OpMode opmode = null;
+    HardwareMap hardwareMap           = null;
+    Telemetry telemetry         = null;
+    OpMode opmode         = null;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -93,7 +87,7 @@ public class Robot {
     static final double DEFAULT_TURN_SPEED = 0.5;
 
     /* Constructor */
-    public Robot() {
+    public Robot(){
 
     }
 
@@ -105,129 +99,50 @@ public class Robot {
         this.opmode = opmode;
 
         // Define and Initialize Motors
-        frontLeft = this.hardwareMap.get(DcMotor.class, "frontLeft");
+        frontLeft  = this.hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = this.hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = this.hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = this.hardwareMap.get(DcMotor.class, "backRight");
-        //leftArm    = hwMap.get(DcMotor.class, "left_arm");
+        backLeft   = this.hardwareMap.get(DcMotor.class, "backLeft");
+        backRight  = this.hardwareMap.get(DcMotor.class, "backRight");
+        leftArm    = this.hardwareMap.get(DcMotor.class, "leftArm");
+        rightArm   = this.hardwareMap.get(DcMotor.class, "rightArm");
+        extendArm  = this.hardwareMap.get(DcMotor.class, "extendArm");
 
-        frontLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        frontLeft.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftArm.setDirection(DcMotor.Direction.FORWARD);
+        rightArm.setDirection(DcMotor.Direction.FORWARD);
+        extendArm.setDirection(DcMotor.Direction.FORWARD);
+
+        leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        extendArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
-        setMotorPowers(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        leftArm.setPower(0);
+        rightArm.setPower(0);
+        extendArm.setPower(0);
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Define and initialize ALL installed servos.
-        leftHolder = this.hardwareMap.get(Servo.class, "leftHand");
-        rightHolder = this.hardwareMap.get(Servo.class, "rightHand");
-        leftHolder.setPosition(MID_SERVO);
-        rightHolder.setPosition(MID_SERVO);
-
-        // Define and initialize ALL sensors
-        colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
-    }
-
-    public void fullLog(boolean isFullLog, String caption, double value) {
-        if (isFullLog) {
-            fullLog(caption, String.valueOf(value));
-        } else {
-            telemetry.addData(caption, value);
-            telemetry.update();
-        }
-    }
-
-    public void fullLog(String value) {
-        fullLog("Main", value);
-    }
-
-    public void fullLog(boolean isFullLog, String caption, String value) {
-        if (isFullLog) {
-            fullLog(caption, value);
-        } else {
-            telemetry.addData(caption, value);
-            telemetry.update();
-        }
-    }
-
-    public void fullLog(String caption, String value) {
-        Log.d("14736:" + caption, value);
-        telemetry.addData(caption, value);
-        telemetry.update();
-    }
-
-    public void powerArm(double height, double speed) {
-        if (opmode instanceof LinearOpMode && !((LinearOpMode) opmode).opModeIsActive()) {
-            return;
-        }
-
-        // Reset encoders
-        leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        int armTarget = (leftArm.getCurrentPosition() + rightArm.getCurrentPosition()) / 2
-                + (int) (height * COUNTS_PER_INCH);
-
-        leftArm.setTargetPosition(armTarget);
-        rightArm.setTargetPosition(armTarget);
-
-        leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        runtime.reset();
-
-        leftArm.setPower(Math.abs(speed));
-        rightArm.setPower(Math.abs(speed));
-
-        while ((!(opmode instanceof LinearOpMode) || ((LinearOpMode) opmode).opModeIsActive()) &&
-                (leftArm.isBusy() && rightArm.isBusy())) {
-            boolean isFullLog = runtime.milliseconds() % 250 == 0;
-
-            fullLog(isFullLog, "ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
-            fullLog(isFullLog, "ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
-        }
-
-        leftArm.setPower(0);
-        rightArm.setPower(0);
-
         leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extendArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        if (opmode instanceof LinearOpMode) {
-            ((LinearOpMode) opmode).sleep(250);
-        }
-    }
-
-    public void raiseArm() {
-        powerArm(2, 0.3);
-    }
-
-    public void lowerArm() {
-        powerArm(-2, 0.3);
-    }
-
-    public void grabBaseplate() {
-        setHolderPos(0.75);
-    }
-
-    public void releaseBaseplate() {
-        setHolderPos(0.25);
-    }
-
-    private void setHolderPos(double pos) {
-        setHolderPos(pos, pos);
-    }
-
-    private void setHolderPos(double left, double right) {
-        leftHolder.setPosition(left);
-        rightHolder.setPosition(right);
+        // Define and initialize ALL installed servos.
+//        leftHolder  = this.hardwareMap.get(Servo.class, "left_hand");
+//        rightHolder = this.hardwareMap.get(Servo.class, "right_hand");
+//        leftHolder.setPosition(MID_SERVO);
+//        rightHolder.setPosition(MID_SERVO);
     }
 
     public void turnDegreesWithEncoders(double degrees, boolean goClockwise) {
@@ -240,25 +155,17 @@ public class Robot {
 
     }
 
-    public void runInchesWithEncoders(double leftInches, double rightInches) {
+    public void runInchesWithEncoders(int leftInches, int rightInches) {
         runInchesWithEncoders(leftInches, rightInches, 999, 1);
     }
 
-    public void runInchesWithEncoders(double leftInches, double rightInches, double maxSeconds) {
-        runInchesWithEncoders(leftInches, rightInches, maxSeconds, 1);
+    public void runInchesWithEncoders(int leftInches, int rightInches, int maxTime) {
+        runInchesWithEncoders(leftInches, rightInches, maxTime, 1);
     }
 
-    public void runInchesWithEncoders(double leftInches, double rightInches, double maxSeconds, double speed) {
-        if (opmode instanceof LinearOpMode && !((LinearOpMode) opmode).opModeIsActive()) {
-            return;
-        }
-
-        // Reset encoder values
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+    public void runInchesWithEncoders(double leftInches, double rightInches, double maxTime, double speed) {
+        if(!(opmode instanceof LinearOpMode)) { return; }
+        LinearOpMode lOpMode = (LinearOpMode) this.opmode;
         int newLeftTarget = frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
         int newRightTarget = frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
         frontLeft.setTargetPosition(newLeftTarget);
@@ -274,7 +181,10 @@ public class Robot {
 
         // reset the timeout time and start motion.
         runtime.reset();
-        setMotorPowers(Math.abs(speed));
+        frontLeft.setPower(Math.abs(speed));
+        frontRight.setPower(Math.abs(speed));
+        backLeft.setPower(Math.abs(speed));
+        backRight.setPower(Math.abs(speed));
 
         // keep looping while we are still active, and there is time left, and all motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -282,24 +192,26 @@ public class Robot {
         // always end the motion as soon as possible.
         // However, if you require that BOTH motors have finished their moves before the robot continues
         // onto the next step, use (isBusy() || isBusy()) in the loop test.
-        while ((!(opmode instanceof LinearOpMode) || ((LinearOpMode) opmode).opModeIsActive()) &&
-                (runtime.seconds() < maxSeconds) &&
+        while (lOpMode.opModeIsActive() &&
+                (runtime.seconds() < maxTime) &&
                 (frontLeft.isBusy() && backLeft.isBusy() &&
-                        frontRight.isBusy() && backRight.isBusy())) {
+                 frontRight.isBusy() && backRight.isBusy())) {
 
             // Display it for the driver.
-            boolean isFullLog = runtime.milliseconds() % 250 == 0;
-
-            fullLog(isFullLog, "Path1", String.format(Locale.US, "Running to %7d :%7d", newLeftTarget, newRightTarget));
-            fullLog(isFullLog, "Path2", String.format(Locale.US, "Running at %7d :%7d and %7d :%7d",
+            telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            telemetry.addData("Path2", "Running at %7d :%7d and %7d :%7d",
                     frontLeft.getCurrentPosition(),
                     frontRight.getCurrentPosition(),
                     backLeft.getCurrentPosition(),
-                    backRight.getCurrentPosition()));
+                    backRight.getCurrentPosition());
+            telemetry.update();
         }
 
         // Stop all motion;
-        setMotorPowers(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
 
         // Turn off RUN_TO_POSITION
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -307,24 +219,7 @@ public class Robot {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        if (opmode instanceof LinearOpMode) {
-            ((LinearOpMode) opmode).sleep(250);   // optional pause after each move
-        }
-    }
-
-    public void setMotorPowers(double pwr) {
-        setMotorPowers(pwr, pwr, pwr, pwr);
-    }
-
-    public void setMotorPowers(double fL, double fR, double bL, double bR) {
-        frontLeft.setPower(fL);
-        frontRight.setPower(fR);
-        backLeft.setPower(bL);
-        backRight.setPower(bR);
-    }
-
-    public boolean isOnLine() {
-        return (colorSensor.red() > 150 || colorSensor.blue() > 150);
+        lOpMode.sleep(250);   // optional pause after each move
     }
 }
 

@@ -1,14 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by shell on 09/10/2019.
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Basic Iterative Opmode", group = "Manual")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Basic Iterative Opmode", group="Manual")
 public class TeleOp extends OpMode {
 
+    // Declare motors/servos/variables
     Robot robot = new Robot();
 
     // Creating a speed variable
@@ -59,10 +63,24 @@ public class TeleOp extends OpMode {
 
         if (this.gamepad1.dpad_left) {
         } else if (this.gamepad1.dpad_right) {
+        } else if (this.gamepad1.dpad_up) {
+            robot.leftArm.setPower(-0.33);
+            robot.rightArm.setPower(-0.33);
+        } else if(this.gamepad1.dpad_down) {
+            robot.leftArm.setPower(0.33);
+            robot.rightArm.setPower(0.33);
+        } else {
+            robot.rightArm.setPower(0);
+            robot.leftArm.setPower(0);
         }
 
+
         if (this.gamepad1.right_trigger > 0.5) { // When right trigger is clicked
+            robot.extendArm.setPower(0.3);
         } else if (this.gamepad1.left_trigger > 0.5) { // When left trigger is clicked
+            robot.extendArm.setPower(-0.3);
+        } else {
+            robot.extendArm.setPower(0);
         }
 
         if (this.gamepad1.left_bumper && !wasSpeedingUp) {
@@ -110,8 +128,29 @@ public class TeleOp extends OpMode {
 
     private void powerMotors() {
         // New robot powering math...
+        double[] powers = new double[4]; // [leftX, leftY, rightX, rightY]
+        powers[0] = this.gamepad1.left_stick_x;
+        powers[1] = this.gamepad1.left_stick_y;
+        powers[2] = this.gamepad1.right_stick_x;
+        powers[3] = this.gamepad1.right_stick_y;
 
-        robot.setMotorPowers(0, 0, 0, 0); // fL, fR, bL, bR
+        double[] fp = new double[4];
+        fp[0] = powers[1]+powers[0]-powers[2];
+        fp[1] = powers[1]-powers[0]-powers[2];
+        fp[2] = powers[1]-powers[0]+powers[2];
+        fp[3] = powers[1]+powers[0]+powers[2];
+
+        for(int i = 0; i < fp.length; i++) {
+            if(fp[i] < 0.05 && fp[i] > -0.05) { fp[i] = 0.0; }
+            if(fp[i] > 1) { fp[i] = 1; }
+            if(fp[i] < -1) { fp[i] = -1; }
+        }
+
+        robot.frontLeft.setPower(fp[0]);
+        robot.backLeft.setPower(fp[1]);
+        robot.frontRight.setPower(fp[2]);
+        robot.backRight.setPower(fp[3]);
+
     }
 
 }
