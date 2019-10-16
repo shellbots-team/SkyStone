@@ -62,7 +62,9 @@ public class TeleOp extends OpMode {
         }
 
         if (this.gamepad1.dpad_left) {
+            robot.setServoPosition(robot.rightHand, 0.65);
         } else if (this.gamepad1.dpad_right) {
+            robot.setServoPosition(robot.rightHand, 1);
         } else if (this.gamepad1.dpad_up) {
             robot.leftArm.setPower(-0.33);
             robot.rightArm.setPower(-0.33);

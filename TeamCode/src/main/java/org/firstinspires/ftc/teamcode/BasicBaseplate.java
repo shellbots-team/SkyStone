@@ -14,6 +14,11 @@ public class BasicBaseplate extends BaseAutonomous {
 
         super.runOpMode();
 
+        waitForStart();
+
+        robot.setServoPosition(robot.leftGrip, 0.9);
+        sleep(5000);
+        /*
         // Step 0 - Ready to run
         robot.fullLog("Status", "Ready To Run");
 
@@ -61,6 +66,6 @@ public class BasicBaseplate extends BaseAutonomous {
         // Step X - Finished
         robot.fullLog("Status", "Finished");
         robot.setMotorPowers(0);
-
+*/
     }
 }

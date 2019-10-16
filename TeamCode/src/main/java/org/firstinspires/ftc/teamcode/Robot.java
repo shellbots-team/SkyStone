@@ -33,11 +33,13 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -69,8 +71,12 @@ public class Robot {
     public DcMotor leftArm = null;
     public DcMotor rightArm = null;
     public DcMotor extendArm = null;
-    public Servo leftHolder = null;
-    public Servo rightHolder = null;
+
+    public CRServo leftGrip = null;
+    public CRServo rightGrip = null;
+    public CRServo leftHand = null;
+    public CRServo rightHand = null;
+
     public ColorSensor colorSensor = null;
 
     public static final double MID_SERVO = 0.5;
@@ -143,10 +149,10 @@ public class Robot {
         extendArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Define and initialize ALL installed servos.
-        leftHolder = this.hardwareMap.get(Servo.class, "leftHand");
-        rightHolder = this.hardwareMap.get(Servo.class, "rightHand");
-        leftHolder.setPosition(MID_SERVO);
-        rightHolder.setPosition(MID_SERVO);
+        leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
+        rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
+        leftHand = this.hardwareMap.get(CRServo.class, "leftHand");
+        rightHand = this.hardwareMap.get(CRServo.class, "rightHand");
 
         // Define and initialize ALL sensors
         colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
@@ -230,21 +236,18 @@ public class Robot {
         powerArm(-2, 0.3);
     }
 
+    public void setServoPosition(CRServo crservo, double position) {
+        crservo.getController().setServoPosition(crservo.getPortNumber(), position);
+    }
+
     public void grabBaseplate() {
-        setHolderPos(0.75);
+        setServoPosition(leftGrip, 1);
+        setServoPosition(rightGrip, 0.5);
     }
 
     public void releaseBaseplate() {
-        setHolderPos(0.25);
-    }
-
-    private void setHolderPos(double pos) {
-        setHolderPos(pos, pos);
-    }
-
-    private void setHolderPos(double left, double right) {
-        leftHolder.setPosition(left);
-        rightHolder.setPosition(right);
+        setServoPosition(leftGrip, 0);
+        setServoPosition(rightGrip, 1);
     }
 
     public void turnDegreesWithEncoders(double degrees, boolean goClockwise) {
