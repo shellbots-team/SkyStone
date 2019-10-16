@@ -146,11 +146,7 @@ public class TeleOp extends OpMode {
             if(fp[i] < -1) { fp[i] = -1; }
         }
 
-        robot.frontLeft.setPower(fp[0]);
-        robot.backLeft.setPower(fp[1]);
-        robot.frontRight.setPower(fp[2]);
-        robot.backRight.setPower(fp[3]);
-
+        robot.setMotorPowers(fp[0], fp[2], fp[1], fp[3]);
     }
 
 }
