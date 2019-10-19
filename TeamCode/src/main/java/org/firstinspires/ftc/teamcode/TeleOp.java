@@ -138,10 +138,10 @@ public class TeleOp extends OpMode {
         powers[3] = this.gamepad1.right_stick_y;
 
         double[] fp = new double[4];
-        fp[0] = powers[1]+powers[0]-powers[2];
-        fp[1] = powers[1]-powers[0]-powers[2];
-        fp[2] = powers[1]-powers[0]+powers[2];
-        fp[3] = powers[1]+powers[0]+powers[2];
+        fp[0] = (powers[1]+powers[0]-powers[2])*speed;
+        fp[1] = (powers[1]-powers[0]-powers[2])*speed;
+        fp[2] = (powers[1]-powers[0]+powers[2])*speed;
+        fp[3] = (powers[1]+powers[0]+powers[2])*speed;
 
         for(int i = 0; i < fp.length; i++) {
             if(fp[i] < 0.05 && fp[i] > -0.05) { fp[i] = 0.0; }
