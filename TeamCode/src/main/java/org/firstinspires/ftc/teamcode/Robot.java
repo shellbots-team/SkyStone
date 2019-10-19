@@ -72,12 +72,12 @@ public class Robot {
     public DcMotor rightArm = null;
     public DcMotor extendArm = null;
 
-    //public CRServo leftGrip = null;
-    //public CRServo rightGrip = null;
-    //public CRServo leftHand = null;
-    //public CRServo rightHand = null;
+    public CRServo leftGrip = null;
+    public CRServo rightGrip = null;
+    public CRServo leftHand = null;
+    public CRServo rightHand = null;
 
-    //public ColorSensor colorSensor = null;
+    public ColorSensor colorSensor = null;
 
     public static final double MID_SERVO = 0.5;
 
@@ -123,10 +123,10 @@ port 2 - 6
         rightArm = this.hardwareMap.get(DcMotor.class, "rightArm");
         extendArm = this.hardwareMap.get(DcMotor.class, "extendArm");
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        frontLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         leftArm.setDirection(DcMotor.Direction.FORWARD);
         rightArm.setDirection(DcMotor.Direction.FORWARD);
         extendArm.setDirection(DcMotor.Direction.FORWARD);
@@ -155,22 +155,17 @@ port 2 - 6
         extendArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Define and initialize ALL installed servos.
-        //leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
-        //rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
-        //leftHand = this.hardwareMap.get(CRServo.class, "leftHand");
-        //rightHand = this.hardwareMap.get(CRServo.class, "rightHand");
+        leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
+        rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
+        leftHand = this.hardwareMap.get(CRServo.class, "leftHand");
+        rightHand = this.hardwareMap.get(CRServo.class, "rightHand");
 
         // Define and initialize ALL sensors
-        //colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
+        colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
     }
 
-    public void fullLog(boolean isFullLog, String caption, double value) {
-        if (isFullLog) {
-            fullLog(caption, String.valueOf(value));
-        } else {
-            telemetry.addData(caption, value);
-            telemetry.update();
-        }
+    public void fullLog(String caption, double value) {
+        fullLog(caption, String.valueOf(value));
     }
 
     public void fullLog(String value) {
@@ -189,7 +184,6 @@ port 2 - 6
     public void fullLog(String caption, String value) {
         Log.d("14736:" + caption, value);
         telemetry.addData(caption, value);
-        telemetry.update();
     }
 
     public void powerArm(double height, double speed) {
@@ -219,8 +213,8 @@ port 2 - 6
             (leftArm.isBusy() && rightArm.isBusy())) {
             boolean isFullLog = runtime.milliseconds() % 250 == 0;
 
-            //fullLog(isFullLog, "ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
-            //fullLog(isFullLog, "ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
+            fullLog(isFullLog, "ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
+            fullLog(isFullLog, "ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
         }
 
         leftArm.setPower(0);
@@ -247,17 +241,17 @@ port 2 - 6
     }
 
     public void grabBaseplate() {
-        //setServoPosition(leftGrip, 1);
-        //setServoPosition(rightGrip, 0.5);
+        setServoPosition(leftGrip, 1);
+        setServoPosition(rightGrip, 0.5);
     }
 
     public void releaseBaseplate() {
-        //setServoPosition(leftGrip, 0);
-        //setServoPosition(rightGrip, 1);
+        setServoPosition(leftGrip, 0);
+        setServoPosition(rightGrip, 1);
     }
 
     public void turnDegreesWithEncoders(double degrees, boolean goClockwise) {
-        int inchTurn = (int) (degrees * 1); // Math goes here
+        int inchTurn = (int) (degrees/15); // Math goes here
         if (goClockwise) {
             runInchesWithEncoders(inchTurn, -inchTurn);
         } else {
@@ -313,9 +307,6 @@ port 2 - 6
                 (frontLeft.isBusy() && backLeft.isBusy() &&
                         frontRight.isBusy() && backRight.isBusy())) {
 
-            // Display it for the driver.
-            boolean isFullLog = runtime.milliseconds() % 250 == 0;
-
             fullLog( "Path1", String.format(Locale.US, "Running to %7d :%7d", newLeftTarget, newRightTarget));
             fullLog( "Path2", String.format(Locale.US, "Running at %7d :%7d and %7d :%7d",
                     frontLeft.getCurrentPosition(),
@@ -324,17 +315,20 @@ port 2 - 6
                     backRight.getCurrentPosition()));
         }
 
+        // Stop all motion
+        setMotorPowers(0);
+
         // Turn off RUN_TO_POSITION
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Stop all motion;
+        // Stop all motion
         setMotorPowers(0);
 
         if (opmode instanceof LinearOpMode) {
-            ((LinearOpMode) opmode).sleep(2000);   // optional pause after each move
+            ((LinearOpMode) opmode).sleep(200);   // optional pause after each move
         }
     }
 
@@ -349,9 +343,16 @@ port 2 - 6
         backRight.setPower(bR);
     }
 
+    public void setMotorPowersSideways(double pwr, boolean isRight) {
+        if(isRight) {
+            setMotorPowers(pwr, -pwr, -pwr, pwr);
+        } else {
+            setMotorPowers(-pwr, pwr, pwr, -pwr);
+        }
+    }
+
     public boolean isOnLine() {
-        return true;
-        //return (colorSensor.red() > 150 || colorSensor.blue() > 150);
+        return (colorSensor.red() > 20 || colorSensor.blue() > 20);
     }
 }
 

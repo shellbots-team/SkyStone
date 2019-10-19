@@ -16,59 +16,52 @@ public class BasicBaseplate extends BaseAutonomous {
 
         waitForStart();
 
-        //robot.setServoPosition(robot.leftGrip, 0.9);
-        sleep(1000);
-
         // Step 0 - Ready to run
         robot.fullLog("Status", "Ready To Run");
 
         // Waiting until user presses start
         waitForStart();
 
+        robot.releaseBaseplate();
+
         // Step 1 - Move to the baseplate
         robot.fullLog("Status", "Step 1");
-        robot.runInchesWithEncoders(3, 3);
-        robot.fullLog("Status", "Finished");
-        sleep(3000);
-        robot.setMotorPowers(0);
-/*
+        robot.runInchesWithEncoders(17, 17);
+
         // Step 2 - grab onto the baseplate
         robot.fullLog("Status", "Step 2");
         robot.grabBaseplate();
-        sleep(100);
+        sleep(1000);
 
         // Step 3 - Drag baseplate to corner
         robot.fullLog("Status", "Step 3");
-        robot.runInchesWithEncoders(-4, -4);
+        robot.runInchesWithEncoders(-17, -17);
 
         // Step 4 - Release the baseplate
         robot.fullLog("Status", "Step 4");
         robot.releaseBaseplate();
         sleep(100);
 
-        // Step 5 - Turning to look at the midline
-        robot.fullLog("Status", "Step 5");
-        robot.turnDegreesWithEncoders(90, true);
-
         // Step 6 - Move until on the line
         robot.fullLog("Status", "Step 6");
-        while (!robot.isOnLine()) {
-            robot.setMotorPowers(1);
+        robot.setMotorPowersSideways(1.0, false);
+        int i = 0;
+        while (!robot.isOnLine() && opModeIsActive()) {
+            i++;
+            if( i % 10 == 0) {
+                robot.fullLog("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());
+                robot.telemetry.update();
+            }
         }
-        sleep(25);
         robot.setMotorPowers(0);
 
-        // Step 7 - Turn to middle
-        robot.fullLog("Status", "Step 7");
-        robot.turnDegreesWithEncoders(90, true);
-
-        // Step 8 - Drive to middle
-        robot.fullLog("Status", "Step 8");
-        robot.runInchesWithEncoders(2, 2);
+        robot.setMotorPowersSideways(1.0, true);
+        sleep(250);
+        robot.setMotorPowers(0);
 
         // Step X - Finished
         robot.fullLog("Status", "Finished");
         robot.setMotorPowers(0);
-*/
+
     }
 }
