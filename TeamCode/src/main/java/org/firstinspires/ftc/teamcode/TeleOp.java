@@ -141,6 +141,19 @@ public class TeleOp extends OpMode {
     }
 
     private void powerMotors() {
+        double leftX = this.gamepad1.left_stick_x;
+        double leftY = -this.gamepad1.left_stick_y;
+        double rightX = this.gamepad1.right_stick_x;
+        double rightY = -this.gamepad1.right_stick_y;
+
+        if((leftX > 0.2 && rightX > 0.2) || (leftX < -0.2 && rightX < -0.2)) {
+            robot.setMotorPowers(leftX, -leftX, -rightX, rightX);
+        } else {
+            robot.setMotorPowers(leftY, rightY, leftY, rightY);
+        }
+    }
+
+    private void oldPowerMotors() {
         // New robot powering math...
         double[] powers = new double[4]; // [leftX, leftY, rightX, rightY]
         powers[0] = this.gamepad1.left_stick_x;
