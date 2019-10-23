@@ -26,7 +26,7 @@ public class BasicBaseplate extends BaseAutonomous {
 
         // Step 1 - Move to the baseplate
         robot.fullLog("Status", "Step 1");
-        robot.runInchesWithEncoders(17, 17);
+        robot.runInchesWithEncoders(DISTANCE_TO_BASEPLATE, DISTANCE_TO_BASEPLATE);
 
         // Step 2 - grab onto the baseplate
         robot.fullLog("Status", "Step 2");
@@ -35,16 +35,22 @@ public class BasicBaseplate extends BaseAutonomous {
 
         // Step 3 - Drag baseplate to corner
         robot.fullLog("Status", "Step 3");
-        robot.runInchesWithEncoders(-17, -17);
+        robot.runInchesWithEncoders(-DISTANCE_TO_BASEPLATE, -DISTANCE_TO_BASEPLATE);
 
         // Step 4 - Release the baseplate
         robot.fullLog("Status", "Step 4");
         robot.releaseBaseplate();
         sleep(100);
 
+        //Step 5 - Move from build zone
+        robot.fullLog("status", "Step 5");
+        robot.driveLeft();
+        sleep(2000);
+        robot.setMotorPowers(0);
+
         // Step 6 - Move until on the line
         robot.fullLog("Status", "Step 6");
-        robot.setMotorPowersSideways(1.0, false);
+        robot.driveLeft();
         int i = 0;
         while (!robot.isOnLine() && opModeIsActive()) {
             i++;
@@ -55,7 +61,9 @@ public class BasicBaseplate extends BaseAutonomous {
         }
         robot.setMotorPowers(0);
 
-        robot.setMotorPowersSideways(1.0, true);
+        // Step 7 - Fixing alignment with line
+        robot.fullLog("Status", "Step 7");
+        robot.driveRight();
         sleep(250);
         robot.setMotorPowers(0);
 

@@ -354,6 +354,14 @@ port 2 - 6
     public boolean isOnLine() {
         return (colorSensor.red() > 20 || colorSensor.blue() > 20);
     }
+
+    public void driveLeft() {
+        setMotorPowersSideways(1.0,false);
+    }
+
+    public void driveRight() {
+        setMotorPowersSideways(1.0,true);
+    }
 }
 
 
