@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by shell on 09/10/2019.
@@ -15,8 +12,9 @@ public class TeleOp extends OpMode {
     // Declare motors/servos/variables
     Robot robot = new Robot();
 
-    // Creating a speed variable
-    private double speed = 1.0;
+    // Creating a moveSpeed variable
+    private double moveSpeed = 1.0;
+    private double armSpeed = 0.3;
 
 
     /**
@@ -55,9 +53,9 @@ public class TeleOp extends OpMode {
         powerMotors();
 
         if (this.gamepad1.right_trigger > 0.5) { // When right trigger is clicked
-            speed = 1.0;
+            moveSpeed = 1.0;
         } else if (this.gamepad1.left_trigger > 0.5) { // When left trigger is clicked
-            speed = 0.5;
+            moveSpeed = 0.5;
         }
 
         if (this.gamepad1.left_bumper) {
@@ -83,15 +81,17 @@ public class TeleOp extends OpMode {
          */
 
         if (this.gamepad2.right_trigger > 0.5) { // When right trigger is clicked
-            robot.extendArm.setPower(0.3);
+            robot.extendArm.setPower(armSpeed);
         } else if (this.gamepad2.left_trigger > 0.5) { // When left trigger is clicked
-            robot.extendArm.setPower(-0.3);
+            robot.extendArm.setPower(-armSpeed);
         } else {
             robot.extendArm.setPower(0);
         }
 
         if (this.gamepad2.left_bumper) {
+            armSpeed = 0.15;
         } else if (this.gamepad2.right_bumper) {
+            armSpeed = 0.3;
         }
 
         if (this.gamepad2.dpad_left) {
@@ -126,7 +126,7 @@ public class TeleOp extends OpMode {
         robot.fullLog("FrontRight", robot.frontRight.getPower());
         robot.fullLog("BackLeft", robot.backLeft.getPower());
         robot.fullLog("BackRight", robot.backRight.getPower());
-        robot.fullLog("Speed", speed);
+        robot.fullLog("Speed", moveSpeed);
         robot.telemetry.update();
     }
 
@@ -162,10 +162,10 @@ public class TeleOp extends OpMode {
         powers[3] = this.gamepad1.right_stick_y;
 
         double[] fp = new double[4];
-        fp[0] = (powers[1]+powers[0]-powers[2])*speed;
-        fp[1] = (powers[1]-powers[0]-powers[2])*speed;
-        fp[2] = (powers[1]-powers[0]+powers[2])*speed;
-        fp[3] = (powers[1]+powers[0]+powers[2])*speed;
+        fp[0] = (powers[1]+powers[0]-powers[2])* moveSpeed;
+        fp[1] = (powers[1]-powers[0]-powers[2])* moveSpeed;
+        fp[2] = (powers[1]-powers[0]+powers[2])* moveSpeed;
+        fp[3] = (powers[1]+powers[0]+powers[2])* moveSpeed;
 
         //double ma = Math.max(Math.max(Math.max(fp[0], fp[1]), fp[2]), fp[3]);
 

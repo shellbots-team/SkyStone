@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 
 @Autonomous(group = "Basic", name = "Basic: SkyStone")
-public class BasicSkyStone extends BaseSkystone {
+public class RedBasicSkyStone extends BaseSkystone {
 
     @Override
     public void runOpMode() {
 
         super.runOpMode();
 
-        // Setting status to "Ready to run"
+        // Step 0 - Setting status to "Ready to run"
         telemetry.addData("Status", "Ready To Run");
         telemetry.update();
 
@@ -28,10 +28,10 @@ public class BasicSkyStone extends BaseSkystone {
         // Step 2 - Detect correct block
         robot.fullLog("Status", "Step 2");
 
-        // Step 3 - Move sideways
+        // Step 3 - Move sideways (align with the block)
         robot.fullLog("Status", "Step 3");
 
-        // Step 4 - Move to block
+        // Step 4 - Move to block (drive forward)
         robot.fullLog("Status", "Step 4");
         robot.runInchesWithEncoders(4, 4);
 
@@ -60,7 +60,6 @@ public class BasicSkyStone extends BaseSkystone {
 
         // Step 11 - Dropping block
         robot.fullLog("Status", "Step 11");
-
 
         // Step 12 - Moving backwards to line
         robot.fullLog("Status", "Step 12");

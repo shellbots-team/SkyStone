@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 
 @Autonomous(group = "Basic", name = "Basic: Baseplate")
-public class BasicBaseplate extends BaseAutonomous {
+public class RedBasicBaseplate extends BaseAutonomous {
+
+    private final int SAFE_GUARD = 4;
 
     @Override
     public void runOpMode() {
@@ -26,7 +28,8 @@ public class BasicBaseplate extends BaseAutonomous {
 
         // Step 1 - Move to the baseplate
         robot.fullLog("Status", "Step 1");
-        robot.runInchesWithEncoders(DISTANCE_TO_BASEPLATE, DISTANCE_TO_BASEPLATE);
+        robot.runInchesWithEncoders(DISTANCE_TO_BASEPLATE-SAFE_GUARD, DISTANCE_TO_BASEPLATE-SAFE_GUARD);
+        robot.runInchesWithEncoders(SAFE_GUARD, SAFE_GUARD, 999, 0.5);
 
         // Step 2 - grab onto the baseplate
         robot.fullLog("Status", "Step 2");
@@ -35,7 +38,7 @@ public class BasicBaseplate extends BaseAutonomous {
 
         // Step 3 - Drag baseplate to corner
         robot.fullLog("Status", "Step 3");
-        robot.runInchesWithEncoders(-DISTANCE_TO_BASEPLATE, -DISTANCE_TO_BASEPLATE);
+        robot.runInchesWithEncoders(-(DISTANCE_TO_BASEPLATE+1), -(DISTANCE_TO_BASEPLATE+1));
 
         // Step 4 - Release the baseplate
         robot.fullLog("Status", "Step 4");
