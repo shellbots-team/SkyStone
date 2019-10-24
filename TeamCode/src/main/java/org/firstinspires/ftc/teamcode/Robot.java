@@ -211,16 +211,9 @@ port 2 - 6
 
         while ((!(opmode instanceof LinearOpMode) || ((LinearOpMode) opmode).opModeIsActive()) &&
             (leftArm.isBusy() && rightArm.isBusy())) {
-<<<<<<< HEAD
-            boolean isFullLog = runtime.milliseconds() % 250 == 0;
-
-            fullLog(isFullLog, "ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
-            fullLog(isFullLog, "ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
-=======
 
             fullLog("ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
             fullLog("ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
->>>>>>> Fixing github error
         }
 
         leftArm.setPower(0);
@@ -234,21 +227,12 @@ port 2 - 6
         }
     }
 
-<<<<<<< HEAD
-    public void raiseArm() {
-        powerArm(2, 0.3);
-    }
-
-    public void lowerArm() {
-        powerArm(-2, 0.3);
-=======
         public void lowerArm() {
             powerArm(1.15, 0.15);
         }
 
         public void raiseArm() {
             powerArm(-1.175, 0.2);
->>>>>>> Fixing github error
     }
 
     public void setServoPosition(CRServo crservo, double position) {
@@ -266,11 +250,7 @@ port 2 - 6
     }
 
     public void turnDegreesWithEncoders(double degrees, boolean goClockwise) {
-<<<<<<< HEAD
-        int inchTurn = (int) (degrees/15); // Math goes here
-=======
         int inchTurn = (int) (degrees/8.02);
->>>>>>> Fixing github error
         if (goClockwise) {
             runInchesWithEncoders(inchTurn, -inchTurn);
         } else {
@@ -362,8 +342,6 @@ port 2 - 6
         backRight.setPower(bR);
     }
 
-<<<<<<< HEAD
-=======
     public void grabHand() {
         setServoPosition(rightHand, 1.00);
         setServoPosition(leftHand, 0.00);
@@ -374,7 +352,6 @@ port 2 - 6
         setServoPosition(leftHand, 1.00);
     }
 
->>>>>>> Fixing github error
     public void setMotorPowersSideways(double pwr, boolean isRight) {
         if(isRight) {
             setMotorPowers(pwr, -pwr, -pwr, pwr);

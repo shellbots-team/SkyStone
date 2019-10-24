@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-<<<<<<< HEAD
-=======
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 import java.util.List;
 import java.util.Locale;
->>>>>>> Fixing github error
 
 /**
  * Created by shell on 09/24/2019.
@@ -30,11 +27,6 @@ public class RedBasicSkyStone extends BaseSkystone {
         // Waiting until user presses start
         waitForStart();
 
-<<<<<<< HEAD
-        // Step 1 - Lift arm to unblock camera
-        robot.fullLog("Status", "Step 1");
-        robot.raiseArm();
-=======
         //Step 1 - Getting ready to find skystone
         robot.fullLog("Status", "Step 1");
         robot.setMotorPowers(-0.75);
@@ -159,7 +151,6 @@ public class RedBasicSkyStone extends BaseSkystone {
         // Step 1 - Lift arm to unblock camera
         robot.fullLog("Status", "Step 1");
         robot.lowerArm();
->>>>>>> Fixing github error
 
         // Step 2 - Detect correct block
         robot.fullLog("Status", "Step 2");
@@ -173,22 +164,14 @@ public class RedBasicSkyStone extends BaseSkystone {
 
         // Step 5 - Lower arm
         robot.fullLog("Status", "Step 5");
-<<<<<<< HEAD
-        robot.lowerArm();
-=======
         robot.raiseArm();
->>>>>>> Fixing github error
 
         // Step 6 - Grab block
         robot.fullLog("Status", "Step 6");
 
         // Step 7 - Raise arm
         robot.fullLog("Status", "Step 7");
-<<<<<<< HEAD
-        robot.raiseArm();
-=======
         robot.lowerArm();
->>>>>>> Fixing github error
 
         // Step 8 - Moving back to wall
         robot.fullLog("Status", "Step 8");
@@ -212,11 +195,7 @@ public class RedBasicSkyStone extends BaseSkystone {
         }
         sleep(25);
         robot.setMotorPowers(0);
-<<<<<<< HEAD
-
-=======
 */
->>>>>>> Fixing github error
         // Step X - Finished
         robot.fullLog("Status", "Finished");
         robot.setMotorPowers(0);
