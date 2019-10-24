@@ -115,8 +115,12 @@ public class TeleOp extends OpMode {
         if (this.gamepad2.x) {
         } else if (this.gamepad2.b) {
         } else if (this.gamepad2.y) {
+<<<<<<< HEAD
             robot.setServoPosition(robot.rightHand, 1.00);
             robot.setServoPosition(robot.leftHand, 0.00);
+=======
+            robot.grabHand();
+>>>>>>> Fixing github error
         } else if (this.gamepad2.a) {
             robot.setServoPosition(robot.rightHand, 0.00);
             robot.setServoPosition(robot.leftHand, 1.00);

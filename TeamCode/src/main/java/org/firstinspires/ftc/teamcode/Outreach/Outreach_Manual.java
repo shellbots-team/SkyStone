@@ -51,9 +51,15 @@ public class Outreach_Manual extends LinearOpMode {
                 //markerPos = "down";
                 //markerServo.setPosition(0.2275);
             } else if (this.gamepad1.y) {
+<<<<<<< HEAD
                 //raiseArm();
             } else if (this.gamepad1.a) {
                 //lowerArm();
+=======
+                //lowerArm();
+            } else if (this.gamepad1.a) {
+                //raiseArm();
+>>>>>>> Fixing github error
                 markerPos = "up";
                 markerServo.setPosition(0.3);
             }
