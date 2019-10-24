@@ -21,38 +21,44 @@ public class RedBasicSkyStone extends BaseSkystone {
         super.runOpMode();
 
         // Step 0 - Setting status to "Ready to run"
-        telemetry.addData("Status", "Ready To Run");
-        telemetry.update();
+        robot.fullLogAndUpdate("Status", "Step 0 - Ready To Run");
 
         // Waiting until user presses start
         waitForStart();
 
-        //Step 1 - Getting ready to find skystone
-        robot.fullLog("Status", "Step 1");
+        //Step 1 - Driving until on corner tape
+        robot.fullLogAndUpdate("Status", "Step 1 - Driving until on corner tape");
         robot.setMotorPowers(-0.75);
         int i = 0;
         while (!robot.isOnLine() && opModeIsActive()) {
             i++;
             if (i % 10 == 0) {
-                robot.fullLog("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());
-                robot.telemetry.update();
+                robot.fullLogAndUpdate("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());
             }
         }
         robot.setMotorPowers(0);
 
+        // Step 2 - Running until on the wall
+        robot.fullLogAndUpdate("Status", "Step 2 - Driving until on the wall");
         robot.runInchesWithEncoders(-4, -4);
 
+        // Step 3 - Raising the arm
+        robot.fullLogAndUpdate("Status", "Step 3 - Raising the arm");
         robot.raiseArm();
 
+        // Step 4 - Driving until next to the blocks
+        robot.fullLogAndUpdate("Status", "Step 4 - Driving until next to blocks");
         robot.setMotorPowersSideways(0.75, false);
-
         sleep(1500);
 
+        // Step 5 - Driving next to blocks slowly
+        robot.fullLogAndUpdate("Status", "Step 5 - Driving next to blocks slowly");
         robot.setMotorPowers(0.25);
 
+        // Step 6 - If skystone seen, stop
+        robot.fullLogAndUpdate("Status", "Step 6 - Scanning for skystone");
         ElapsedTime currTime = new ElapsedTime();
         boolean elementNotFound = true;
-
         while (currTime.seconds() < 4 && opModeIsActive() && elementNotFound) {
             if (tfod != null) {
                 sleep(250);
@@ -66,138 +72,118 @@ public class RedBasicSkyStone extends BaseSkystone {
                     // step through the list of recognitions and display boundary info.
                     i = 0;
                     for (Recognition recognition : updatedRecognitions) {
-                        robot.fullLog(String.format(Locale.US, "Detection Number %d" +
-                                        "\nConfidence: %.03f " +
-                                        "\nLabel: %s" +
-                                        "\nLeft: %.03f\n Right: %.03f\n Top: %.03f\n Bottom: %.03f\n",
-                                i, recognition.getConfidence(), recognition.getLabel(), recognition.getLeft(), recognition.getRight(), recognition.getTop(), recognition.getBottom()));
+                        robot.fullLog("ObjectDetection",
+                                  "\nDetection Number " + i +
+                                        "\nLabel " + recognition.getLabel() +
+                                        "\nConfidence: " + recognition.getConfidence() +
+                                        "\nLeft: " + recognition.getLeft() +
+                                        "\nRight: " + recognition.getRight() +
+                                        "\nTop: " + recognition.getTop() +
+                                        "\nBottom: " + recognition.getBottom());
+                        i++;
                     }
+                    telemetry.update();
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel() == LABEL_SECOND_ELEMENT) {
-                            robot.fullLog("Found skystone");
+                            robot.fullLogAndUpdate("ObjectDetection", "Found skystone");
                             robot.setMotorPowers(0);
                             elementNotFound = false;
                         }
                     }
-                    telemetry.update();
                 }
             }
         }
 
-        robot.setMotorPowersSideways(0.75, false);
-
-        sleep(600);
-
+        // Step 7 - Stopping motors if block not found
+        robot.fullLogAndUpdate("Status", "Step 7 - Stopping motors if skystone not found");
         robot.setMotorPowers(0);
 
+        // Step 8 - Getting closer to grab a block
+        robot.fullLogAndUpdate("Status", "Step 8 - Getting closer to block in order to grab it");
+        robot.setMotorPowersSideways(0.75, false);
+        sleep(600);
+        robot.setMotorPowers(0);
+
+        // Step 9 - Dropping arm onto the block
+        robot.fullLogAndUpdate("Status", "Step 9 - Dropping arm onto the block");
         robot.lowerArm();
         sleep(250);
 
+        // Step 10 - Grabbing onto the block with hand
+        robot.fullLogAndUpdate("Status", "Step 10 - Grabbing the block with hand");
         robot.grabHand();
         sleep(500);
 
+        // Step 11 - Raising the arm
+        robot.fullLogAndUpdate("Status", "Step 11 - Raising the arm");
         robot.raiseArm();
         sleep(200);
 
+        // Step 12 - Turning to face the baseplate
+        robot.fullLogAndUpdate("Status", "Step 12 - Turning to look at the baseplate");
         robot.turnDegreesWithEncoders(90, true);
 
+        // Step 13 - Lowering the arm to fit under bridge
+        robot.fullLogAndUpdate("Status", "Step 13 - Lowering the arm to fit under the bridge");
         robot.lowerArm();
         sleep(300);
 
+        // Step 14 - Driving until on the midline
+        robot.fullLogAndUpdate("Status", "Step 14 - Driving until on the midline");
         robot.setMotorPowers(1.0);
         i = 0;
         while (!robot.isOnLine() && opModeIsActive()) {
             i++;
             if (i % 10 == 0) {
-                robot.fullLog("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());
-                robot.telemetry.update();
+                robot.fullLogAndUpdate("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());
             }
         }
         robot.setMotorPowers(0);
 
+        // Step 15 - Driving to baseplate
+        robot.fullLogAndUpdate("Status", "Step 15 - Driving to the baseplate");
         robot.runInchesWithEncoders(16, 16);
 
+        // Step 16 - Lowering the arm
+        robot.fullLogAndUpdate("Status", "Step 16 - Lowering the arm");
         robot.lowerArm();
         sleep(200);
 
+        // Step 17 - Releasing the block
+        robot.fullLogAndUpdate("Status", "Step 17 - Releasing the block");
         robot.releaseHand();
         sleep(200);
 
+        // Step 18 - Raising the arm
+        robot.fullLogAndUpdate("Status", "Step 18 - Raising the arm");
         robot.raiseArm();
         sleep(200);
 
+        // Step 19 - Driving away from baseplate
+        robot.fullLogAndUpdate("Status", "Step 19 - Driving away from the baseplate");
         robot.runInchesWithEncoders(-6, -6);
 
+        // Step 20 - Lowering the arm to fit under bridge
+        robot.fullLogAndUpdate("Status", "Step 20 - Lowering the arm in order to fit under the bridge");
         robot.lowerArm();
         sleep(200);
 
+        // Step 21 - Driving until on midline
+        robot.fullLogAndUpdate("Status", "Step 21 - Driving until on the midline");
         robot.setMotorPowers(-0.75);
         i = 0;
         while (!robot.isOnLine() && opModeIsActive()) {
             i++;
             if (i % 10 == 0) {
-                robot.fullLog("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());
-                robot.telemetry.update();
+                robot.fullLogAndUpdate("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());
             }
         }
+
+        // Step 22 - Stopping motors/finished
+        robot.fullLogAndUpdate("Status", "Step 22 - Stopping/Finished");
         robot.setMotorPowers(0);
-
-        sleep(10000);
-
         if (tfod != null) {
             tfod.shutdown();
         }
-/*
-        // Step 1 - Lift arm to unblock camera
-        robot.fullLog("Status", "Step 1");
-        robot.lowerArm();
-
-        // Step 2 - Detect correct block
-        robot.fullLog("Status", "Step 2");
-
-        // Step 3 - Move sideways (align with the block)
-        robot.fullLog("Status", "Step 3");
-
-        // Step 4 - Move to block (drive forward)
-        robot.fullLog("Status", "Step 4");
-        robot.runInchesWithEncoders(4, 4);
-
-        // Step 5 - Lower arm
-        robot.fullLog("Status", "Step 5");
-        robot.raiseArm();
-
-        // Step 6 - Grab block
-        robot.fullLog("Status", "Step 6");
-
-        // Step 7 - Raise arm
-        robot.fullLog("Status", "Step 7");
-        robot.lowerArm();
-
-        // Step 8 - Moving back to wall
-        robot.fullLog("Status", "Step 8");
-        robot.runInchesWithEncoders(-4, -4);
-
-        // Step 9 - Turning to baseplate
-        robot.fullLog("Status", "Step 9");
-        robot.turnDegreesWithEncoders(90, true);
-
-        // Step 10 - Moving to baseplate
-        robot.fullLog("Status", "Step 10");
-        robot.runInchesWithEncoders(12, 12);
-
-        // Step 11 - Dropping block
-        robot.fullLog("Status", "Step 11");
-
-        // Step 12 - Moving backwards to line
-        robot.fullLog("Status", "Step 12");
-        while (!robot.isOnLine()) {
-            robot.setMotorPowers(-1);
-        }
-        sleep(25);
-        robot.setMotorPowers(0);
-*/
-        // Step X - Finished
-        robot.fullLog("Status", "Finished");
-        robot.setMotorPowers(0);
     }
 }

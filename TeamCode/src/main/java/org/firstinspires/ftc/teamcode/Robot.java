@@ -186,6 +186,11 @@ port 2 - 6
         telemetry.addData(caption, value);
     }
 
+    public void fullLogAndUpdate(String caption, String value) {
+        fullLog(caption, value);
+        telemetry.update();
+    }
+
     public void powerArm(double height, double speed) {
         if (opmode instanceof LinearOpMode && !((LinearOpMode) opmode).opModeIsActive()) {
             return;
@@ -214,6 +219,7 @@ port 2 - 6
 
             fullLog("ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
             fullLog("ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
+            telemetry.update();
         }
 
         leftArm.setPower(0);
@@ -227,11 +233,11 @@ port 2 - 6
         }
     }
 
-        public void lowerArm() {
+    public void lowerArm() {
             powerArm(1.15, 0.15);
         }
 
-        public void raiseArm() {
+    public void raiseArm() {
             powerArm(-1.175, 0.2);
     }
 
