@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Disabled
 public class BaseAutonomous extends LinearOpMode {
 
-    Robot robot = new Robot();
-    static final double DISTANCE_TO_BASEPLATE = 16.3;
+    public Robot robot = new Robot();
+    public static final double DISTANCE_TO_BASEPLATE = 16.3;
 
     @Override
     public void runOpMode() {

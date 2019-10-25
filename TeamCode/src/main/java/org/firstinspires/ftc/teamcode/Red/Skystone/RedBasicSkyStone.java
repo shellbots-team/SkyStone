@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Red.Skystone;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.BaseSkystone;
 
 import java.util.List;
 import java.util.Locale;
@@ -12,7 +14,8 @@ import java.util.Locale;
  * Created by shell on 09/24/2019.
  */
 
-@Autonomous(group = "Basic", name = "Basic: SkyStone")
+@Disabled
+@Autonomous(group = "Basic", name = "Red: SkyStone")
 public class RedBasicSkyStone extends BaseSkystone {
 
     @Override

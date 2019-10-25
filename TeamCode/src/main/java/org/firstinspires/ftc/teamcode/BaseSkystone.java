@@ -16,14 +16,14 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 @Disabled
 public class BaseSkystone extends BaseAutonomous {
 
-    static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    static final String LABEL_FIRST_ELEMENT = "Stone";
-    static final String LABEL_SECOND_ELEMENT = "Skystone";
+    public static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    public static final String LABEL_FIRST_ELEMENT = "Stone";
+    public static final String LABEL_SECOND_ELEMENT = "Skystone";
 
     private static final String VUFORIA_KEY = "AZUaS/D/////AAABmd9bAfIzFEvNp68QYPiUGWod1bqxZ/G6UuphfSOO67letJ25Ep2V5E/VfwlFektkz7sNxqkGiOXlTjCcLqVgj/eUwRxum4kkhFHDXZyjrKRb2U7xZaiv+tXxRLS52MnwFzzsUJZOZ0m9d5z3h0wBxL+yeA0bZHMKkIDdHlol+oxI+oTIlj/HtIJ0lqJMSBx40vrLg5Tx91849XDXFWtY9/CAsJbTUkYmLUniWHyolCF4UJ/mXSuyh0OMfaicPRPT4Ue0b0UKM9Z/PFOrqHeE57zO2e9zMBIG9ihPXbjF68ZZcAGfWIzA6uC3QdLwInO0DxR4iDCKqO6fCV+9EWQx8Xcde3yxdMX/E39+Sr+PpAw5";
 
-    private VuforiaLocalizer vuforia;
-    TFObjectDetector tfod;
+    public VuforiaLocalizer vuforia;
+    public TFObjectDetector tfod;
 
     @Override
     public void runOpMode() {

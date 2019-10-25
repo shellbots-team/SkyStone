@@ -52,14 +52,14 @@ public class TeleOp extends OpMode {
 
         powerMotors();
 
-        if (this.gamepad1.right_trigger > 0.5) { // When right trigger is clicked
-            moveSpeed = 1.0;
-        } else if (this.gamepad1.left_trigger > 0.5) { // When left trigger is clicked
-            moveSpeed = 0.5;
+        if (this.gamepad1.right_trigger > 0.5) {
+        } else if (this.gamepad1.left_trigger > 0.5) {
         }
 
-        if (this.gamepad1.left_bumper) {
-        } else if (this.gamepad1.right_bumper) {
+        if (this.gamepad1.right_bumper) {
+            moveSpeed = 1.0;
+        } else if (this.gamepad1.left_bumper) {
+            moveSpeed = 0.5;
         }
 
         if (this.gamepad1.dpad_left) {

@@ -1,12 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Red.Baseplate;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.teamcode.BaseAutonomous;
 
 /**
  * Created by shell on 09/24/2019.
  */
 
-@Autonomous(group = "Basic", name = "Basic: Baseplate")
+@Autonomous(group = "Basic", name = "Red: Baseplate")
 public class RedBasicBaseplate extends BaseAutonomous {
 
     private final int SAFE_GUARD = 4;
@@ -26,6 +28,9 @@ public class RedBasicBaseplate extends BaseAutonomous {
 
         robot.releaseBaseplate();
 
+        robot.driveRight();
+        sleep(600);
+
         // Step 1 - Move near the baseplate
         robot.fullLogAndUpdate("Status", "Step 1 - Moving near the baseplate");
         robot.runInchesWithEncoders(DISTANCE_TO_BASEPLATE-SAFE_GUARD, DISTANCE_TO_BASEPLATE-SAFE_GUARD);
@@ -41,7 +46,7 @@ public class RedBasicBaseplate extends BaseAutonomous {
 
         // Step 4 - Drag baseplate to corner
         robot.fullLogAndUpdate("Status", "Step 4 - Dragging baseplate to the corner");
-        robot.runInchesWithEncoders(-(DISTANCE_TO_BASEPLATE+1), -(DISTANCE_TO_BASEPLATE+1));
+        robot.runInchesWithEncoders(-(DISTANCE_TO_BASEPLATE+2), -(DISTANCE_TO_BASEPLATE+2));
 
         // Step 5 - Release the baseplate
         robot.fullLogAndUpdate("Status", "Step 5 - Releasing the baseplate");
@@ -72,8 +77,12 @@ public class RedBasicBaseplate extends BaseAutonomous {
         sleep(250);
         robot.setMotorPowers(0);
 
-        // Step 9 - Finished
-        robot.fullLogAndUpdate("Status", "Step 9 - Stopping motors/finished");
+        // Step 9 - Run back to wall
+        robot.fullLogAndUpdate("Status", "Step 9");
+        robot.runInchesWithEncoders(-2, -2);
+
+        // Step 10 - Finished
+        robot.fullLogAndUpdate("Status", "Step 10 - Stopping motors/finished");
         robot.setMotorPowers(0);
 
     }
