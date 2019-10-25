@@ -140,10 +140,10 @@ public class TeleOp extends OpMode {
     }
 
     private void powerMotors() {
-        double leftX = this.gamepad1.left_stick_x;
-        double leftY = -this.gamepad1.left_stick_y;
-        double rightX = this.gamepad1.right_stick_x;
-        double rightY = -this.gamepad1.right_stick_y;
+        double leftX = this.gamepad1.left_stick_x * moveSpeed;
+        double leftY = -this.gamepad1.left_stick_y * moveSpeed;
+        double rightX = this.gamepad1.right_stick_x * moveSpeed;
+        double rightY = -this.gamepad1.right_stick_y * moveSpeed;
 
         if((leftX > 0.2 && rightX > 0.2) || (leftX < -0.2 && rightX < -0.2)) {
             robot.setMotorPowers(leftX, -leftX, -rightX, rightX);

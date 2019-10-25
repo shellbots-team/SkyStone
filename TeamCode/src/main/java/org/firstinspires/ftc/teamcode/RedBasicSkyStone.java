@@ -42,24 +42,27 @@ public class RedBasicSkyStone extends BaseSkystone {
         robot.fullLogAndUpdate("Status", "Step 2 - Driving until on the wall");
         robot.runInchesWithEncoders(-4, -4);
 
-        // Step 3 - Raising the arm
-        robot.fullLogAndUpdate("Status", "Step 3 - Raising the arm");
-        robot.raiseArm();
-
         // Step 4 - Driving until next to the blocks
         robot.fullLogAndUpdate("Status", "Step 4 - Driving until next to blocks");
         robot.setMotorPowersSideways(0.75, false);
-        sleep(1500);
+        sleep(1350);
+        robot.setMotorPowers(0);
+        sleep(250);
+
+        // Step 3 - Raising the arm
+        robot.fullLogAndUpdate("Status", "Step 3 - Raising the arm");
+        robot.raiseArm();
+        sleep(250);
 
         // Step 5 - Driving next to blocks slowly
         robot.fullLogAndUpdate("Status", "Step 5 - Driving next to blocks slowly");
-        robot.setMotorPowers(0.25);
+        robot.setMotorPowers(0.5);
 
         // Step 6 - If skystone seen, stop
         robot.fullLogAndUpdate("Status", "Step 6 - Scanning for skystone");
         ElapsedTime currTime = new ElapsedTime();
         boolean elementNotFound = true;
-        while (currTime.seconds() < 4 && opModeIsActive() && elementNotFound) {
+        while (currTime.seconds() < 3 && opModeIsActive() && elementNotFound) {
             if (tfod != null) {
                 sleep(250);
                 // getUpdatedRecognitions() will return null if no new information is available since
@@ -86,13 +89,14 @@ public class RedBasicSkyStone extends BaseSkystone {
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel() == LABEL_SECOND_ELEMENT) {
                             robot.fullLogAndUpdate("ObjectDetection", "Found skystone");
-                            robot.setMotorPowers(0);
                             elementNotFound = false;
                         }
                     }
                 }
             }
         }
+
+        sleep(250);
 
         // Step 7 - Stopping motors if block not found
         robot.fullLogAndUpdate("Status", "Step 7 - Stopping motors if skystone not found");
@@ -112,7 +116,7 @@ public class RedBasicSkyStone extends BaseSkystone {
         // Step 10 - Grabbing onto the block with hand
         robot.fullLogAndUpdate("Status", "Step 10 - Grabbing the block with hand");
         robot.grabHand();
-        sleep(500);
+        sleep(2000);
 
         // Step 11 - Raising the arm
         robot.fullLogAndUpdate("Status", "Step 11 - Raising the arm");

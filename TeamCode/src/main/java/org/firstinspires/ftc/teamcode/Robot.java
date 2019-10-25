@@ -34,12 +34,17 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.CRServoImpl;
+import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.ServoControllerEx;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -78,6 +83,7 @@ public class Robot {
     public CRServo rightHand = null;
 
     public ColorSensor colorSensor = null;
+    public TouchSensor touchSensor = null;
 
     public static final double MID_SERVO = 0.5;
 
@@ -162,6 +168,7 @@ port 2 - 6
 
         // Define and initialize ALL sensors
         colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
+        touchSensor = this.hardwareMap.get(TouchSensor.class, "touchSensor");
     }
 
     public void fullLog(String caption, double value) {
@@ -215,7 +222,7 @@ port 2 - 6
         rightArm.setPower(Math.abs(speed));
 
         while ((!(opmode instanceof LinearOpMode) || ((LinearOpMode) opmode).opModeIsActive()) &&
-            (leftArm.isBusy() && rightArm.isBusy())) {
+            (leftArm.isBusy() && rightArm.isBusy()) && !touchSensor.isPressed()) {
 
             fullLog("ArmPath", String.format(Locale.US, "Runnning to %7d", armTarget));
             fullLog("ArmPath2", String.format(Locale.US, "Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
@@ -234,15 +241,20 @@ port 2 - 6
     }
 
     public void lowerArm() {
-            powerArm(1.15, 0.15);
+            powerArm(1.05, 0.15);
         }
 
     public void raiseArm() {
-            powerArm(-1.175, 0.2);
+            powerArm(-1.215, 0.2);
     }
 
     public void setServoPosition(CRServo crservo, double position) {
         crservo.getController().setServoPosition(crservo.getPortNumber(), position);
+//        ServoControllerEx pwmControl = ((ServoControllerEx) crservo.getController());
+//        int servoNum = crservo.getPortNumber();
+//        pwmControl.setServoPwmEnable(servoNum);
+//        pwmControl.setServoPwmRange(servoNum,);
+//        pwmControl.setServoPosition(servoNum, 0);
     }
 
     public void grabBaseplate() {
