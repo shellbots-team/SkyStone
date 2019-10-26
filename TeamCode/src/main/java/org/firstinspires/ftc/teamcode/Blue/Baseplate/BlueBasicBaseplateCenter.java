@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.Blue.Baseplate;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.BaseAutonomous;
 
 /**
- * Created by shell on 10/25/2019.
+ * Created by shell on 10/26/2019.
  */
 
-@Autonomous(group = "Basic", name = "Blue: Baseplate")
-public class BlueBasicBaseplate extends BaseAutonomous {
+@Autonomous(group = "Basic", name = "Blue: BaseplateCenter")
+public class BlueBasicBaseplateCenter extends BaseAutonomous {
 
 	private final int SAFE_GUARD = 4;
 
@@ -59,11 +60,25 @@ public class BlueBasicBaseplate extends BaseAutonomous {
 		sleep(2000);
 		robot.setMotorPowers(0);
 
+		robot.runInchesWithEncoders(5, 5);
+
+		robot.driveLeft();
+		sleep(800);
+		robot.setMotorPowers(0);
+
+		robot.driveRight();
+		sleep(500);
+		robot.setMotorPowers(0);
+
+		robot.runInchesWithEncoders(7, 7);
+
 		// Step 7 - Move until on the midline
 		robot.fullLogAndUpdate("Status", "Step 7 - Moving until on the midline");
 		robot.driveRight();
 		int i = 0;
-		while (!robot.isOnLine() && opModeIsActive()) {
+		ElapsedTime rt = new ElapsedTime();
+		rt.reset();
+		while (!robot.isOnLine() && opModeIsActive() && rt.seconds() < 4.5) {
 			i++;
 			if( i % 10 == 0) {
 				robot.fullLogAndUpdate("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());
@@ -76,10 +91,6 @@ public class BlueBasicBaseplate extends BaseAutonomous {
 		robot.driveLeft();
 		sleep(250);
 		robot.setMotorPowers(0);
-
-		// Step 9 - Run back to wall
-		robot.fullLogAndUpdate("Status", "Step 9");
-		robot.runInchesWithEncoders(-2, -2);
 
 		// Step 10 - Finished
 		robot.fullLogAndUpdate("Status", "Step 10 - Stopping motors/finished");

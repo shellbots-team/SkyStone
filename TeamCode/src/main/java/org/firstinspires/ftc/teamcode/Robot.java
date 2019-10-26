@@ -299,8 +299,8 @@ port 2 - 6
         int newLeftTarget = frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
         int newRightTarget = frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
         frontLeft.setTargetPosition(newLeftTarget);
-        backLeft.setTargetPosition(newLeftTarget);
         frontRight.setTargetPosition(newRightTarget);
+        backLeft.setTargetPosition(newLeftTarget);
         backRight.setTargetPosition(newRightTarget);
 
         // Turn On RUN_TO_POSITION
@@ -321,8 +321,8 @@ port 2 - 6
         // onto the next step, use (isBusy() || isBusy()) in the loop test.
         while ((!(opmode instanceof LinearOpMode) || ((LinearOpMode) opmode).opModeIsActive()) &&
                 (runtime.seconds() < maxSeconds) &&
-                (frontLeft.isBusy() && backLeft.isBusy() &&
-                        frontRight.isBusy() && backRight.isBusy())) {
+                (frontLeft.isBusy() && frontRight.isBusy() &&
+                        backLeft.isBusy() && backRight.isBusy())) {
 
             fullLog( "Path1", String.format(Locale.US, "Running to %7d :%7d", newLeftTarget, newRightTarget));
             fullLog( "Path2", String.format(Locale.US, "Running at %7d :%7d and %7d :%7d",

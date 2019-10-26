@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Red.Baseplate;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.BaseAutonomous;
 
@@ -8,8 +9,8 @@ import org.firstinspires.ftc.teamcode.BaseAutonomous;
  * Created by shell on 09/24/2019.
  */
 
-@Autonomous(group = "Basic", name = "Red: Baseplate")
-public class RedBasicBaseplate extends BaseAutonomous {
+@Autonomous(group = "Basic", name = "Red: BaseplateWall")
+public class RedBasicBaseplateWall extends BaseAutonomous {
 
     private final int SAFE_GUARD = 4;
 
@@ -59,11 +60,21 @@ public class RedBasicBaseplate extends BaseAutonomous {
         sleep(2000);
         robot.setMotorPowers(0);
 
+        robot.runInchesWithEncoders(5, 5);
+
+        robot.driveRight();
+        sleep(800);
+        robot.setMotorPowers(0);
+
+        robot.runInchesWithEncoders(-5, -5);
+
         // Step 7 - Move until on the midline
         robot.fullLogAndUpdate("Status", "Step 7 - Moving until on the midline");
         robot.driveLeft();
         int i = 0;
-        while (!robot.isOnLine() && opModeIsActive()) {
+        ElapsedTime rt = new ElapsedTime();
+        rt.reset();
+        while (!robot.isOnLine() && opModeIsActive() && rt.seconds() < 4.5) {
             i++;
             if( i % 10 == 0) {
                 robot.fullLogAndUpdate("Color", robot.colorSensor.red() + " : " + robot.colorSensor.green() + " : " + robot.colorSensor.blue());

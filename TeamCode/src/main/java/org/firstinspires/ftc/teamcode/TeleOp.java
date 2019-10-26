@@ -15,6 +15,7 @@ public class TeleOp extends OpMode {
     // Creating a moveSpeed variable
     private double moveSpeed = 1.0;
     private double armSpeed = 0.3;
+    private boolean singleJoystick = true;
 
 
     /**
@@ -50,7 +51,11 @@ public class TeleOp extends OpMode {
          * Controller 1 settings
          */
 
-        powerMotors();
+        if(singleJoystick) {
+            singleJoystickDrive();
+        } else {
+            twoJoystickDrive();
+        }
 
         if (this.gamepad1.right_trigger > 0.5) {
         } else if (this.gamepad1.left_trigger > 0.5) {
@@ -70,10 +75,13 @@ public class TeleOp extends OpMode {
             robot.grabBaseplate();
         }
 
+        if (this.gamepad1.y && this.gamepad1.a) { singleJoystick = true; }
+        if (this.gamepad1.x && this.gamepad1.b) { singleJoystick = false; }
+
         if (this.gamepad1.x) {
         } else if (this.gamepad1.b) {
         } else if (this.gamepad1.y) {
-        } else if (this.gamepad1.a) {
+        } if (this.gamepad1.a) {
         }
 
         /**
@@ -115,10 +123,10 @@ public class TeleOp extends OpMode {
         if (this.gamepad2.x) {
         } else if (this.gamepad2.b) {
         } else if (this.gamepad2.y) {
-            robot.grabHand();
-        } else if (this.gamepad2.a) {
             robot.setServoPosition(robot.rightHand, 0.00);
             robot.setServoPosition(robot.leftHand, 1.00);
+        } else if (this.gamepad2.a) {
+            robot.grabHand();
         }
 
         robot.fullLog("FrontLeft", robot.frontLeft.getPower());
@@ -139,7 +147,7 @@ public class TeleOp extends OpMode {
         robot.telemetry.update();
     }
 
-    private void powerMotors() {
+    private void twoJoystickDrive() {
         double leftX = this.gamepad1.left_stick_x * moveSpeed;
         double leftY = -this.gamepad1.left_stick_y * moveSpeed;
         double rightX = this.gamepad1.right_stick_x * moveSpeed;
@@ -152,12 +160,12 @@ public class TeleOp extends OpMode {
         }
     }
 
-    private void oldPowerMotors() {
+    private void singleJoystickDrive() {
         // New robot powering math...
         double[] powers = new double[4]; // [leftX, leftY, rightX, rightY]
         powers[0] = this.gamepad1.left_stick_x;
         powers[1] = -(this.gamepad1.left_stick_y);
-        powers[2] = this.gamepad1.right_stick_x;
+        powers[2] = -(this.gamepad1.right_stick_x);
         powers[3] = this.gamepad1.right_stick_y;
 
         double[] fp = new double[4];
