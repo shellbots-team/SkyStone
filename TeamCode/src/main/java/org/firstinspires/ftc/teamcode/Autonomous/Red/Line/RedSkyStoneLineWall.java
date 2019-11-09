@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BasicLine;
  * Created by shell on 10/26/2019.
  */
 
-@Autonomous(group = "Red:ZLine:SkyStone", name = "Red: Line: Baseplate Wall")
+@Autonomous(group = "Red:ZLine:SkyStone", name = "Red: Line: SkyStone Wall")
 public class RedSkyStoneLineWall extends BasicLine {
 	@Override
 	protected Side getStartingSide() {

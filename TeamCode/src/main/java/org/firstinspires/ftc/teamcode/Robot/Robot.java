@@ -65,8 +65,8 @@ public class Robot {
 	public Arm arm = null;
 	public ObjectDetection objectDetection = null;
 
-	private CRServo leftGrip = null;
-	private CRServo rightGrip = null;
+	public CRServo leftGrip = null;
+	public CRServo rightGrip = null;
 
 	private ColorSensor colorSensor = null;
 

@@ -48,13 +48,13 @@ public abstract class BasicLine extends BaseAutonomous {
 		}
 
 		// Step 5 - Running into wall/bridge
-		if (getFinalPlacement() == Placement.CENTER) {
-			logger.statusLog(step++, "Running into bridge");
-			robot.drivetrain.runDistance(1, 1);
-		} else {
-			logger.statusLog(step++, "Running into wall");
-			robot.drivetrain.runDistance(-2, -2);
-		}
+//		if (getFinalPlacement() == Placement.CENTER) {
+//			logger.statusLog(step++, "Running into bridge");
+//			robot.drivetrain.runDistance(1, 1);
+//		} else {
+//			logger.statusLog(step++, "Running into wall");
+//			robot.drivetrain.runDistance(-2, -2);
+//		}
 
 	}
 

@@ -81,7 +81,7 @@ public class TeleOp extends OpMode {
 		 * Controller 1 settings
 		 */
 
-		powerMotors();
+		singleJoystickDrive();
 
 		if (this.gamepad1.right_trigger > 0.5) {
 			speed = 1.0;
@@ -95,14 +95,15 @@ public class TeleOp extends OpMode {
 		}
 
 		if (this.gamepad1.dpad_up) {
-			robot.releaseBaseplate();
+			robot.leftGrip.setPower(1.0);
+			//robot.releaseBaseplate();
 		} else if (this.gamepad1.dpad_down) {
-			robot.grabBaseplate();
-		}
-
-		if (this.gamepad1.dpad_left) {
-		}
-		if (this.gamepad1.dpad_right) {
+			robot.leftGrip.setPower(0.0);
+			//robot.grabBaseplate();
+		} else if (this.gamepad1.dpad_left) {
+			robot.leftGrip.getController().setServoPosition(robot.leftGrip.getPortNumber(), 1.0);
+		} else if (this.gamepad1.dpad_right) {
+			robot.leftGrip.getController().setServoPosition(robot.leftGrip.getPortNumber(), 0.0);
 		}
 
 		if (this.gamepad1.y) {
@@ -155,7 +156,7 @@ public class TeleOp extends OpMode {
 		}
 
 
-		robot.logTeleOpData();
+		robot.arm.logTeleOpData();
 		logger.numberLog("Speed", speed);
 		logger.update();
 	}
@@ -170,30 +171,24 @@ public class TeleOp extends OpMode {
 		logger.update();
 	}
 
-	private void powerMotors() {
-		double leftX = this.gamepad1.left_stick_x; // Side-to-side movement
-		double leftY = -this.gamepad1.right_stick_y; // Forward/backward movement
-		double rightX = this.gamepad1.right_stick_x; // Turning movement
-		double rightY = this.gamepad1.right_stick_y; // N/A
+	private void singleJoystickDrive() {
+		// New robot powering math...
+		double[] powers = new double[4]; // [leftX, leftY, rightX, rightY]
+		double leftX = this.gamepad1.left_stick_x;
+		double leftY = this.gamepad1.left_stick_y;
+		double rightX = this.gamepad1.right_stick_x;
+		double rightY = this.gamepad1.right_stick_y;
 
 		double[] motorPowers = new double[4];
+		motorPowers[0] = (leftY-leftX-rightX) * speed;
+		motorPowers[1] = (leftY+leftX+rightX) * speed;
+		motorPowers[2] = (leftY+leftX-rightX) * speed;
+		motorPowers[3] = (leftY-leftX+rightX) * speed;
 
-		motorPowers[0] = (leftY + leftX - rightX) * speed; // Front left
-		motorPowers[1] = (leftY - leftX + rightX) * speed; // Front right
-		motorPowers[2] = (leftY - leftX - rightX) * speed; // Back left
-		motorPowers[3] = (leftY + leftX + rightX) * speed; // Back right
-
-		// Normalizing motor powers (removing above/below max/min powers and removing very low power
-		for (int i = 0; i < motorPowers.length; i++) {
-			if (motorPowers[i] < 0.05 && motorPowers[i] > -0.05) {
-				motorPowers[i] = 0;
-			}
-			if (motorPowers[i] > 1.0) {
-				motorPowers[i] = 1;
-			}
-			if (motorPowers[i] < -1.0) {
-				motorPowers[i] = -1;
-			}
+		for(int i = 0; i < motorPowers.length; i++) {
+			if(motorPowers[i] < 0.05 && motorPowers[i] > -0.05) { motorPowers[i] = 0.0; }
+			if(motorPowers[i] > 1.0) { motorPowers[i] = 1.0; }
+			if(motorPowers[i] < -1.0) { motorPowers[i] = -1.0; }
 		}
 
 		robot.drivetrain.setIndividualPowers(motorPowers);

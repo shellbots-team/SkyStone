@@ -28,7 +28,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 2 = Moving to be aligned with center of baseplate
 		logger.statusLog(step++, "Moving to be aligned with center of baseplate");
-		moveTowardsLoadingZone(600, 1.0);
+		moveTowardsBuildingZone(600, 1.0);
 
 		// Step 3 - Move near the baseplate
 		logger.statusLog(step++, "Moving near the baseplate");

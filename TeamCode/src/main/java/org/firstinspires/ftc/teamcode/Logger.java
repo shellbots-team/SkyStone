@@ -9,7 +9,7 @@ import java.util.Locale;
 public class Logger {
 
 	private Telemetry telemetry;
-	private static final int HOW_OFTEN_LOG = 5;
+	private static final int HOW_OFTEN_LOG = 3;
 	private int i = 1;
 
 	public Logger(Telemetry telemetry) {

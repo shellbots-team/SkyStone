@@ -32,10 +32,10 @@ public class Drivetrain extends RobotComponent {
 		this.backLeft = backLeft;
 		this.backRight = backRight;
 
-		frontLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-		backLeft.setDirection(DcMotor.Direction.FORWARD);
-		frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-		backRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+		frontLeft.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+		backLeft.setDirection(DcMotor.Direction.REVERSE);
+		frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+		backRight.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
 		setAllPowers(0);
 
@@ -89,8 +89,7 @@ public class Drivetrain extends RobotComponent {
 		}
 
 		// Reset encoder values
-		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
-
+		// setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
 		int newLeftTarget = frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
 		int newRightTarget = frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
 		frontLeft.setTargetPosition(newLeftTarget);
@@ -142,7 +141,7 @@ public class Drivetrain extends RobotComponent {
 	}
 
 	public void setPowerRight(double power) {
-		setIndividualPowers(power, -power, -power, power);
+		setIndividualPowers(power,-power, -power, power);
 	}
 
 

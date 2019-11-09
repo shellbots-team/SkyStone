@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -50,10 +52,15 @@ public class Arm extends RobotComponent {
 	}
 
 	@Override
-	void logTeleOpData() {
-		logger.numberLog("Leftarm", leftArm.getPower());
-		logger.numberLog("Rightarm", rightArm.getPower());
-		logger.numberLog("Extendarm", extendArm.getPower());
+	public void logTeleOpData() {
+//		logger.numberLog("Leftarm", leftArm.getPower());
+//		logger.numberLog("Rightarm", rightArm.getPower());
+//		logger.numberLog("Extendarm", extendArm.getPower());
+		ServoController controller = leftHand.getController();
+		logger.numberLog("LeftPos", controller.getServoPosition(leftHand.getPortNumber()));
+		logger.numberLog("LeftPow", leftHand.getPower());
+		logger.numberLog("RightPos", controller.getServoPosition(rightHand.getPortNumber()));
+		logger.numberLog("RightPow", rightHand.getPower());
 	}
 
 	public 	void elevateDistance(double height, double speed) {
@@ -128,7 +135,7 @@ public class Arm extends RobotComponent {
 	}
 
 	public void releaseHand() {
-		setServoPosition(rightHand, 0);
+		setServoPosition(rightHand,0);
 		setServoPosition(leftHand, 1);
 	}
 
