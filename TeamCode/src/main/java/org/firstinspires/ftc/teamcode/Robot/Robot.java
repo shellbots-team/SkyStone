@@ -138,12 +138,12 @@ public class Robot {
 	}
 
 	public void grabBaseplate() {
-		setServoPosition(leftGrip, 1);
-		setServoPosition(rightGrip, 0.5);
+		setServoPosition(leftGrip, 0);
+		setServoPosition(rightGrip, 0);
 	}
 
 	public void releaseBaseplate() {
-		setServoPosition(leftGrip, 0);
+		setServoPosition(leftGrip, 1);
 		setServoPosition(rightGrip, 1);
 	}
 

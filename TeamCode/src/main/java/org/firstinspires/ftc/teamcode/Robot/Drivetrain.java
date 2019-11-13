@@ -89,7 +89,7 @@ public class Drivetrain extends RobotComponent {
 		}
 
 		// Reset encoder values
-		// setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
+		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
 		int newLeftTarget = frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
 		int newRightTarget = frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
 		frontLeft.setTargetPosition(newLeftTarget);

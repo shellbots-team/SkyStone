@@ -173,7 +173,6 @@ public class TeleOp extends OpMode {
 
 	private void singleJoystickDrive() {
 		// New robot powering math...
-		double[] powers = new double[4]; // [leftX, leftY, rightX, rightY]
 		double leftX = this.gamepad1.left_stick_x;
 		double leftY = this.gamepad1.left_stick_y;
 		double rightX = this.gamepad1.right_stick_x;

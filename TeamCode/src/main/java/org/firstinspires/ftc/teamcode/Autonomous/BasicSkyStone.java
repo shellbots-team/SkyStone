@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.Robot.ObjectDetection;
+
 /**
  * Created by shell on 09/24/2019.
  */
@@ -63,20 +67,32 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		logger.statusLog(step++, "Initializing object detection");
 		robot.objectDetection.initializeObjectDetection();
 
-		// Step 2 - Driving until on the center tape
-		logger.statusLog(step++, "Driving until on the center tape");
-		moveTowardsBuildingZone(0, 0.75);
-		robot.stopWhenOnLine(2);
-
-		// Step 3 - Driving to be aligned with the last block
-		logger.statusLog(step++, "Driving to be aligned with final block");
-		moveTowardsLoadingZone(5, 5);
-
-		// Step 4 - Drive to be near the SkyStone
+		// Step 2 - Drive to be near the SkyStone
 		logger.statusLog(step++, "Driving to be near the SkyStones");
 		robot.drivetrain.setPowerLeft(1.0);
 		sleep(1350);
 		robot.drivetrain.stopAllMotors();
+
+		// Checking position of skystone
+		logger.statusLog(step++, "Finding position of skystone");
+		Recognition skystone = robot.objectDetection.getSkyStone();
+		byte position;
+		if(skystone.getRight() > 100) {
+			position = 1;
+		} else if(skystone.getRight() < -100) {
+			position = -1;
+		} else {
+			position = 0;
+		}
+
+		if(getColor() == Color.BLUE) { position *= -1; }
+
+		logger.statusLog(step++, "Finding moving to position");
+		if(position == 1) {
+			moveTowardsBuildingZone(5.0, 5.0);
+		} else if(position == -1) {
+			moveTowardsLoadingZone(5.0, 5.0);
+		}
 
 		// Step 5 - Raising arm
 		logger.statusLog(step++, "Raising arm");
@@ -84,18 +100,8 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		// Step 6 - Slowly driving next to blocks
 		logger.statusLog(step++, "Slowly driving next to blocks");
-		moveTowardsLoadingZone(0, 0.5);
-
-		// Step 7 - Stopping when block is detected
-		logger.statusLog(step++, "Stopping when block is detected");
-		ElapsedTime elapsedTime = new ElapsedTime();
-		while (elapsedTime.seconds() < 3 && opModeIsActive() && !robot.objectDetection.isSkyStone()) {}
-		robot.drivetrain.stopAllMotors();
-
-		// Step 8 - Moving next to the correct block
-		logger.statusLog(step++, "Moving next to the correct block");
-		robot.drivetrain.setPowerLeft(0.75);
-		sleep(600);
+		robot.drivetrain.setPowerRight(0.25);
+		sleep(250);
 		robot.drivetrain.stopAllMotors();
 
 		// Step 9 - Lowering arm
@@ -111,23 +117,29 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		// Step 11 - Re-raise the arm
 		logger.statusLog(step++, "Re-raising the arm");
 		robot.arm.raiseArm();
+		sleep(500);
 
 		// Step 12 - Turning to face the baseplate
 		logger.statusLog(step++, "Turning to face the baseplate");
-		robot.drivetrain.turnDegrees(90, true, 1.0);
+		if(getColor() == Color.RED) {
+			robot.drivetrain.turnDegrees(90, true, 1.0);
+		} else {
+			robot.drivetrain.turnDegrees(90, false, 1.0);
+		}
 
 		// Step 13 - Lowering the arm
 		logger.statusLog(step++, "Lowering the arm");
 		robot.arm.lowerArm();
+		sleep(500);
 
 		// Step 14 - Driving until on midline
 		logger.statusLog(step++, "Driving until on the midline");
-		moveTowardsBuildingZone(0, 1.0);
+		robot.drivetrain.setPowerRight(1.0);
 		robot.stopWhenOnLine(4.5);
 
 		// Step 15 - Driving until at baseplate
 		logger.statusLog(step++, "Driving until at baseplate");
-		moveTowardsLoadingZone(12, 12);
+		moveTowardsLoadingZone(12.0, 12.0);
 
 		// Step 16 - Lowering arm onto baseplate
 		logger.statusLog(step++, "Lowering arm onto baseplate");
@@ -140,6 +152,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		// Step 18 - Re-raising the arm
 		logger.statusLog(step++, "Re-raising the arm");
 		robot.arm.raiseArm();
+		sleep(250);
 
 		// Step 19 - Moving away from the baseplate
 		logger.statusLog(step++, "Moving away from the baseplate");

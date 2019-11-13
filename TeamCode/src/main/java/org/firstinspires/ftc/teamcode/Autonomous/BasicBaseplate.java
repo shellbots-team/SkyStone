@@ -9,8 +9,8 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 	@Override
 	public void runOpMode() {
 
-		final double DISTANCE_TO_BASEPLATE = 16.3;
-		final double SAFE_GUARD = 4;
+		final double DISTANCE_TO_BASEPLATE = 15.3;
+		final double SAFE_GUARD = 2;
 
 		super.runOpMode();
 
@@ -28,7 +28,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 2 = Moving to be aligned with center of baseplate
 		logger.statusLog(step++, "Moving to be aligned with center of baseplate");
-		moveTowardsBuildingZone(600, 1.0);
+		moveTowardsLoadingZone(600, 1.0);
 
 		// Step 3 - Move near the baseplate
 		logger.statusLog(step++, "Moving near the baseplate");
@@ -37,6 +37,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 		// Step 4 - Moving next to the baseplate
 		logger.statusLog(step++, "Moving next to the baseplate");
 		robot.drivetrain.runDistance(SAFE_GUARD, SAFE_GUARD, 0.5);
+		sleep(250);
 
 		// Step 5 - Grab onto the baseplate
 		logger.statusLog(step++, "Grabbing the baseplate");
@@ -54,7 +55,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 8 - Move away from build zone
 		logger.statusLog(step++, "Moving away from the build zone");
-		moveTowardsBuildingZone(2000, 1.0);
+		moveTowardsBuildingZone(1300, 1.0);
 
 		// Step 9 - Moving next to the baseplate
 		logger.statusLog(step++, "Moving next to the baseplate");
@@ -62,11 +63,11 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 10 - Pushing baseplate into wall
 		logger.statusLog(step++, "Pushing baseplate into the wall");
-		moveTowardsLoadingZone(800, 1.0);
+		moveTowardsLoadingZone(450, 1.0);
 
 		// Step 11 - Moving away from the baseplate
 		logger.statusLog(step++, "Moving away from the baseplate");
-		moveTowardsBuildingZone(500, 1.0);
+		moveTowardsBuildingZone(450, 1.0);
 
 		// Step 12 - Moving to wall, or to center
 		if (getFinalPlacement() == Placement.CENTER) {
@@ -80,7 +81,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 		// Step 13 - Driving until on the color line
 		logger.statusLog(step++, "Driving until on the colored line");
 		moveTowardsBuildingZone(0, 1.0);
-		robot.stopWhenOnLine(4.5);
+		robot.stopWhenOnLine(6);
 
 		// Step 14 - Fixing positioning on the line
 		logger.statusLog(step++, "Fixing positioning on the line");

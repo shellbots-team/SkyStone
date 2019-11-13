@@ -139,6 +139,13 @@ public class Arm extends RobotComponent {
 		setServoPosition(leftHand, 1);
 	}
 
+	public void maintainPosition(int pos) {
+		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm, rightArm);
+		setSpecificPowers(0.2);
+		leftArm.setTargetPosition(pos);
+		rightArm.setTargetPosition(pos);
+	}
+
 	@Override
 	public void stopAllMotors() {
 		setSpecificPowers(0, leftArm, rightArm, extendArm);

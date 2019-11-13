@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -54,7 +55,7 @@ public class ObjectDetection {
 		}
 	}
 
-	public boolean isSkyStone() {
+	public Recognition getSkyStone() {
 		if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
@@ -77,12 +78,67 @@ public class ObjectDetection {
 				for (Recognition recognition : updatedRecognitions) {
 					if (recognition.getLabel().equals(LABEL_SECOND_ELEMENT)) {
 						logger.completeLog("ObjectDetection", "Found skystone");
-						return true;
+						return recognition;
 					}
 				}
 			}
 		}
-		return false;
+		return new Recognition() {
+			@Override
+			public String getLabel() {
+				return null;
+			}
+
+			@Override
+			public float getConfidence() {
+				return 0;
+			}
+
+			@Override
+			public float getLeft() {
+				return 0.5f;
+			}
+
+			@Override
+			public float getRight() {
+				return 0.5f;
+			}
+
+			@Override
+			public float getTop() {
+				return 0.5f;
+			}
+
+			@Override
+			public float getBottom() {
+				return 0.5f;
+			}
+
+			@Override
+			public float getWidth() {
+				return 0;
+			}
+
+			@Override
+			public float getHeight() {
+				return 0;
+			}
+
+			@Override
+			public int getImageWidth() {
+				return 0;
+			}
+
+			@Override
+			public int getImageHeight() {
+				return 0;
+			}
+
+			@Override
+			public double estimateAngleToObject(AngleUnit angleUnit) {
+				return 0;
+			}
+		};
 	}
 
 	/**

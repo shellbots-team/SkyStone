@@ -29,11 +29,12 @@ public abstract class BasicLine extends BaseAutonomous {
 
 		// Step 2 - Driving onto the midline
 		logger.statusLog(step++, "Driving to midline");
-		if (getStartingSide() == Side.SKYSTONE) {
-			moveTowardsBuildingZone(0, 1.0);
-		} else {
-			moveTowardsLoadingZone(0, 1.0);
-		}
+//		if (getStartingSide() == Side.SKYSTONE) {
+//			moveTowardsBuildingZone(0, 1.0);
+//		} else {
+//			moveTowardsLoadingZone(0, 1.0);
+//		}
+		moveTowardsBuildingZone(0, 1.0);
 
 		// Step 3 - Stopping when on the line
 		logger.statusLog(step++, "Stopping when on the midline");
@@ -41,11 +42,12 @@ public abstract class BasicLine extends BaseAutonomous {
 
 		// Step 4 - Correcting self on line
 		logger.statusLog(step++, "Correcting self on line");
-		if (getStartingSide() == Side.SKYSTONE) {
-			moveTowardsLoadingZone(250, 1.0);
-		} else {
-			moveTowardsBuildingZone(250, 1.0);
-		}
+//		if (getStartingSide() == Side.SKYSTONE) {
+//			moveTowardsLoadingZone(250, 1.0);
+//		} else {
+//			moveTowardsBuildingZone(250, 1.0);
+//		}
+		moveTowardsLoadingZone(250, 1);
 
 		// Step 5 - Running into wall/bridge
 //		if (getFinalPlacement() == Placement.CENTER) {
