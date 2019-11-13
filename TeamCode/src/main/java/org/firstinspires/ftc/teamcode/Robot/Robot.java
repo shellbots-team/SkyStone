@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.Robot;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -120,13 +122,14 @@ public class Robot {
 	}
 
 	private boolean isOnLine() {
-		return (colorSensor.red() > 20 || colorSensor.blue() > 20);
+		return (colorSensor.red() > 27 || colorSensor.blue() > 31);
 	}
 
 	public void stopWhenOnLine(double maxSeconds) {
 		int i = 0;
 		ElapsedTime elapsedTime = new ElapsedTime();
 		while (!isOnLine() && opModeIsActive() && elapsedTime.seconds() < maxSeconds) {
+			Log.d("14736:Seconds", String.valueOf(elapsedTime.seconds()));
 			i++;
 			if (i % 10 == 0) {
 				logger.completeLog("Color", String.format(Locale.US, "R:%d G:%d B:%d",
@@ -134,6 +137,9 @@ public class Robot {
 				logger.update();
 			}
 		}
+		logger.completeLog("Color", String.format(Locale.US, "Final: R:%d G:%d B:%d",
+				colorSensor.red(), colorSensor.green(), colorSensor.blue()));
+		logger.update();
 		drivetrain.setAllPowers(0);
 	}
 

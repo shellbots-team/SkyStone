@@ -179,10 +179,10 @@ public class TeleOp extends OpMode {
 		double rightY = this.gamepad1.right_stick_y;
 
 		double[] motorPowers = new double[4];
-		motorPowers[0] = (leftY-leftX-rightX) * speed;
-		motorPowers[1] = (leftY+leftX+rightX) * speed;
-		motorPowers[2] = (leftY+leftX-rightX) * speed;
-		motorPowers[3] = (leftY-leftX+rightX) * speed;
+		motorPowers[0] = (-leftY+leftX+rightX) * speed;
+		motorPowers[1] = (-leftY-leftX-rightX) * speed;
+		motorPowers[2] = (-leftY-leftX+rightX) * speed;
+		motorPowers[3] = (-leftY+leftX-rightX) * speed;
 
 		for(int i = 0; i < motorPowers.length; i++) {
 			if(motorPowers[i] < 0.05 && motorPowers[i] > -0.05) { motorPowers[i] = 0.0; }

@@ -57,6 +57,11 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		super.runOpMode();
 
+		waitForStart();
+
+		robot.arm.raiseArm();
+		sleep(1000);
+/*
 		// Step 0 - Ready to run
 		logger.statusLog(step++, "Ready to run");
 
@@ -180,5 +185,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		// Step 22 - Finished
 		logger.statusLog(step++, "Finished");
 		robot.stopAllMotors();
+
+ */
 	}
 }

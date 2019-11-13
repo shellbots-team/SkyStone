@@ -1,18 +1,18 @@
-package org.firstinspires.ftc.teamcode.Autonomous.Blue.Skystone;
+package org.firstinspires.ftc.teamcode.Autonomous.Red.SkyStone;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BasicSkyStone;
 
 /**
- * Created by shell on 10/26/2019.
+ * Created by shell on 11/13/2019.
  */
 
-@Autonomous(group = "Blue:SkyStone", name = "Blue: SkyStone: Wall")
-public class BlueSkyStoneWall extends BasicSkyStone {
+@Autonomous(group = "Red:SkyStone", name = "Red: SkyStone: Wall")
+public class RedSkyStoneWall extends BasicSkyStone {
 	@Override
 	protected Color getColor() {
-		return Color.BLUE;
+		return Color.RED;
 	}
 
 	@Override

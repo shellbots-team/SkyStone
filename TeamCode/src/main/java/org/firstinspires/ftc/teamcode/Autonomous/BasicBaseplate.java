@@ -9,7 +9,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 	@Override
 	public void runOpMode() {
 
-		final double DISTANCE_TO_BASEPLATE = 15.3;
+		final double DISTANCE_TO_BASEPLATE = 14.5;
 		final double SAFE_GUARD = 2;
 
 		super.runOpMode();
@@ -26,9 +26,15 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 		logger.statusLog(step++, "Making sure baseplate servos are up");
 		robot.releaseBaseplate();
 
-		// Step 2 = Moving to be aligned with center of baseplate
+		// Step 2 - Moving to be on the corner
+		logger.statusLog(step++, "Moving to be on the corner");
+		moveTowardsBuildingZone(0, 1);
+		robot.stopWhenOnLine(1.5);
+
+		// Step 3 - Moving to be aligned with center of baseplate
 		logger.statusLog(step++, "Moving to be aligned with center of baseplate");
-		moveTowardsLoadingZone(600, 1.0);
+		moveTowardsLoadingZone(550, 1);
+		sleep(100);
 
 		// Step 3 - Move near the baseplate
 		logger.statusLog(step++, "Moving near the baseplate");
@@ -55,7 +61,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 8 - Move away from build zone
 		logger.statusLog(step++, "Moving away from the build zone");
-		moveTowardsBuildingZone(1300, 1.0);
+		moveTowardsLoadingZone(1300, 1.0);
 
 		// Step 9 - Moving next to the baseplate
 		logger.statusLog(step++, "Moving next to the baseplate");
@@ -63,16 +69,16 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 10 - Pushing baseplate into wall
 		logger.statusLog(step++, "Pushing baseplate into the wall");
-		moveTowardsLoadingZone(450, 1.0);
+		moveTowardsBuildingZone(450, 1.0);
 
 		// Step 11 - Moving away from the baseplate
 		logger.statusLog(step++, "Moving away from the baseplate");
-		moveTowardsBuildingZone(450, 1.0);
+		moveTowardsLoadingZone(450, 1.0);
 
 		// Step 12 - Moving to wall, or to center
 		if (getFinalPlacement() == Placement.CENTER) {
 			logger.statusLog(step++, "Moving to the center");
-			robot.drivetrain.runDistance(7, 7);
+			robot.drivetrain.runDistance(5.5, 5.5);
 		} else {
 			logger.statusLog(step++, "Moving to the wall");
 			robot.drivetrain.runDistance(-5, -5);
@@ -80,12 +86,11 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 13 - Driving until on the color line
 		logger.statusLog(step++, "Driving until on the colored line");
-		moveTowardsBuildingZone(0, 1.0);
-		robot.stopWhenOnLine(6);
+		moveTowardsLoadingZone(1000, 1.0);
 
 		// Step 14 - Fixing positioning on the line
 		logger.statusLog(step++, "Fixing positioning on the line");
-		moveTowardsLoadingZone(250, 1.0);
+		moveTowardsBuildingZone(250, 1.0);
 
 		// Step 15 - Run into wall or into bridge
 		if (getFinalPlacement() == Placement.CENTER) {

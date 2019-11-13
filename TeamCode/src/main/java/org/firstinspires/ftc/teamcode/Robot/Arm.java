@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -64,7 +65,7 @@ public class Arm extends RobotComponent {
 	}
 
 	public 	void elevateDistance(double height, double speed) {
-		elevateDistance(height, speed, 999);
+		elevateDistance(height, speed, 9999);
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class Arm extends RobotComponent {
 		int armTarget = (leftArm.getCurrentPosition() + rightArm.getCurrentPosition()) / 2
 				+ (int) (height * COUNTS_PER_INCH);
 
-		leftArm.setTargetPosition(armTarget);
+		leftArm.setTargetPosition(-armTarget);
 		rightArm.setTargetPosition(armTarget);
 
 		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm, rightArm);
