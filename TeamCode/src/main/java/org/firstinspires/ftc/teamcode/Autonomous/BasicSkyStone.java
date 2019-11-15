@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -59,24 +60,47 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		waitForStart();
 
-		robot.arm.raiseArm();
-		sleep(1000);
-/*
+//		robot.arm.grabHand();
+//
+//		robot.arm.raiseArm();
+//
+//		sleep(4000);
+//
+//		robot.arm.lowerArm();
+//
+//		robot.arm.releaseHand();
+//
+//		telemetry.addData("Finished", "!");
+//		telemetry.update();
+
+//		robot.arm.stopAllMotors();
+//
+//		lg(robot.arm.leftArm, robot.arm.rightArm);
+//
+//		sleep(2000);
+//
+//		lg(robot.arm.leftArm, robot.arm.rightArm);
+
+
 		// Step 0 - Ready to run
 		logger.statusLog(step++, "Ready to run");
 
 		// Waiting until user presses start
 		waitForStart();
 
-		// Step 1 - Initializing object detection
-		logger.statusLog(step++, "Initializing object detection");
-		robot.objectDetection.initializeObjectDetection();
-
 		// Step 2 - Drive to be near the SkyStone
 		logger.statusLog(step++, "Driving to be near the SkyStones");
 		robot.drivetrain.setPowerLeft(1.0);
-		sleep(1350);
+		sleep(700);
 		robot.drivetrain.stopAllMotors();
+
+		// Step 5 - Raising arm
+		logger.statusLog(step++, "Raising arm");
+		robot.arm.raiseArm();
+
+		// Step 1 - Initializing object detection
+		logger.statusLog(step++, "Initializing object detection");
+		robot.objectDetection.initializeObjectDetection();
 
 		// Checking position of skystone
 		logger.statusLog(step++, "Finding position of skystone");
@@ -90,18 +114,24 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 			position = 0;
 		}
 
+		logger.numberLog("Position", position);
+
 		if(getColor() == Color.BLUE) { position *= -1; }
 
-		logger.statusLog(step++, "Finding moving to position");
+		logger.statusLog(step++, "Moving to position");
 		if(position == 1) {
 			moveTowardsBuildingZone(5.0, 5.0);
 		} else if(position == -1) {
 			moveTowardsLoadingZone(5.0, 5.0);
 		}
 
-		// Step 5 - Raising arm
+		/*
+
+		// Step - Extending arm
 		logger.statusLog(step++, "Raising arm");
-		robot.arm.raiseArm();
+		robot.arm.extendWithPower(1);
+		sleep(500);
+		robot.arm.extendWithPower(0);
 
 		// Step 6 - Slowly driving next to blocks
 		logger.statusLog(step++, "Slowly driving next to blocks");
@@ -185,7 +215,6 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		// Step 22 - Finished
 		logger.statusLog(step++, "Finished");
 		robot.stopAllMotors();
-
- */
+		*/
 	}
 }

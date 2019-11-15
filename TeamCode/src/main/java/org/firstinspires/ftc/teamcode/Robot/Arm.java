@@ -15,8 +15,8 @@ import java.util.Locale;
 
 public class Arm extends RobotComponent {
 
-	private DcMotor leftArm = null;
-	private DcMotor rightArm = null;
+	public DcMotor leftArm = null;
+	public DcMotor rightArm = null;
 	private DcMotor extendArm = null;
 	private CRServo leftHand = null;
 	private CRServo rightHand = null;
@@ -37,12 +37,11 @@ public class Arm extends RobotComponent {
 		this.rightArm = rightArm;
 		this.extendArm = extendArm;
 
-		leftArm.setDirection(DcMotor.Direction.FORWARD);
-		rightArm.setDirection(DcMotor.Direction.FORWARD);
+		leftArm.setDirection(DcMotor.Direction.REVERSE);
+		rightArm.setDirection(DcMotor.Direction.REVERSE);
 		extendArm.setDirection(DcMotor.Direction.FORWARD);
 
 		leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		extendArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		// Set all motors to zero power
@@ -122,22 +121,44 @@ public class Arm extends RobotComponent {
 		rightArm.setPower(power);
 	}
 
+	public void lowerWithPower(double power) {
+		leftArm.setPower(-power);
+		rightArm.setPower(-power);
+	}
+
 	public void raiseArm() {
-		elevateDistance(2, 0.3);
+		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm);
+		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm);
+
+		raiseWithPower(0.2);
+		sleep(850);
+
+		int leftPos = leftArm.getCurrentPosition() - 8;
+
+		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
+
+		leftArm.setTargetPosition(leftPos);
+
+		setSpecificPowers(0.2, leftArm);
 	}
 
 	public void lowerArm() {
-		elevateDistance(-2, 0.3);
+		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm);
+		lowerWithPower(0.01);
+		sleep(250);
+		stopAllMotors();
 	}
 
 	public void grabHand() {
 		setServoPosition(rightHand, 1);
 		setServoPosition(leftHand, 0);
+		sleep(1500);
 	}
 
 	public void releaseHand() {
 		setServoPosition(rightHand,0);
 		setServoPosition(leftHand, 1);
+		sleep(1000);
 	}
 
 	public void maintainPosition(int pos) {
