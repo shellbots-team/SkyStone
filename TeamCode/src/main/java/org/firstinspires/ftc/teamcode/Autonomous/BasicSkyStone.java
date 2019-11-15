@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -11,8 +12,7 @@ import org.firstinspires.ftc.teamcode.Robot.ObjectDetection;
 /**
  * Created by shell on 09/24/2019.
  */
-
-@Autonomous(group = "Basic", name = "Basic: SkyStone")
+@Disabled
 public abstract class BasicSkyStone extends BaseAutonomous {
 
 	@Override
@@ -62,9 +62,9 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 //		robot.arm.grabHand();
 //
-//		robot.arm.raiseArm();
-//
-//		sleep(4000);
+		robot.arm.raiseArm();
+
+		sleep(4000);
 //
 //		robot.arm.lowerArm();
 //
@@ -81,7 +81,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 //
 //		lg(robot.arm.leftArm, robot.arm.rightArm);
 
-
+/*
 		// Step 0 - Ready to run
 		logger.statusLog(step++, "Ready to run");
 
@@ -124,8 +124,6 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		} else if(position == -1) {
 			moveTowardsLoadingZone(5.0, 5.0);
 		}
-
-		/*
 
 		// Step - Extending arm
 		logger.statusLog(step++, "Raising arm");

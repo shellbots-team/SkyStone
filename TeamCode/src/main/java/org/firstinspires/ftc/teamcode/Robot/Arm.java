@@ -20,6 +20,7 @@ public class Arm extends RobotComponent {
 	private DcMotor extendArm = null;
 	private CRServo leftHand = null;
 	private CRServo rightHand = null;
+	private boolean isGrabbing = false;
 
 	private Logger logger = null;
 
@@ -43,6 +44,9 @@ public class Arm extends RobotComponent {
 
 		leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		extendArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+		leftArm.setTargetPosition(0);
+		rightArm.setTargetPosition(0);
 
 		// Set all motors to zero power
 		setSpecificPowers(0, leftArm, rightArm, extendArm);
@@ -87,7 +91,6 @@ public class Arm extends RobotComponent {
 		leftArm.setTargetPosition(-armTarget);
 		rightArm.setTargetPosition(armTarget);
 
-		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm, rightArm);
 
 		ElapsedTime runtime = new ElapsedTime();
 
@@ -127,19 +130,20 @@ public class Arm extends RobotComponent {
 	}
 
 	public void raiseArm() {
-		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm);
 		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm);
 
 		raiseWithPower(0.2);
 		sleep(850);
 
-		int leftPos = leftArm.getCurrentPosition() - 8;
-
-		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
+		int leftPos = leftArm.getCurrentPosition();
 
 		leftArm.setTargetPosition(leftPos);
 
+
+
 		setSpecificPowers(0.2, leftArm);
+
+		setSpecificPowers(0, rightArm);
 	}
 
 	public void lowerArm() {
@@ -150,19 +154,24 @@ public class Arm extends RobotComponent {
 	}
 
 	public void grabHand() {
+		isGrabbing = true;
 		setServoPosition(rightHand, 1);
 		setServoPosition(leftHand, 0);
 		sleep(1500);
 	}
 
 	public void releaseHand() {
+		isGrabbing = false;
 		setServoPosition(rightHand,0);
 		setServoPosition(leftHand, 1);
 		sleep(1000);
 	}
 
+	public boolean getIsGrabbing() {
+		return isGrabbing;
+	}
+
 	public void maintainPosition(int pos) {
-		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm, rightArm);
 		setSpecificPowers(0.2);
 		leftArm.setTargetPosition(pos);
 		rightArm.setTargetPosition(pos);

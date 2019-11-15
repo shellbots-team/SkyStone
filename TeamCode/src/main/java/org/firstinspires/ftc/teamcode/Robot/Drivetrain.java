@@ -32,6 +32,11 @@ public class Drivetrain extends RobotComponent {
 		this.backLeft = backLeft;
 		this.backRight = backRight;
 
+		frontLeft.setTargetPosition(0);
+		frontRight.setTargetPosition(0);
+		backLeft.setTargetPosition(0);
+		backRight.setTargetPosition(0);
+
 		frontLeft.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 		backLeft.setDirection(DcMotor.Direction.REVERSE);
 		frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -90,6 +95,7 @@ public class Drivetrain extends RobotComponent {
 
 		// Reset encoder values
 		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
+		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeft, frontRight, backLeft, backRight);
 		int newLeftTarget = frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
 		int newRightTarget = frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
 		frontLeft.setTargetPosition(newLeftTarget);

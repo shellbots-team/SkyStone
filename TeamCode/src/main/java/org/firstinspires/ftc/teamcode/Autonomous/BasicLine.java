@@ -8,7 +8,7 @@ public abstract class BasicLine extends BaseAutonomous {
 
 	protected abstract Side getStartingSide();
 
-	protected final double DISTANCE_TO_MID = 11.0;
+	protected final double DISTANCE_TO_MID = 10.5;
 
 	protected enum Side {
 		SKYSTONE,
@@ -41,7 +41,7 @@ public abstract class BasicLine extends BaseAutonomous {
 
 		// Step 3 - Stopping when on the line
 		logger.statusLog(step++, "Stopping when on the midline");
-		robot.stopWhenOnLine(2);
+		robot.stopWhenOnLine(1.75);
 		logger.statusLog(step++, "Stopped on midline");
 
 		// Step 4 - Correcting self on line

@@ -95,15 +95,11 @@ public class TeleOp extends OpMode {
 		}
 
 		if (this.gamepad1.dpad_up) {
-			robot.leftGrip.setPower(1.0);
-			//robot.releaseBaseplate();
+			robot.releaseBaseplate();
 		} else if (this.gamepad1.dpad_down) {
-			robot.leftGrip.setPower(0.0);
-			//robot.grabBaseplate();
+			robot.grabBaseplate();
 		} else if (this.gamepad1.dpad_left) {
-			robot.leftGrip.getController().setServoPosition(robot.leftGrip.getPortNumber(), 1.0);
 		} else if (this.gamepad1.dpad_right) {
-			robot.leftGrip.getController().setServoPosition(robot.leftGrip.getPortNumber(), 0.0);
 		}
 
 		if (this.gamepad1.y) {
@@ -133,7 +129,11 @@ public class TeleOp extends OpMode {
 		}
 
 		if (this.gamepad2.dpad_up) {
-			robot.arm.raiseWithPower(-0.35);
+			if(robot.arm.getIsGrabbing()) {
+				robot.arm.raiseWithPower(-0.4);
+			} else {
+				robot.arm.raiseWithPower(-0.35);
+			}
 		} else if (this.gamepad2.dpad_down) {
 			robot.arm.raiseWithPower(0.35);
 		} else {
@@ -162,7 +162,7 @@ public class TeleOp extends OpMode {
 	}
 
 	/**
-	 * Runs once after STOP is pushed
+	 * Runxs once after STOP is pushed
 	 */
 	@Override
 	public void stop() {

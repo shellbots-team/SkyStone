@@ -85,55 +85,58 @@ public class Robot {
 	/* Initialize standard Hardware interfaces */
 	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode) {
 		// Save reference to Hardware map
-		this.hardwareMap = hardwareMap;
-		this.telemetry = telemetry;
-		this.opmode = opmode;
-
-		logger = new Logger(telemetry);
-		drivetrain = new Drivetrain(opmode);
-		arm = new Arm(opmode);
-		objectDetection = new ObjectDetection(hardwareMap, telemetry);
-
-		drivetrain.init(
-				telemetry,
-				this.hardwareMap.get(DcMotor.class, "frontLeft"),
-				this.hardwareMap.get(DcMotor.class, "frontRight"),
-				this.hardwareMap.get(DcMotor.class, "backLeft"),
-				this.hardwareMap.get(DcMotor.class, "backRight")
-		);
-
-		arm.init(
-				telemetry,
-				this.hardwareMap.get(DcMotor.class, "leftArm"),
-				this.hardwareMap.get(DcMotor.class, "rightArm"),
-				this.hardwareMap.get(DcMotor.class, "extendArm"),
-				this.hardwareMap.get(CRServo.class, "leftHand"),
-				this.hardwareMap.get(CRServo.class, "rightHand")
-		);
-
-		objectDetection = new ObjectDetection(this.hardwareMap, this.telemetry);
-
-		// Define and initialize ALL installed servos.
-		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
-		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
-
-		// Define and initialize ALL sensors
-		colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
+//		this.hardwareMap = hardwareMap;
+//		this.telemetry = telemetry;
+//		this.opmode = opmode;
+//
+//		logger = new Logger(telemetry);
+//		drivetrain = new Drivetrain(opmode);
+//		arm = new Arm(opmode);
+//		objectDetection = new ObjectDetection(hardwareMap, telemetry);
+//
+//		drivetrain.init(
+//				telemetry,
+//				this.hardwareMap.get(DcMotor.class, "frontLeft"),
+//				this.hardwareMap.get(DcMotor.class, "frontRight"),
+//				this.hardwareMap.get(DcMotor.class, "backLeft"),
+//				this.hardwareMap.get(DcMotor.class, "backRight")
+//		);
+//
+//		arm.init(
+//				telemetry,
+//				this.hardwareMap.get(DcMotor.class, "leftArm"),
+//				this.hardwareMap.get(DcMotor.class, "rightArm"),
+//				this.hardwareMap.get(DcMotor.class, "extendArm"),
+//				this.hardwareMap.get(CRServo.class, "leftHand"),
+//				this.hardwareMap.get(CRServo.class, "rightHand")
+//		);
+//
+//		objectDetection = new ObjectDetection(this.hardwareMap, this.telemetry);
+//
+//		// Define and initialize ALL installed servos.
+//		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
+//		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
+//
+//		// Define and initialize ALL sensors
+//		colorSensor = this.hardwareMap.get(ColorSensor.class, "colorSensor");
 	}
 
-	private boolean isOnLine() {
-		return (colorSensor.red() > 27 || colorSensor.blue() > 31);
+	private boolean isOnLine(int red, int blue) {
+		return (red > 27 || blue > 31);
 	}
 
 	public void stopWhenOnLine(double maxSeconds) {
 		int i = 0;
 		ElapsedTime elapsedTime = new ElapsedTime();
-		while (!isOnLine() && opModeIsActive() && elapsedTime.seconds() < maxSeconds) {
-			Log.d("14736:Seconds", String.valueOf(elapsedTime.seconds()));
+		int red = 0;
+		int blue = 0;
+		while (!isOnLine(red, blue) && opModeIsActive() && elapsedTime.seconds() < maxSeconds) {
+			red = colorSensor.red();
+			blue = colorSensor.blue();
 			i++;
 			if (i % 10 == 0) {
-				logger.completeLog("Color", String.format(Locale.US, "R:%d G:%d B:%d",
-						colorSensor.red(), colorSensor.green(), colorSensor.blue()));
+				logger.completeLog("Color", String.format(Locale.US, "R:%d B:%d",
+						red, blue));
 				logger.update();
 			}
 		}
