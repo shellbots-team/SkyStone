@@ -129,13 +129,13 @@ public class TeleOp extends OpMode {
 		}
 
 		if (this.gamepad2.dpad_up) {
-			if(robot.arm.getIsGrabbing()) {
-				robot.arm.raiseWithPower(-0.4);
+			if(robot.arm.isGrabbing()) {
+				robot.arm.raiseWithPower(0.35);
 			} else {
-				robot.arm.raiseWithPower(-0.35);
+				robot.arm.raiseWithPower(0.25);
 			}
 		} else if (this.gamepad2.dpad_down) {
-			robot.arm.raiseWithPower(0.35);
+			robot.arm.lowerWithPower(0.15);
 		} else {
 			robot.arm.raiseWithPower(0);
 		}

@@ -89,6 +89,10 @@ public class Drivetrain extends RobotComponent {
 	 * @param speed       The speed for all of the motors to be set at
 	 */
 	public void runDistance(double leftInches, double rightInches, double speed, double maxSeconds) {
+		runDistance(leftInches, leftInches, rightInches, rightInches, 1.0, 999);
+	}
+
+	public void runDistance(double frontLeftInches, double backLeftInches, double frontRightInches, double backRightInches, double speed, double maxSeconds) {
 		if (!opModeIsActive()) {
 			return;
 		}
@@ -96,12 +100,14 @@ public class Drivetrain extends RobotComponent {
 		// Reset encoder values
 		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
 		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeft, frontRight, backLeft, backRight);
-		int newLeftTarget = frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-		int newRightTarget = frontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-		frontLeft.setTargetPosition(newLeftTarget);
-		backLeft.setTargetPosition(newLeftTarget);
-		frontRight.setTargetPosition(newRightTarget);
-		backRight.setTargetPosition(newRightTarget);
+		int newFrontLeftTarget = frontLeft.getCurrentPosition() + (int) (frontLeftInches * COUNTS_PER_INCH);
+		int newBackLeftTarget = backLeft.getCurrentPosition() + (int) (backLeftInches * COUNTS_PER_INCH);
+		int newFrontRightTarget = frontRight.getCurrentPosition() + (int) (frontRightInches * COUNTS_PER_INCH);
+		int newBackRightTarget = backRight.getCurrentPosition() + (int) (backRightInches * COUNTS_PER_INCH);
+		frontLeft.setTargetPosition(newFrontLeftTarget);
+		backLeft.setTargetPosition(newBackLeftTarget);
+		frontRight.setTargetPosition(newFrontRightTarget);
+		backRight.setTargetPosition(newBackRightTarget);
 
 		// Turn On RUN_TO_POSITION
 		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, frontLeft, frontRight, backLeft, backRight);
@@ -112,7 +118,7 @@ public class Drivetrain extends RobotComponent {
 
 		// Log the path
 		logger.completeLog("Path1", String.format(Locale.US,
-				"Running to %7d :%7d", newLeftTarget, newRightTarget));
+				"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
 
 		// While game is still going, maxtime has not been reached, and none of the motors have reached their position
 		while (opModeIsActive() && (runtime.seconds() < maxSeconds) &&
@@ -120,9 +126,9 @@ public class Drivetrain extends RobotComponent {
 				(frontRight.isBusy() && backRight.isBusy())) {
 
 			logger.addData("Path1", String.format(Locale.US,
-					"Running to %7d :%7d", newLeftTarget, newRightTarget));
+					"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
 			logger.occasionalLog("Path2", String.format(Locale.US,
-					"Running at %7d :%7d and %7d :%7d",
+					"Running at FL:%7d BL:%7d FR:%7d BR:%7d",
 					frontLeft.getCurrentPosition(),
 					frontRight.getCurrentPosition(),
 					backLeft.getCurrentPosition(),

@@ -64,6 +64,8 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 //
 		robot.arm.raiseArm();
 
+		robot.arm.stopAllMotors();
+
 		sleep(4000);
 //
 //		robot.arm.lowerArm();

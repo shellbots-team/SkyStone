@@ -32,17 +32,10 @@ public abstract class BasicLine extends BaseAutonomous {
 		// Step 2 - Driving onto the midline
 		logger.statusLog(step++, "Driving to midline");
 		if (getStartingSide() == Side.SKYSTONE) {
-			moveTowardsBuildingZone(0, 1.0);
+			moveTowardsBuildingZone(1750, 1.0);
 		} else if (getStartingSide() == Side.BASEPLATE) {
-			moveTowardsLoadingZone(0, 1.0);
-		} else {
-			logger.completeLog("ERROR", "No side chosen");
+			moveTowardsLoadingZone(1750, 1.0);
 		}
-
-		// Step 3 - Stopping when on the line
-		logger.statusLog(step++, "Stopping when on the midline");
-		robot.stopWhenOnLine(1.75);
-		logger.statusLog(step++, "Stopped on midline");
 
 		// Step 4 - Correcting self on line
 		logger.statusLog(step++, "Correcting self on line");

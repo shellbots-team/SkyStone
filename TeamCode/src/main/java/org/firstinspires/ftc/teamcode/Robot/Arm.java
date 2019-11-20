@@ -21,6 +21,7 @@ public class Arm extends RobotComponent {
 	private CRServo leftHand = null;
 	private CRServo rightHand = null;
 	private boolean isGrabbing = false;
+	private DcMotor.RunMode armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
 
 	private Logger logger = null;
 
@@ -57,62 +58,9 @@ public class Arm extends RobotComponent {
 
 	@Override
 	public void logTeleOpData() {
-//		logger.numberLog("Leftarm", leftArm.getPower());
-//		logger.numberLog("Rightarm", rightArm.getPower());
-//		logger.numberLog("Extendarm", extendArm.getPower());
-		ServoController controller = leftHand.getController();
-		logger.numberLog("LeftPos", controller.getServoPosition(leftHand.getPortNumber()));
-		logger.numberLog("LeftPow", leftHand.getPower());
-		logger.numberLog("RightPos", controller.getServoPosition(rightHand.getPortNumber()));
-		logger.numberLog("RightPow", rightHand.getPower());
-	}
-
-	public 	void elevateDistance(double height, double speed) {
-		elevateDistance(height, speed, 9999);
-	}
-
-	/**
-	 * Moves the arm to a given height with a specified speed
-	 *
-	 * @param height The height (in inches) to move to
-	 * @param speed  The power to give the arm motors
-	 */
-	public void elevateDistance(double height, double speed, long maxMilliseconds) {
-		if (!opModeIsActive()) {
-			return;
-		}
-
-		// Reset encoders
-		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm, rightArm);
-
-		int armTarget = (leftArm.getCurrentPosition() + rightArm.getCurrentPosition()) / 2
-				+ (int) (height * COUNTS_PER_INCH);
-
-		leftArm.setTargetPosition(-armTarget);
-		rightArm.setTargetPosition(armTarget);
-
-
-		ElapsedTime runtime = new ElapsedTime();
-
-		setSpecificPowers(Math.abs(speed), leftArm, rightArm);
-
-		// Log the path
-		logger.completeLog("ArmPath", String.format(Locale.US,
-				"Runnning to %7d", armTarget));
-
-		while (opModeIsActive() && runtime.milliseconds() < maxMilliseconds&& (leftArm.isBusy() && rightArm.isBusy())) {
-			logger.addData("ArmPath", String.format(Locale.US,
-					"Runnning to %7d", armTarget));
-			logger.completeLog("ArmPath2", String.format(Locale.US,
-					"Running at %7d :%7d", leftArm.getCurrentPosition(), rightArm.getCurrentPosition()));
-			logger.update();
-		}
-
-		setSpecificPowers(0, leftArm, rightArm);
-
-		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
-
-		sleep(200);
+		logger.numberLog("Leftarm", leftArm.getPower());
+		logger.numberLog("Rightarm", rightArm.getPower());
+		logger.numberLog("Extendarm", extendArm.getPower());
 	}
 
 	public void extendWithPower(double power) {
@@ -120,61 +68,75 @@ public class Arm extends RobotComponent {
 	}
 
 	public void raiseWithPower(double power) {
+		if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
+			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
+			armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
+		}
 		leftArm.setPower(power);
 		rightArm.setPower(power);
 	}
 
 	public void lowerWithPower(double power) {
+		if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
+			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
+			armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
+		}
 		leftArm.setPower(-power);
 		rightArm.setPower(-power);
 	}
 
 	public void raiseArm() {
-		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm);
+		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm, rightArm);
+		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
 
-		raiseWithPower(0.2);
-		sleep(850);
+		raiseWithPower(0.08);
+		sleep(1000);
 
-		int leftPos = leftArm.getCurrentPosition();
-
-		leftArm.setTargetPosition(leftPos);
-
-
-
-		setSpecificPowers(0.2, leftArm);
-
-		setSpecificPowers(0, rightArm);
+//		int leftPos = leftArm.getCurrentPosition();
+//
+//		leftArm.setTargetPosition(leftPos);
+//
+//		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
+//		armRunMode = DcMotor.RunMode.RUN_TO_POSITION;
+//
+//		leftArm.setPower(0.2);
+//		rightArm.setPower(0);
 	}
 
 	public void lowerArm() {
-		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm);
 		lowerWithPower(0.01);
 		sleep(250);
 		stopAllMotors();
 	}
 
+	public void maintainPosition() {
+//		if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
+//			setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm, rightArm);
+//			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
+//		}
+//
+//		int leftPos = leftArm.getCurrentPosition();
+//
+//		leftArm.setTargetPosition(leftPos);
+//
+//		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
+//
+//		leftArm.setPower(0.2);
+//		rightArm.setPower(0);
+	}
+
 	public void grabHand() {
 		isGrabbing = true;
-		setServoPosition(rightHand, 1);
 		setServoPosition(leftHand, 0);
-		sleep(1500);
 	}
 
 	public void releaseHand() {
 		isGrabbing = false;
-		setServoPosition(rightHand,0);
 		setServoPosition(leftHand, 1);
-		sleep(1000);
 	}
 
-	public boolean getIsGrabbing() {
+	public boolean isGrabbing() {
 		return isGrabbing;
-	}
-
-	public void maintainPosition(int pos) {
-		setSpecificPowers(0.2);
-		leftArm.setTargetPosition(pos);
-		rightArm.setTargetPosition(pos);
 	}
 
 	@Override
