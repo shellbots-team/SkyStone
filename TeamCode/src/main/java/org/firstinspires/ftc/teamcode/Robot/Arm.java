@@ -86,18 +86,28 @@ public class Arm extends RobotComponent {
 		rightArm.setPower(-power);
 	}
 
-	public void raiseArm() {
-		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm, rightArm);
-		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
+	public void raiseArm(boolean isHoldingBlock) {
+		if(isHoldingBlock) {
+//			raiseWithPower(0.08);
+//			sleep(2150);
+			raiseWithPower(0.2);
+			sleep(850);
+		} else {
+			raiseWithPower(0.2);
+			sleep(900);
+		}
 
-		raiseWithPower(0.05);
-		sleep(2700);
 		currentPosition = leftArm.getCurrentPosition();
 	}
 
-	public void lowerArm() {
-		lowerWithPower(0.1);
-		sleep(450);
+	public void lowerArm(boolean isHoldingBlock) {
+		if(isHoldingBlock) {
+			lowerWithPower(0.04);
+			sleep(1000);
+		} else {
+			lowerWithPower(0.1);
+			sleep(700);
+		}
 		stopAllMotors();
 		currentPosition = leftArm.getCurrentPosition();
 	}
@@ -106,8 +116,7 @@ public class Arm extends RobotComponent {
 		if(armRunMode == DcMotor.RunMode.RUN_TO_POSITION) {
 			return;
 		} else if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
-			setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm, rightArm);
-			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
+			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, rightArm);
 		}
 		leftArm.setTargetPosition(currentPosition);
 

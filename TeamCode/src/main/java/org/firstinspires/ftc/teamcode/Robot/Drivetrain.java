@@ -62,7 +62,7 @@ public class Drivetrain extends RobotComponent {
 	 * @param goClockwise If movement should be clockwise
 	 */
 	public void turnDegrees(double degrees, boolean goClockwise, double speed) {
-		int inchTurn = (int) (degrees / 8.02);
+		int inchTurn = (int) (degrees / 10.95);
 		if (goClockwise) {
 			runDistance(inchTurn, -inchTurn);
 		} else {
@@ -144,8 +144,6 @@ public class Drivetrain extends RobotComponent {
 
 		// Stop all motion
 		setAllPowers(0);
-
-		sleep(200);
 	}
 
 	public void setPowerLeft(double power) {

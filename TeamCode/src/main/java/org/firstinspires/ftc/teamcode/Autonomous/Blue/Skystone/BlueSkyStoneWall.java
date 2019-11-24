@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BasicSkyStone;
 /**
  * Created by shell on 10/26/2019.
  */
-
+@Disabled
 @Autonomous(group = "Blue:SkyStone", name = "Blue: SkyStone: Wall")
 public class BlueSkyStoneWall extends BasicSkyStone {
 	@Override

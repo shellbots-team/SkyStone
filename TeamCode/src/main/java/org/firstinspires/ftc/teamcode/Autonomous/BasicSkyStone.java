@@ -31,10 +31,11 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 	}
 
 	private void moveTowardsLoadingZone(double leftInches, double rightInches) {
-		robot.drivetrain.runDistance(leftInches, rightInches);
+		robot.drivetrain.runDistance(-leftInches, -rightInches);
 	}
 
 	@Override
+	// TODO: Test this and movetowardsloading zone
 	void moveTowardsBuildingZone(long milliseconds, double speed) {
 		if (getColor() == Color.BLUE) {
 			robot.drivetrain.setAllPowers(-speed);
@@ -60,8 +61,105 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		waitForStart();
 
+		robot.arm.raiseArm(false);
+		//TODO: extend arm at the start
+		robot.arm.maintainPosition();
+
 		robot.drivetrain.runDistance(-7, 7, 7, -7, 1.0, 999);
 
+		robot.objectDetection.initializeObjectDetection();
+
+		sleep(1000);
+
+		Recognition stone = robot.objectDetection.getSkyStone();
+		logger.completeLog("Right Side", String.valueOf(stone.getRight()));
+
+		byte position = 0;
+		final byte BASEPLATE_SIDE = 1;
+		final byte MIDDLE_SIDE = 0;
+		final byte SKYSTONE_SIDE = -1;
+
+		if(stone.getRight() < 300) {
+			position = -1;
+		} else if (stone.getRight() > 600) {
+			position = 1;
+		}
+
+		if(getColor() == Color.BLUE) { position *= -1; }
+
+		logger.completeLog("Postion", String.valueOf(position));
+
+		robot.drivetrain.runDistance(-4.4, 4.4, 4.4, -4.4, 1.0, 999);
+
+		if(position == SKYSTONE_SIDE) {
+			moveTowardsLoadingZone(3.0, 3.0);
+		} else if(position == MIDDLE_SIDE) {
+		} else if(position == BASEPLATE_SIDE) {
+			moveTowardsBuildingZone(3.0, 3.0);
+		}
+
+		robot.arm.lowerArm(false);
+		sleep(750);
+
+		robot.arm.grabHand();
+		sleep(1250);
+
+		robot.arm.raiseArm(true);
+		robot.arm.maintainPosition();
+
+		robot.drivetrain.runDistance(1, -1, -1, 1, 1, 999);
+
+		robot.drivetrain.turnDegrees(94, true, 1.0);
+
+		robot.arm.lowerArm(true);
+
+		int distanceToBaseplate = 0;
+
+		if(position == SKYSTONE_SIDE) {
+			distanceToBaseplate = 26;
+		} else if(position == MIDDLE_SIDE) {
+			distanceToBaseplate = 21;
+		} else if(position == BASEPLATE_SIDE) {
+			distanceToBaseplate = 16;
+		}
+
+		if(getColor() == Color.BLUE) { distanceToBaseplate *= -1; }
+
+		robot.drivetrain.runDistance(-distanceToBaseplate, distanceToBaseplate, distanceToBaseplate, -distanceToBaseplate, 1.0, 999);
+
+		robot.arm.releaseHand();
+		robot.drivetrain.turnDegrees(10.5, true, 1.0);
+
+		distanceToBaseplate += 9.7;
+
+		robot.drivetrain.runDistance(distanceToBaseplate, -distanceToBaseplate, -distanceToBaseplate, distanceToBaseplate, 1.0, 999);
+
+		robot.drivetrain.runDistance(-0.75, -0.75);
+
+		robot.drivetrain.turnDegrees(100, false, 1.0);
+
+		robot.drivetrain.runDistance(-1.3, 1.3, 1.3, -1.3, 1, 999);
+
+		robot.arm.grabHand();
+		sleep(500);
+
+		robot.arm.raiseArm(true);
+		robot.arm.maintainPosition();
+
+		robot.drivetrain.runDistance(1.0,-1.0,-1.0,1.0,1.0,999);
+
+		robot.drivetrain.turnDegrees(100, true, 1.0);
+
+		robot.arm.lowerArm(true);
+
+		robot.drivetrain.runDistance(-distanceToBaseplate, distanceToBaseplate, distanceToBaseplate, -distanceToBaseplate, 1.0, 999);
+
+		robot.arm.releaseHand();
+
+		robot.drivetrain.runDistance(5, -5, -5, 5, 1, 999);
+
+
+		// move forward, grab block, ect...
 
 //		robot.objectDetection.initializeObjectDetection();
 //		sleep(20000);

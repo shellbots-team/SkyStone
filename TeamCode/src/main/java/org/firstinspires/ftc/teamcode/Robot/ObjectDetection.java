@@ -21,7 +21,7 @@ public class ObjectDetection {
 
 	private static final String VUFORIA_KEY = "AZUaS/D/////AAABmd9bAfIzFEvNp68QYPiUGWod1bqxZ/G6UuphfSOO67letJ25Ep2V5E/VfwlFektkz7sNxqkGiOXlTjCcLqVgj/eUwRxum4kkhFHDXZyjrKRb2U7xZaiv+tXxRLS52MnwFzzsUJZOZ0m9d5z3h0wBxL+yeA0bZHMKkIDdHlol+oxI+oTIlj/HtIJ0lqJMSBx40vrLg5Tx91849XDXFWtY9/CAsJbTUkYmLUniWHyolCF4UJ/mXSuyh0OMfaicPRPT4Ue0b0UKM9Z/PFOrqHeE57zO2e9zMBIG9ihPXbjF68ZZcAGfWIzA6uC3QdLwInO0DxR4iDCKqO6fCV+9EWQx8Xcde3yxdMX/E39+Sr+PpAw5";
 
-	private static final double MINIMUM_CONFIDENCE = 0.6;
+	private static final double MINIMUM_CONFIDENCE = 0.4;
 
 	private VuforiaLocalizer vuforia;
 	private TFObjectDetector tfod;
@@ -99,9 +99,9 @@ public class ObjectDetection {
 				return 0.5f;
 			}
 
-			@Override
+			@Override //TODO: If finds 2 stone, return pos 3rd stone would be in, if 1 then return pos that isnt it
 			public float getRight() {
-				return 0.5f;
+				return 500f;
 			}
 
 			@Override
