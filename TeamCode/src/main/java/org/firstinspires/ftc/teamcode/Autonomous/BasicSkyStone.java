@@ -60,14 +60,35 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		waitForStart();
 
+		robot.drivetrain.runDistance(-7, 7, 7, -7, 1.0, 999);
+
+
+//		robot.objectDetection.initializeObjectDetection();
+//		sleep(20000);
+
+//		robot.arm.extendWithPower(0.5);
+//		sleep(500);
+//		robot.arm.stopAllMotors();
+//		sleep(4000);
+
 //		robot.arm.grabHand();
 //
-		robot.arm.raiseArm();
-
-		robot.arm.stopAllMotors();
-
-		sleep(4000);
+//		sleep(1200);
 //
+//		robot.arm.raiseArm();
+//
+//		robot.arm.maintainPosition();
+//
+//		sleep(4000);
+//
+//		robot.arm.lowerArm();
+//
+//		sleep(1000);
+//
+//		robot.arm.releaseHand();
+//
+//		sleep(3000);
+
 //		robot.arm.lowerArm();
 //
 //		robot.arm.releaseHand();

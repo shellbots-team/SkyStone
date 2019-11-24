@@ -22,6 +22,7 @@ public class Arm extends RobotComponent {
 	private CRServo rightHand = null;
 	private boolean isGrabbing = false;
 	private DcMotor.RunMode armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
+	private int currentPosition = 0;
 
 	private Logger logger = null;
 
@@ -89,40 +90,32 @@ public class Arm extends RobotComponent {
 		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm, rightArm);
 		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
 
-		raiseWithPower(0.08);
-		sleep(1000);
-
-//		int leftPos = leftArm.getCurrentPosition();
-//
-//		leftArm.setTargetPosition(leftPos);
-//
-//		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
-//		armRunMode = DcMotor.RunMode.RUN_TO_POSITION;
-//
-//		leftArm.setPower(0.2);
-//		rightArm.setPower(0);
+		raiseWithPower(0.05);
+		sleep(2700);
+		currentPosition = leftArm.getCurrentPosition();
 	}
 
 	public void lowerArm() {
-		lowerWithPower(0.01);
-		sleep(250);
+		lowerWithPower(0.1);
+		sleep(450);
 		stopAllMotors();
+		currentPosition = leftArm.getCurrentPosition();
 	}
 
 	public void maintainPosition() {
-//		if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
-//			setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm, rightArm);
-//			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
-//		}
-//
-//		int leftPos = leftArm.getCurrentPosition();
-//
-//		leftArm.setTargetPosition(leftPos);
-//
-//		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
-//
-//		leftArm.setPower(0.2);
-//		rightArm.setPower(0);
+		if(armRunMode == DcMotor.RunMode.RUN_TO_POSITION) {
+			return;
+		} else if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
+			setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, leftArm, rightArm);
+			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
+		}
+		leftArm.setTargetPosition(currentPosition);
+
+		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
+		armRunMode = DcMotor.RunMode.RUN_TO_POSITION;
+
+		leftArm.setPower(0.1);
+		rightArm.setPower(0);
 	}
 
 	public void grabHand() {
@@ -132,7 +125,7 @@ public class Arm extends RobotComponent {
 
 	public void releaseHand() {
 		isGrabbing = false;
-		setServoPosition(leftHand, 1);
+		setServoPosition(leftHand, 0.8);
 	}
 
 	public boolean isGrabbing() {

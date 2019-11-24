@@ -14,8 +14,6 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		super.runOpMode();
 
-		waitForStart();
-
 		// Step 0 - Ready to run
 		logger.statusLog(step++, "Ready To Run");
 
@@ -28,7 +26,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 2 - Moving to be on the corner
 		logger.statusLog(step++, "Moving to be on the corner");
-		moveTowardsBuildingZone(1350, 1);
+		moveTowardsBuildingZone(1150, 1);
 
 		// Step 3 - Moving to be aligned with center of baseplate
 		logger.statusLog(step++, "Moving to be aligned with center of baseplate");

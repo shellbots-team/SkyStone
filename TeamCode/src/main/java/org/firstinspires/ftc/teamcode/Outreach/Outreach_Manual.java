@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.Outreach;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Outreach: Manual", group = "Outreach")
 public class Outreach_Manual extends LinearOpMode {
 
