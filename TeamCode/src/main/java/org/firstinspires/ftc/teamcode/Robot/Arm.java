@@ -88,13 +88,11 @@ public class Arm extends RobotComponent {
 
 	public void raiseArm(boolean isHoldingBlock) {
 		if(isHoldingBlock) {
-//			raiseWithPower(0.08);
-//			sleep(2150);
 			raiseWithPower(0.2);
-			sleep(850);
+			sleep(800);
 		} else {
 			raiseWithPower(0.2);
-			sleep(900);
+			sleep(700);
 		}
 
 		currentPosition = leftArm.getCurrentPosition();
@@ -130,6 +128,10 @@ public class Arm extends RobotComponent {
 	public void grabHand() {
 		isGrabbing = true;
 		setServoPosition(leftHand, 0);
+	}
+
+	public void partialGrabHand() {
+		setServoPosition(leftHand, 0.5);
 	}
 
 	public void releaseHand() {

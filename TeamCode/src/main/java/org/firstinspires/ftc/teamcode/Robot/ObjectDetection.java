@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectDetection {
@@ -21,7 +22,7 @@ public class ObjectDetection {
 
 	private static final String VUFORIA_KEY = "AZUaS/D/////AAABmd9bAfIzFEvNp68QYPiUGWod1bqxZ/G6UuphfSOO67letJ25Ep2V5E/VfwlFektkz7sNxqkGiOXlTjCcLqVgj/eUwRxum4kkhFHDXZyjrKRb2U7xZaiv+tXxRLS52MnwFzzsUJZOZ0m9d5z3h0wBxL+yeA0bZHMKkIDdHlol+oxI+oTIlj/HtIJ0lqJMSBx40vrLg5Tx91849XDXFWtY9/CAsJbTUkYmLUniWHyolCF4UJ/mXSuyh0OMfaicPRPT4Ue0b0UKM9Z/PFOrqHeE57zO2e9zMBIG9ihPXbjF68ZZcAGfWIzA6uC3QdLwInO0DxR4iDCKqO6fCV+9EWQx8Xcde3yxdMX/E39+Sr+PpAw5";
 
-	private static final double MINIMUM_CONFIDENCE = 0.4;
+	private static final double MINIMUM_CONFIDENCE = 0.2;
 
 	private VuforiaLocalizer vuforia;
 	private TFObjectDetector tfod;
@@ -35,6 +36,12 @@ public class ObjectDetection {
 
 	}
 
+	public void initializeTFOD() {
+		if(tfod != null) {
+			tfod.activate();
+		}
+	}
+
 	public void initializeObjectDetection() {
 
 		initVuforia();
@@ -45,21 +52,16 @@ public class ObjectDetection {
 			logger.completeLog("Sorry!", "This device is not compatible with TFOD");
 			logger.update();
 		}
-
-		/*
-		 * Activate TensorFlow Object Detection before we wait for the start command.
-		 * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-		 **/
-		if (tfod != null) {
-			tfod.activate();
-		}
 	}
 
 	public Recognition getSkyStone() {
+		List<Recognition> updatedRecognitions = null;
+		float firstRight = -1000;
+		float secondRight = 1000;
 		if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
-			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+			updatedRecognitions = tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
 				logger.numberLog("# Object Detected", updatedRecognitions.size());
 				int i = 0;
@@ -81,8 +83,30 @@ public class ObjectDetection {
 						return recognition;
 					}
 				}
+				if(updatedRecognitions.size() > 0) {
+					firstRight = updatedRecognitions.get(0).getRight() - 500;
+					if(updatedRecognitions.size() > 1) {
+						secondRight = updatedRecognitions.get(1).getRight() - 500;
+					}
+				}
 			}
 		}
+		logger.completeLog("Object Detection", "No objects detected");
+		final float rightPosition;
+		if(firstRight < 100 && secondRight < 100) {
+			rightPosition = 750f;
+		} else if(firstRight > -100 && secondRight > -100) {
+			rightPosition = 0f;
+		} else if(firstRight > 100) {
+			rightPosition = 500f;
+		} else if(firstRight < -100) {
+			rightPosition = 0f;
+		} else {
+			rightPosition = 750f;
+		}
+		logger.completeLog("Positions", "FirstRight: " + firstRight
+													+ "SecondRight: " + secondRight
+													+ "RightPosition: " + rightPosition);
 		return new Recognition() {
 			@Override
 			public String getLabel() {
@@ -99,9 +123,9 @@ public class ObjectDetection {
 				return 0.5f;
 			}
 
-			@Override //TODO: If finds 2 stone, return pos 3rd stone would be in, if 1 then return pos that isnt it
+			@Override //TODO: if it finds 1 then return pos that isnt it
 			public float getRight() {
-				return 500f;
+				return rightPosition;
 			}
 
 			@Override

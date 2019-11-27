@@ -125,6 +125,7 @@ public class Drivetrain extends RobotComponent {
 				(frontLeft.isBusy() && backLeft.isBusy()) &&
 				(frontRight.isBusy() && backRight.isBusy())) {
 
+			/*
 			logger.addData("Path1", String.format(Locale.US,
 					"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
 			logger.occasionalLog("Path2", String.format(Locale.US,
@@ -134,6 +135,7 @@ public class Drivetrain extends RobotComponent {
 					backLeft.getCurrentPosition(),
 					backRight.getCurrentPosition()));
 			logger.update();
+			 */
 		}
 
 		// Stop all motion
