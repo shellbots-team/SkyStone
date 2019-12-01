@@ -63,6 +63,8 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		waitForStart();
 
+		robot.releaseBaseplate();
+
 		// Drive forward so objects are within distance
 		robot.drivetrain.runDistance(-7, 7, 7, -7, 1.0, 999);
 
@@ -75,11 +77,11 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		// Hold arm in the air
 		robot.arm.maintainPosition();
 
-		robot.arm.extendWithPower(1);
+//		robot.arm.extendWithPower(1);
 
 		sleep(300);
 
-		robot.arm.extendWithPower(0);
+//		robot.arm.extendWithPower(0);
 
 		// Get the value of the skystone
 		Recognition stone = robot.objectDetection.getSkyStone();
@@ -106,20 +108,20 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		// Move so skystone is in front of arm
 		if(position == SKYSTONE_SIDE) {
-			moveTowardsLoadingZone(3.0, 3.0);
+			moveTowardsLoadingZone(3.5, 3.5);
 		} else if(position == MIDDLE_SIDE) {
 		} else if(position == BASEPLATE_SIDE) {
-			moveTowardsBuildingZone(3.0, 3.0);
+			moveTowardsBuildingZone(3.5, 3.5);
 		}
-
-		// Grab the skystone
-		robot.arm.grabHand();
 
 		// Lower the arm in front of the skystone
 		robot.arm.lowerArm(false);
 		sleep(500);
 
-		robot.drivetrain.runDistance(-0.3, 0.3, 0.3, -0.3, 1.0, 999);
+		robot.drivetrain.runDistance(-4, 4, 4, -4, 1.0, 999);
+
+		// Grab the skystone
+		robot.arm.grabHand();
 
 		// Lift the skystone up
 		robot.arm.raiseArm(true);

@@ -91,7 +91,7 @@ public class Arm extends RobotComponent {
 			raiseWithPower(0.22);
 			sleep(800);
 		} else {
-			raiseWithPower(0.2);
+			raiseWithPower(0.3);
 			sleep(700);
 		}
 

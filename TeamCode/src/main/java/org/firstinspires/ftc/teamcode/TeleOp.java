@@ -137,7 +137,7 @@ public class TeleOp extends OpMode {
 		} else if (this.gamepad2.dpad_down) {
 			robot.arm.lowerWithPower(0.15);
 		} else {
-			robot.arm.maintainPosition();
+			robot.arm.raiseWithPower(0);
 		}
 
 		if (this.gamepad2.dpad_left) {
