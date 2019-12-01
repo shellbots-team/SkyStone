@@ -69,7 +69,7 @@ public class Arm extends RobotComponent {
 	}
 
 	public void raiseWithPower(double power) {
-		if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
+		if (armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
 			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
 			armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
 		}
@@ -78,7 +78,7 @@ public class Arm extends RobotComponent {
 	}
 
 	public void lowerWithPower(double power) {
-		if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
+		if (armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
 			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
 			armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
 		}
@@ -87,8 +87,8 @@ public class Arm extends RobotComponent {
 	}
 
 	public void raiseArm(boolean isHoldingBlock) {
-		if(isHoldingBlock) {
-			raiseWithPower(0.2);
+		if (isHoldingBlock) {
+			raiseWithPower(0.22);
 			sleep(800);
 		} else {
 			raiseWithPower(0.2);
@@ -121,17 +121,13 @@ public class Arm extends RobotComponent {
 		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
 		armRunMode = DcMotor.RunMode.RUN_TO_POSITION;
 
-		leftArm.setPower(0.1);
+		leftArm.setPower(0.3);
 		rightArm.setPower(0);
 	}
 
 	public void grabHand() {
 		isGrabbing = true;
 		setServoPosition(leftHand, 0);
-	}
-
-	public void partialGrabHand() {
-		setServoPosition(leftHand, 0.5);
 	}
 
 	public void releaseHand() {
