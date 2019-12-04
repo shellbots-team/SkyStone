@@ -36,9 +36,10 @@ public abstract class BaseAutonomous extends LinearOpMode {
 	void moveTowardsLoadingZone(long milliseconds, double speed) {
 		if (getColor() == Color.BLUE) {
 			robot.drivetrain.setPowerRight(speed);
-		}
-		if (getColor() == Color.RED) {
+		} else if (getColor() == Color.RED) {
 			robot.drivetrain.setPowerLeft(speed);
+		} else {
+			logger.completeLog("Color", "Color not found");
 		}
 		if (milliseconds == 0) {
 			return;

@@ -32,9 +32,9 @@ public abstract class BasicLine extends BaseAutonomous {
 		// Step 2 - Driving onto the midline
 		logger.statusLog(step++, "Driving to midline");
 		if (getStartingSide() == Side.SKYSTONE) {
-			moveTowardsBuildingZone(1750, 1.0);
+			moveTowardsBuildingZone(1350, 1.0);
 		} else if (getStartingSide() == Side.BASEPLATE) {
-			moveTowardsLoadingZone(1750, 1.0);
+			moveTowardsLoadingZone(1650, 1.0);
 		}
 
 		// Step 4 - Correcting self on line

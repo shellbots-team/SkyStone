@@ -88,11 +88,11 @@ public class Arm extends RobotComponent {
 
 	public void raiseArm(boolean isHoldingBlock) {
 		if (isHoldingBlock) {
+			raiseWithPower(0.5);
+			sleep(400);
+		} else {
 			raiseWithPower(0.22);
 			sleep(800);
-		} else {
-			raiseWithPower(0.3);
-			sleep(700);
 		}
 
 		currentPosition = leftArm.getCurrentPosition();
@@ -116,12 +116,14 @@ public class Arm extends RobotComponent {
 		} else if(armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
 			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, rightArm);
 		}
-		leftArm.setTargetPosition(currentPosition);
+		//leftArm.setTargetPosition(leftArm.getCurrentPosition() + 100);
+		leftArm.setTargetPosition(250);
+		logger.completeLog("Pos", String.valueOf(leftArm.getCurrentPosition()));
 
 		setRunMode(DcMotor.RunMode.RUN_TO_POSITION, leftArm);
 		armRunMode = DcMotor.RunMode.RUN_TO_POSITION;
 
-		leftArm.setPower(0.3);
+		leftArm.setPower(0.55);
 		rightArm.setPower(0);
 	}
 

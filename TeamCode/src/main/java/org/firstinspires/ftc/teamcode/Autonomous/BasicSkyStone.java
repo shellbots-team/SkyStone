@@ -63,6 +63,14 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		waitForStart();
 
+		robot.arm.grabHand();
+
+		sleep(2000);
+
+		robot.arm.maintainPosition();
+
+		sleep(4000);
+/*
 		robot.releaseBaseplate();
 
 		// Drive forward so objects are within distance
@@ -104,7 +112,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		logger.completeLog("Postion", String.valueOf(position));
 
 		// Run forward to the blocks
-		robot.drivetrain.runDistance(-4.5, 4.5, 4.5, -4.5, 1.0, 999);
+		robot.drivetrain.runDistance(-4, 4, 4, -4, 1.0, 999);
 
 		// Move so skystone is in front of arm
 		if(position == SKYSTONE_SIDE) {
