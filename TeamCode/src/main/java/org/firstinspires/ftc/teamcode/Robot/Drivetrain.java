@@ -123,7 +123,8 @@ public class Drivetrain extends RobotComponent {
 		// While game is still going, maxtime has not been reached, and none of the motors have reached their position
 		while (opModeIsActive() && (runtime.seconds() < maxSeconds) &&
 				(frontLeft.isBusy() && backLeft.isBusy()) &&
-				(frontRight.isBusy() && backRight.isBusy())) {
+				(frontRight.isBusy() && backRight.isBusy()) &&
+				(checkDist(10, frontLeft, frontRight, backLeft, backRight))) {
 
 			/*
 			logger.addData("Path1", String.format(Locale.US,
@@ -146,6 +147,16 @@ public class Drivetrain extends RobotComponent {
 
 		// Stop all motion
 		setAllPowers(0);
+	}
+
+	private boolean checkDist(int max, DcMotor... motorList) {
+		for(DcMotor motor : motorList) {
+			if(Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) < max) {
+				logger.completeLog("Pos", "Close enough");
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void setPowerLeft(double power) {
