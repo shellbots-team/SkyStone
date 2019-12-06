@@ -89,7 +89,7 @@ public class Arm extends RobotComponent {
 	public void raiseArm(boolean isHoldingBlock) {
 		if (isHoldingBlock) {
 			raiseWithPower(0.6);
-			sleep(450);
+			sleep(500);
 		} else {
 			raiseWithPower(0.4);
 			sleep(500);
@@ -100,8 +100,8 @@ public class Arm extends RobotComponent {
 
 	public void lowerArm(boolean isHoldingBlock) {
 		if(isHoldingBlock) {
-			lowerWithPower(0.06);
-			sleep(1000);
+			lowerWithPower(0.08);
+			sleep(800);
 		} else {
 			lowerWithPower(0.1);
 			sleep(700);
@@ -134,7 +134,7 @@ public class Arm extends RobotComponent {
 
 	public void releaseHand() {
 		isGrabbing = false;
-		setServoPosition(leftHand, 0.8);
+		setServoPosition(leftHand, 1);
 	}
 
 	public boolean isGrabbing() {

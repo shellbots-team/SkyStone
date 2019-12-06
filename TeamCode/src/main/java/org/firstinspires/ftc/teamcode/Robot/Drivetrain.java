@@ -89,7 +89,7 @@ public class Drivetrain extends RobotComponent {
 	 * @param speed       The speed for all of the motors to be set at
 	 */
 	public void runDistance(double leftInches, double rightInches, double speed, double maxSeconds) {
-		runDistance(leftInches, leftInches, rightInches, rightInches, 1.0, 999);
+		runDistance(leftInches, leftInches, rightInches, rightInches, speed, maxSeconds);
 	}
 
 	public void runDistance(double frontLeftInches, double backLeftInches, double frontRightInches, double backRightInches, double speed, double maxSeconds) {

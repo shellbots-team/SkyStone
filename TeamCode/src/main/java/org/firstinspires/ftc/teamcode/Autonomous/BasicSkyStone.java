@@ -116,7 +116,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		// Lower the arm in front of the skystone
 		robot.arm.lowerArm(false);
 
-		robot.drivetrain.runDistance(-2.8, 2.8, 2.8, -2.8, 1.0, 999);
+		robot.drivetrain.runDistance(-3.2, 3.2, 3.2, -3.2, 1.0, 999);
 
 		// Grab the skystone
 		robot.arm.grabHand();
@@ -129,10 +129,10 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		robot.arm.maintainPosition();
 
 		// Move away from stones
-		robot.drivetrain.runDistance(1.1, -1.1, -1.1, 1.1, 1, 0.5);
+		robot.drivetrain.runDistance(1.4, -1.4, -1.4, 1.4, 1, 0.5);
 
 		// Turn to look at baseplate
-		robot.drivetrain.turnDegrees(98.8, true, 1.0);
+		robot.drivetrain.turnDegrees(98.72, true, 1.0);
 
 		// Lower the arm to go under the bridge
 		robot.arm.lowerArm(true);
@@ -141,11 +141,11 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		double distanceToBaseplateSide = 0;
 
 		if(position == SKYSTONE_SIDE) {
-			distanceToBaseplateSide = 24;
-		} else if(position == MIDDLE_SIDE) {
 			distanceToBaseplateSide = 22;
-		} else if(position == BASEPLATE_SIDE) {
+		} else if(position == MIDDLE_SIDE) {
 			distanceToBaseplateSide = 20;
+		} else if(position == BASEPLATE_SIDE) {
+			distanceToBaseplateSide = 18;
 		}
 
 		if(getColor() == Color.BLUE) { distanceToBaseplateSide *= -1; }
@@ -157,23 +157,25 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		robot.arm.releaseHand();
 		//robot.drivetrain.turnDegrees(6, false, 1.0);
 
-		distanceToBaseplateSide += 9.7;
+		sleep(250);
+
+		distanceToBaseplateSide += 9.8;
 
 		// Moving back to the other stone
-		robot.drivetrain.runDistance(distanceToBaseplateSide, -distanceToBaseplateSide, -distanceToBaseplateSide, distanceToBaseplateSide, 1.0, 999);
+		robot.drivetrain.runDistance(distanceToBaseplateSide, -distanceToBaseplateSide, -distanceToBaseplateSide, distanceToBaseplateSide, 1.0, 4);
 
 		// Move closer to the stones
-		//robot.drivetrain.runDistance(-1, -1);
+		robot.drivetrain.runDistance(-0.5, -0.5, 1.0, 0.2);
 
 		// Turn to be in position to grab the stone
 		if (position == 0) {
 			robot.drivetrain.turnDegrees(97, false, 1.0);
 		} else if (position == 1) {
-			robot.drivetrain.turnDegrees(100, false, 1.0);
+			robot.drivetrain.turnDegrees(98.8, false, 1.0);
 		}
 
 		// Move closer to the stone
-		robot.drivetrain.runDistance(-1.3, 1.3, 1.3, -1.3, 1, 0.6);
+		robot.drivetrain.runDistance(-0.95, 0.95, 0.95, -0.95, 1, 0.6);
 
 		// Grab the stone
 		robot.arm.grabHand();
@@ -190,7 +192,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		if (position == 0) {
 			robot.drivetrain.turnDegrees(95, true, 1.0);
 		} else if (position == 1) {
-			robot.drivetrain.turnDegrees(102.7, true, 1.0);
+			robot.drivetrain.turnDegrees(100, true, 1.0);
 		}
 
 		// Drop the arm to go under bridge
@@ -203,7 +205,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		robot.arm.releaseHand();
 
 		// Move back to the line
-		robot.drivetrain.runDistance(7, -7, -7, 7, 1, 999);
+		robot.drivetrain.runDistance(5, -5, -5, 5, 1, 999);
 // End
 /*
 		if(position == -1) {
