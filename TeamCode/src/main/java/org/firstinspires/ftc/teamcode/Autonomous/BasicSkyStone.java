@@ -159,13 +159,23 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 		sleep(250);
 
-		distanceToBaseplateSide += 9.8;
+		distanceToBaseplateSide += 9.9;
+
+		double distanceToMidline = 7.8;
+
+		robot.drivetrain.runDistance(distanceToMidline, -distanceToMidline, -distanceToMidline, distanceToMidline, 1.0, 999);
+
+		moveTowardsLoadingZone(300, 0.5);
+
+		// Move away from the stones
+		robot.drivetrain.runDistance(0.75, 0.75, 1.0, 0.4);
+
+		distanceToBaseplateSide -= distanceToMidline;
 
 		// Moving back to the other stone
 		robot.drivetrain.runDistance(distanceToBaseplateSide, -distanceToBaseplateSide, -distanceToBaseplateSide, distanceToBaseplateSide, 1.0, 4);
 
-		// Move closer to the stones
-		robot.drivetrain.runDistance(-0.5, -0.5, 1.0, 0.2);
+		distanceToBaseplateSide += distanceToMidline;
 
 		// Turn to be in position to grab the stone
 		if (position == 0) {
@@ -175,7 +185,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		}
 
 		// Move closer to the stone
-		robot.drivetrain.runDistance(-0.95, 0.95, 0.95, -0.95, 1, 0.6);
+		robot.drivetrain.runDistance(-1.2, 1.2, 1.2, -1.2, 1, 0.6);
 
 		// Grab the stone
 		robot.arm.grabHand();
