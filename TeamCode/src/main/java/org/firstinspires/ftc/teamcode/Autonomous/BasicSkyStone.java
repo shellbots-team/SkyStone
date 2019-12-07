@@ -66,7 +66,7 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		robot.releaseBaseplate();
 
 		// Drive forward so objects are within distance
-		robot.drivetrain.runDistance(-7, 7, 7, -7, 1.0, 999);
+		robot.drivetrain.runDistance(-7, 7, 7, -7, 1.0, 2);
 
 		// Start object detection
 		robot.objectDetection.initializeTFOD();
@@ -103,11 +103,15 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		logger.completeLog("Postion", String.valueOf(position));
 
 		// Run forward to the blocks
-		robot.drivetrain.runDistance(-4, 4, 4, -4, 1.0, 999);
+		if(position == SKYSTONE_SIDE) {
+			robot.drivetrain.runDistance(-5, 5, 5, -5, 1.0, 2);
+		} else {
+			robot.drivetrain.runDistance(-4, 4, 4, -4, 1.0, 2);
+		}
 
 		// Move so skystone is in front of arm
 		if(position == SKYSTONE_SIDE) {
-			moveTowardsLoadingZone(4.0, 4.0);
+			moveTowardsLoadingZone(3.0, 4.0);
 		} else if(position == MIDDLE_SIDE) {
 		} else if(position == BASEPLATE_SIDE) {
 			moveTowardsBuildingZone(4.0, 4.0);
@@ -116,7 +120,11 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		// Lower the arm in front of the skystone
 		robot.arm.lowerArm(false);
 
-		robot.drivetrain.runDistance(-3.2, 3.2, 3.2, -3.2, 1.0, 999);
+		if(position == SKYSTONE_SIDE) {
+			robot.drivetrain.runDistance(-2, 2, 2, -2, 1.0, 1);
+		} else {
+			robot.drivetrain.runDistance(-3, 3, 3, -3, 1.0, 1);
+		}
 
 		// Grab the skystone
 		robot.arm.grabHand();
@@ -132,7 +140,11 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		robot.drivetrain.runDistance(1.4, -1.4, -1.4, 1.4, 1, 0.5);
 
 		// Turn to look at baseplate
-		robot.drivetrain.turnDegrees(98.72, true, 1.0);
+		if(position == SKYSTONE_SIDE) {
+			robot.drivetrain.turnDegrees(98.3,true, 1.0);
+		} else {
+			robot.drivetrain.turnDegrees(98.6,true, 1.0);
+		}
 
 		// Lower the arm to go under the bridge
 		robot.arm.lowerArm(true);
@@ -141,9 +153,9 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		double distanceToBaseplateSide = 0;
 
 		if(position == SKYSTONE_SIDE) {
-			distanceToBaseplateSide = 22;
+			distanceToBaseplateSide = 24;
 		} else if(position == MIDDLE_SIDE) {
-			distanceToBaseplateSide = 20;
+			distanceToBaseplateSide = 21;
 		} else if(position == BASEPLATE_SIDE) {
 			distanceToBaseplateSide = 18;
 		}
@@ -151,74 +163,67 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		if(getColor() == Color.BLUE) { distanceToBaseplateSide *= -1; }
 
 		// Run to the baseplate
-		robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 999);
-// Start
-		// Drop the stone
-		robot.arm.releaseHand();
-		//robot.drivetrain.turnDegrees(6, false, 1.0);
+		robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 5);
 
-		sleep(250);
-
-		distanceToBaseplateSide += 9.9;
-
-		double distanceToMidline = 7.8;
-
-		robot.drivetrain.runDistance(distanceToMidline, -distanceToMidline, -distanceToMidline, distanceToMidline, 1.0, 999);
-
-		moveTowardsLoadingZone(300, 0.5);
-
-		// Move away from the stones
-		robot.drivetrain.runDistance(0.75, 0.75, 1.0, 0.4);
-
-		distanceToBaseplateSide -= distanceToMidline;
-
-		// Moving back to the other stone
-		robot.drivetrain.runDistance(distanceToBaseplateSide, -distanceToBaseplateSide, -distanceToBaseplateSide, distanceToBaseplateSide, 1.0, 4);
-
-		distanceToBaseplateSide += distanceToMidline;
-
-		// Turn to be in position to grab the stone
-		if (position == 0) {
-			robot.drivetrain.turnDegrees(97, false, 1.0);
-		} else if (position == 1) {
-			robot.drivetrain.turnDegrees(98.8, false, 1.0);
-		}
-
-		// Move closer to the stone
-		robot.drivetrain.runDistance(-1.2, 1.2, 1.2, -1.2, 1, 0.6);
-
-		// Grab the stone
-		robot.arm.grabHand();
-		sleep(700);
-
-		// Raise the arm and keep it in that position
-		robot.arm.raiseArm(true);
-		robot.arm.maintainPosition();
-
-		// Drive away from the stones
-		robot.drivetrain.runDistance(1.0, -1.0, -1.0, 1.0, 1.0, 0.6);
-
-		// Turn to look at baseplate side
-		if (position == 0) {
-			robot.drivetrain.turnDegrees(95, true, 1.0);
-		} else if (position == 1) {
-			robot.drivetrain.turnDegrees(100, true, 1.0);
-		}
-
-		// Drop the arm to go under bridge
-		robot.arm.lowerArm(true);
-
-		// Drive to the baseplate side
-		robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 999);
-
-		// Release the block
-		robot.arm.releaseHand();
-
-		// Move back to the line
-		robot.drivetrain.runDistance(5, -5, -5, 5, 1, 999);
-// End
-/*
 		if(position == -1) {
+
+			// Drop the stone
+			robot.arm.releaseHand();
+
+			sleep(250);
+
+			distanceToBaseplateSide -= 10;
+
+			double distanceToMidline;
+
+			distanceToMidline = 6.2;
+
+			robot.drivetrain.runDistance(distanceToMidline, -distanceToMidline, -distanceToMidline, distanceToMidline, 1.0, 2);
+
+			moveTowardsLoadingZone(440, 0.5);
+
+			moveTowardsBuildingZone(135, 0.5);
+
+			distanceToBaseplateSide -= distanceToMidline;
+
+			// Moving back to the other stone
+			robot.drivetrain.runDistance(distanceToBaseplateSide, -distanceToBaseplateSide, -distanceToBaseplateSide, distanceToBaseplateSide, 1.0, 4);
+
+			distanceToBaseplateSide += distanceToMidline;
+
+			// Turn to be in position to grab the stone
+			robot.drivetrain.turnDegrees(98.8, false, 1.0);
+
+			// Move closer to the stone
+			robot.drivetrain.runDistance(-1.35, 1.35, 1.35, -1.35, 1, 0.6);
+
+			// Grab the stone
+			robot.arm.grabHand();
+			sleep(700);
+
+			// Raise the arm and keep it in that position
+			//robot.arm.raiseArm(true);
+			//robot.arm.maintainPosition();
+
+			// Drive away from the stones
+			robot.drivetrain.runDistance(1.2, -1.2, -1.2, 1.2, 1.0, 0.6);
+
+			// Turn to look at baseplate side
+			robot.drivetrain.turnDegrees(100, true, 1.0);
+
+			// Drop the arm to go under bridge
+			//robot.arm.lowerArm(true);
+
+			// Drive to the baseplate side
+			robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 6);
+
+			// Release the block
+			robot.arm.releaseHand();
+
+			// Move back to the line
+			robot.drivetrain.runDistance(5, -5, -5, 5, 1, 2);
+
+			/*
 			robot.arm.raiseArm(true);
 			robot.arm.maintainPosition();
 
@@ -246,11 +251,80 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 			robot.drivetrain.runDistance(4, -4, -4, 4, 1.0, 999);
 
 			moveTowardsBuildingZone(20.0, 20.0);
-
+*/
 		} else {
-		// TODO: Paste lines 157-209 here
+// Start
+		// Drop the stone
+		robot.arm.releaseHand();
+		//robot.drivetrain.turnDegrees(6, false, 1.0);
+
+		sleep(250);
+
+		distanceToBaseplateSide += 9.87;
+
+		double distanceToMidline;
+
+		if(position == 0) {
+			distanceToMidline = 6.35;
+		} else {
+			distanceToMidline = 7.4;
 		}
- */
+
+		robot.drivetrain.runDistance(distanceToMidline, -distanceToMidline, -distanceToMidline, distanceToMidline, 1.0, 2);
+
+		moveTowardsLoadingZone(450, 0.5);
+
+		moveTowardsBuildingZone(150, 0.5);
+
+		distanceToBaseplateSide -= distanceToMidline;
+
+		// Moving back to the other stone
+		robot.drivetrain.runDistance(distanceToBaseplateSide, -distanceToBaseplateSide, -distanceToBaseplateSide, distanceToBaseplateSide, 1.0, 4);
+
+		distanceToBaseplateSide += distanceToMidline;
+
+		// Turn to be in position to grab the stone
+		if (position == 0) {
+			robot.drivetrain.turnDegrees(99.9, false, 1.0);
+		} else if (position == 1) {
+			robot.drivetrain.turnDegrees(98.8, false, 1.0);
+		}
+
+		// Move closer to the stone
+		robot.drivetrain.runDistance(-1.45, 1.45, 1.45, -1.45, 1, 0.6);
+
+		// Grab the stone
+		robot.arm.grabHand();
+		sleep(700);
+
+		// Raise the arm and keep it in that position
+		robot.arm.raiseArm(true);
+		robot.arm.maintainPosition();
+
+		// Drive away from the stones
+		robot.drivetrain.runDistance(1.32, -1.32, -1.32, 1.32, 1.0, 0.6);
+
+		// Turn to look at baseplate side
+		if (position == 0) {
+			robot.drivetrain.turnDegrees(100, true, 1.0);
+			distanceToBaseplateSide += 0.8;
+		} else if (position == 1) {
+			robot.drivetrain.turnDegrees(100, true, 1.0);
+		}
+
+		// Drop the arm to go under bridge
+		robot.arm.lowerArm(true);
+
+		// Drive to the baseplate side
+		robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 6);
+
+		// Release the block
+		robot.arm.releaseHand();
+
+		// Move back to the line
+		robot.drivetrain.runDistance(5.5, -5.5, -5.5, 5.5, 1, 2);
+// End
+		}
 
 		// move forward, grab block, ect...
 
