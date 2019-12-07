@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.Robot.Robot;
-
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Manual", name = "ServoMovement")
 public class ServoMovement extends OpMode {
 

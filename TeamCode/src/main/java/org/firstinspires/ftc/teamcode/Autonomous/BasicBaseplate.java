@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 /**
  * Created by shell on 09/24/2019.
  */
@@ -30,7 +32,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 3 - Moving to be aligned with center of baseplate
 		logger.statusLog(step++, "Moving to be aligned with center of baseplate");
-		moveTowardsLoadingZone(550, 1);
+		moveTowardsLoadingZone(450, 1);
 		sleep(100);
 
 		// Step 3 - Move near the baseplate
@@ -49,7 +51,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 6 - Drag baseplate to the corner
 		logger.statusLog(step++, "Dragging the baseplate to the corner");
-		robot.drivetrain.runDistance(-(DISTANCE_TO_BASEPLATE + 2), -(DISTANCE_TO_BASEPLATE + 2));
+		robot.drivetrain.runDistance(-(DISTANCE_TO_BASEPLATE + 3.5), -(DISTANCE_TO_BASEPLATE + 3.5));
 
 		// Step 7 - Release the baseplate
 		logger.statusLog(step++, "Releasing the baseplate");
@@ -75,7 +77,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 		// Step 12 - Moving to wall, or to center
 		if (getFinalPlacement() == Placement.CENTER) {
 			logger.statusLog(step++, "Moving to the center");
-			robot.drivetrain.runDistance(6.5, 6.5);
+			robot.drivetrain.runDistance(4.5, 4.5);
 		} else {
 			logger.statusLog(step++, "Moving to the wall");
 			robot.drivetrain.runDistance(-7, -7);

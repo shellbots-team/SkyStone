@@ -71,6 +71,16 @@ public class Drivetrain extends RobotComponent {
 
 	}
 
+	public void turnDegrees(double degrees, boolean goClockwise, double speed, double maxSeconds) {
+		int inchTurn = (int) (degrees / 10.95);
+		if (goClockwise) {
+			runDistance(inchTurn, -inchTurn, speed, maxSeconds);
+		} else {
+			runDistance(-inchTurn, inchTurn, speed, maxSeconds);
+		}
+
+	}
+
 	public void runDistance(double leftInches, double rightInches) {
 		runDistance(leftInches, rightInches, DEFAULT_DRIVE_SPEED, 999);
 	}

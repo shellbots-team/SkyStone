@@ -22,7 +22,6 @@ public class Arm extends RobotComponent {
 	private CRServo rightHand = null;
 	private boolean isGrabbing = false;
 	private DcMotor.RunMode armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
-	private int currentPosition = 0;
 
 	private Logger logger = null;
 
@@ -94,8 +93,6 @@ public class Arm extends RobotComponent {
 			raiseWithPower(0.4);
 			sleep(500);
 		}
-
-		currentPosition = leftArm.getCurrentPosition();
 	}
 
 	public void lowerArm(boolean isHoldingBlock) {
@@ -107,7 +104,6 @@ public class Arm extends RobotComponent {
 			sleep(700);
 		}
 		stopAllMotors();
-		currentPosition = leftArm.getCurrentPosition();
 	}
 
 	public void maintainPosition() {
