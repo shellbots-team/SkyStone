@@ -124,8 +124,10 @@ public class TeleOp extends OpMode {
 		}
 
 		if (this.gamepad2.right_bumper) {
+			// down
 		}
 		if (this.gamepad2.left_bumper) {
+			// up
 		}
 
 		if (this.gamepad2.dpad_up) {

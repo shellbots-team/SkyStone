@@ -79,11 +79,11 @@ public class Christmas_On_Main extends OpMode {
 		if(current_status == STATUS.STOPPED) {
 			robot.stopAllMotors();
 		} else if(current_status == STATUS.AUTO) {
-			if(colorSensor.red() > RED_THRESHOLD) {
-				robot.stopAllMotors();
-			} else if(colorSensor.green() > GREEN_THRESHOLD) {
+			if(colorSensor.green() > GREEN_THRESHOLD) {
 				robot.drivetrain.setIndividualPowers(SPEED, -SPEED,SPEED, -SPEED);
-			}
+			} else if (colorSensor.red() > RED_THRESHOLD) {
+				robot.drivetrain.setIndividualPowers(-SPEED, SPEED, -SPEED, SPEED);
+			} else { robot.stopAllMotors();}
 		} else if(current_status == STATUS.NORMAL) {
 
 			/* Controller Layouts

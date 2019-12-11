@@ -66,6 +66,7 @@ public class Robot {
 	public Drivetrain drivetrain = null;
 	public Arm arm = null;
 	public ObjectDetection objectDetection = null;
+	public Grabber grabber = null;
 
 	public CRServo leftGrip = null;
 	public CRServo rightGrip = null;
@@ -91,6 +92,7 @@ public class Robot {
 		drivetrain = new Drivetrain(opmode);
 		arm = new Arm(opmode);
 		objectDetection = new ObjectDetection(hardwareMap, telemetry);
+		grabber = new Grabber(opmode);
 
 		drivetrain.init(
 				telemetry,
@@ -109,7 +111,10 @@ public class Robot {
 				this.hardwareMap.get(CRServo.class, "rightHand")
 		);
 
-		objectDetection = new ObjectDetection(this.hardwareMap, this.telemetry);
+		grabber.init(
+				telemetry,
+				this.hardwareMap.get(CRServo.class, "grabber")
+		);
 
 		// Define and initialize ALL installed servos.
 		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
