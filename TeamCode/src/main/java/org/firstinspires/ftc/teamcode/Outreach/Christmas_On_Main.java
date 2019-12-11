@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Robot.Robot;
  * Created by shell on 09/10/2019.
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Manual", name = "Manual Mode")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Outreach", name = "Christmas on main")
 public class Christmas_On_Main extends OpMode {
 
 	private Robot robot = new Robot();
@@ -20,9 +20,9 @@ public class Christmas_On_Main extends OpMode {
 	private ColorSensor colorSensor = null;
 	private STATUS current_status = STATUS.STOPPED;
 
-	private final double RED_THRESHOLD = 20;
-	private final double GREEN_THRESHOLD = 20;
-	private final double SPEED = 0.5;
+	private final double RED_THRESHOLD = 50;
+	private final double GREEN_THRESHOLD = 50;
+	private final double SPEED = 0.25;
 
 	private double speed = 1.0;
 
@@ -66,25 +66,36 @@ public class Christmas_On_Main extends OpMode {
 	@Override
 	public void loop() {
 
-		if (this.gamepad1.y) {
+		if (this.gamepad1.y || this.gamepad1.a) {
 			current_status = STATUS.STOPPED;
+			colorSensor.enableLed(false);
 		}
-		if (this.gamepad1.a) {
+		if (this.gamepad1.b) {
 			current_status = STATUS.NORMAL;
+			colorSensor.enableLed(false);
 		}
 		if (this.gamepad1.x) {
 			current_status = STATUS.AUTO;
+			colorSensor.enableLed(true);
 		}
 
+		logger.addData("Status", String.valueOf(current_status));
+		logger.addData("Red", String.valueOf(colorSensor.red()));
+		logger.addData("Green", String.valueOf(colorSensor.green()));
+		logger.addData("Blue", String.valueOf(colorSensor.blue()));
+		logger.update();
+
 		if(current_status == STATUS.STOPPED) {
+			colorSensor.enableLed(false);
 			robot.stopAllMotors();
 		} else if(current_status == STATUS.AUTO) {
-			if(colorSensor.green() > GREEN_THRESHOLD) {
-				robot.drivetrain.setIndividualPowers(SPEED, -SPEED,SPEED, -SPEED);
-			} else if (colorSensor.red() > RED_THRESHOLD) {
-				robot.drivetrain.setIndividualPowers(-SPEED, SPEED, -SPEED, SPEED);
+			if(colorSensor.green() > GREEN_THRESHOLD || colorSensor.red() > RED_THRESHOLD) {
+				if(colorSensor.green() > colorSensor.red()) {
+					robot.drivetrain.setAllPowers(SPEED);
+				} else { robot.drivetrain.setAllPowers(-SPEED); }
 			} else { robot.stopAllMotors();}
 		} else if(current_status == STATUS.NORMAL) {
+
 
 			/* Controller Layouts
 			 *
@@ -191,11 +202,6 @@ public class Christmas_On_Main extends OpMode {
 			}
 			if (this.gamepad2.b) {
 			}
-
-
-			robot.arm.logTeleOpData();
-			logger.numberLog("Speed", speed);
-			logger.update();
 		}
 	}
 

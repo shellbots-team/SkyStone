@@ -1,13 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.Robot.ObjectDetection;
 
 /**
  * Created by shell on 09/24/2019.
@@ -18,30 +11,26 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 	@Override
 	void moveTowardsLoadingZone(long milliseconds, double speed) {
 		if (getColor() == Color.BLUE) {
-			robot.drivetrain.setAllPowers(speed);
+			robot.drivetrain.setPowerLeft(speed);
 		}
 		if (getColor() == Color.RED) {
-			robot.drivetrain.setAllPowers(-speed);
+			robot.drivetrain.setPowerRight(speed);
 		}
 		if (milliseconds == 0) {
 			return;
 		}
 		sleep(milliseconds);
 		robot.drivetrain.setAllPowers(0);
-	}
-
-	private void moveTowardsLoadingZone(double leftInches, double rightInches) {
-		robot.drivetrain.runDistance(-leftInches, -rightInches);
 	}
 
 	@Override
-		// TODO: Test this and movetowardsloading zone
 	void moveTowardsBuildingZone(long milliseconds, double speed) {
 		if (getColor() == Color.BLUE) {
-			robot.drivetrain.setAllPowers(-speed);
-		}
-		if (getColor() == Color.RED) {
-			robot.drivetrain.setAllPowers(speed);
+			robot.drivetrain.setPowerRight(speed);
+		} else if (getColor() == Color.RED) {
+			robot.drivetrain.setPowerLeft(speed);
+		} else {
+			logger.completeLog("Color", "Color not found");
 		}
 		if (milliseconds == 0) {
 			return;
@@ -50,13 +39,24 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		robot.drivetrain.setAllPowers(0);
 	}
 
-	private void moveTowardsBuildingZone(double leftInches, double rightInches) {
-		robot.drivetrain.runDistance(leftInches, rightInches);
-	}
 
 	@Override
 	public void runOpMode() {
 
+		super.runOpMode();
+
+		waitForStart();
+
+		robot.grabber.leftGrab();
+		robot.grabber.rightGrab();
+
+		sleep(3000);
+
+		robot.grabber.raise();
+
+		sleep(5000);
+
+		/*
 		boolean isBlue = getColor() == Color.BLUE;
 
 		super.runOpMode();
@@ -169,7 +169,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 3.5);
 
 		// Drop the stone
-		robot.grabber.release();
+		robot.grabber.raise();
 
 		sleep(250);
 
@@ -209,10 +209,10 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		// Drive to the baseplate side
 		robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 6);
 
-		robot.grabber.release();
+		robot.grabber.raise();
 
 		// Move back to the line
 		robot.drivetrain.runDistance(-5.5, 5.5, 5.5, -5.5, 1, 2);
-
+*/
 	}
 }

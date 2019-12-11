@@ -2,28 +2,38 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ServoController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Logger;
 
 public class Grabber extends RobotComponent {
 	public Grabber(OpMode opmode) {
 		super(opmode);
 	}
 
-	Telemetry telemetry = null;
-	CRServo servo = null;
+	Logger logger = null;
+	CRServo leftServo = null;
+	CRServo rightServo = null;
 
-	void init(Telemetry telemetry, CRServo servo) {
-		this.telemetry = telemetry;
-		this.servo = servo;
+	void init(Telemetry telemetry, CRServo leftServo, CRServo rightServo) {
+		logger = new Logger(telemetry);
+		this.leftServo = leftServo;
+		this.rightServo = rightServo;
+
 	}
 
-	public void grab() {
-		setServoPosition(servo, 1);
+	public void leftGrab() {
+		setServoPosition(leftServo, 1);
 	}
 
-	public void release() {
-		setServoPosition(servo, -1);
+	public void rightGrab() {
+		setServoPosition(rightServo, 0);
+	}
+
+	public void raise() {
+		setServoPosition(leftServo, 0.12);
+		setServoPosition(rightServo, 1);
 	}
 
 
@@ -34,6 +44,9 @@ public class Grabber extends RobotComponent {
 
 	@Override
 	void logTeleOpData() {
+		ServoController sc = leftServo.getController();
 
+		logger.completeLog("Left Grabber", String.valueOf(sc.getServoPosition(leftServo.getPortNumber())));
+		logger.completeLog("Right Grabber", String.valueOf(sc.getServoPosition(rightServo.getPortNumber())));
 	}
 }

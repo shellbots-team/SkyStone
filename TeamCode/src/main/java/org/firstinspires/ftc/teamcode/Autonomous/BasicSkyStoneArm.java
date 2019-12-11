@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.Robot.ObjectDetection;
 
 /**
  * Created by shell on 09/24/2019.
@@ -169,7 +164,7 @@ public abstract class BasicSkyStoneArm extends BaseAutonomous {
 		robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 3.5);
 
 		// Drop the stone
-		robot.grabber.release();
+		robot.grabber.raise();
 
 		sleep(250);
 
@@ -201,7 +196,6 @@ public abstract class BasicSkyStoneArm extends BaseAutonomous {
 		distanceToBaseplateSide += distanceToMidline;
 
 		// Grab the stone
-		robot.grabber.grab();
 
 		// Drive away from the stones
 		robot.drivetrain.runDistance(-3, -3, 1.0, 0.6);
@@ -209,7 +203,7 @@ public abstract class BasicSkyStoneArm extends BaseAutonomous {
 		// Drive to the baseplate side
 		robot.drivetrain.runDistance(-distanceToBaseplateSide, distanceToBaseplateSide, -distanceToBaseplateSide, -distanceToBaseplateSide, 1.0, 6);
 
-		robot.grabber.release();
+		robot.grabber.raise();
 
 		// Move back to the line
 		robot.drivetrain.runDistance(-5.5, 5.5, 5.5, -5.5, 1, 2);

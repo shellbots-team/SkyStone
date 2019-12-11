@@ -18,7 +18,6 @@ public class Arm extends RobotComponent {
 	public DcMotor leftArm = null;
 	public DcMotor rightArm = null;
 	private DcMotor extendArm = null;
-	private CRServo leftHand = null;
 	private CRServo rightHand = null;
 	private boolean isGrabbing = false;
 	private DcMotor.RunMode armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
@@ -29,10 +28,9 @@ public class Arm extends RobotComponent {
 		super(opmode);
 	}
 
-	void init(Telemetry telemetry, DcMotor leftArm, DcMotor rightArm, DcMotor extendArm, CRServo leftHand, CRServo rightHand) {
+	void init(Telemetry telemetry, DcMotor leftArm, DcMotor rightArm, DcMotor extendArm, CRServo rightHand) {
 		logger = new Logger(telemetry);
 
-		this.leftHand = leftHand;
 		this.rightHand = rightHand;
 
 		this.leftArm = leftArm;
@@ -125,12 +123,12 @@ public class Arm extends RobotComponent {
 
 	public void grabHand() {
 		isGrabbing = true;
-		setServoPosition(leftHand, 0);
+		setServoPosition(rightHand, 0);
 	}
 
 	public void releaseHand() {
 		isGrabbing = false;
-		setServoPosition(leftHand, 1);
+		setServoPosition(rightHand, 1);
 	}
 
 	public boolean isGrabbing() {
