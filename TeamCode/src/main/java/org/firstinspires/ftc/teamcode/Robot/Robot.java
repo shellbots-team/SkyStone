@@ -112,8 +112,8 @@ public class Robot {
 
 		grabber.init(
 				telemetry,
-				this.hardwareMap.get(CRServo.class, "leftGrabber"),
-				this.hardwareMap.get(CRServo.class, "rightGrabber")
+				this.hardwareMap.get(CRServo.class, "rightGrabber"),
+				this.hardwareMap.get(CRServo.class, "leftGrabber")
 		);
 
 		// Define and initialize ALL installed servos.
@@ -122,7 +122,7 @@ public class Robot {
 	}
 
 	public void grabBaseplate() {
-		setServoPosition(leftGrip, 0);
+		setServoPosition(leftGrip, 0.5);
 		setServoPosition(rightGrip, 0);
 	}
 

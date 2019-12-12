@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+
+import java.util.Objects;
+
 /**
  * Created by shell on 09/24/2019.
  */
@@ -10,54 +14,32 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 
 	@Override
 	void moveTowardsLoadingZone(long milliseconds, double speed) {
-		if (getColor() == Color.BLUE) {
-			robot.drivetrain.setPowerLeft(speed);
-		}
-		if (getColor() == Color.RED) {
-			robot.drivetrain.setPowerRight(speed);
-		}
-		if (milliseconds == 0) {
-			return;
-		}
-		sleep(milliseconds);
-		robot.drivetrain.setAllPowers(0);
+		super.moveTowardsBuildingZone(milliseconds, speed);
+	}
+
+	void moveTowardsLoadingZone(double distance, double speed, long maxSeconds) {
+		robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
 	}
 
 	@Override
 	void moveTowardsBuildingZone(long milliseconds, double speed) {
-		if (getColor() == Color.BLUE) {
-			robot.drivetrain.setPowerRight(speed);
-		} else if (getColor() == Color.RED) {
-			robot.drivetrain.setPowerLeft(speed);
-		} else {
-			logger.completeLog("Color", "Color not found");
-		}
-		if (milliseconds == 0) {
-			return;
-		}
-		sleep(milliseconds);
-		robot.drivetrain.setAllPowers(0);
+		super.moveTowardsLoadingZone(milliseconds, speed);
 	}
 
+	void moveTowardsBuildingZone(double distance, double speed, long maxSeconds) {
+		robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
+	}
+
+	void grabStone() {
+		if(getColor() == Color.BLUE) {
+			robot.grabber.rightGrab();
+		} else {
+			robot.grabber.leftGrab();
+		}
+	}
 
 	@Override
 	public void runOpMode() {
-
-		super.runOpMode();
-
-		waitForStart();
-
-		robot.grabber.leftGrab();
-		robot.grabber.rightGrab();
-
-		sleep(3000);
-
-		robot.grabber.raise();
-
-		sleep(5000);
-
-		/*
-		boolean isBlue = getColor() == Color.BLUE;
 
 		super.runOpMode();
 
@@ -68,21 +50,12 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		robot.releaseBaseplate();
 
 		// Drive forward so objects are within distance
-		robot.drivetrain.runDistance(-7, 7, 7, -7, 1.0, 2);
+		robot.drivetrain.runDistance(-6, -6, 1.0, 2);
 
 		// Start object detection
 		robot.objectDetection.initializeTFOD();
 
-		robot.arm.raiseArm(false);
-
-		// Hold arm in the air
-		robot.arm.maintainPosition();
-
-		robot.arm.extendWithPower(1);
-
-		sleep(500);
-
-		robot.arm.extendWithPower(0);
+		sleep(1500);
 
 		// Get the value of the skystone
 		Recognition stone = robot.objectDetection.getSkyStone();
@@ -104,30 +77,58 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 
 		logger.completeLog("Postion", String.valueOf(position));
 
-		// Run forward to the blocks
-		if(position == SKYSTONE_SIDE) {
-			robot.drivetrain.runDistance(-5.1, 5.1, 5.1, -5.1, 1.0, 2);
-		} else {
-			robot.drivetrain.runDistance(-4, 4, 4, -4, 1.0, 2);
-		}
+		long distanceToBaseplate;
 
-		// Move so skystone is in front of arm
 		if(position == SKYSTONE_SIDE) {
-			moveTowardsLoadingZone(3.3, 3.3);
+			moveTowardsLoadingZone(4, 1.0, 999);
+			distanceToBaseplate = 24;
 		} else if(position == MIDDLE_SIDE) {
-		} else if(position == BASEPLATE_SIDE) {
-			moveTowardsBuildingZone(3.0, 3.0);
+			moveTowardsBuildingZone(2, 1.0, 999);
+			distanceToBaseplate = 22;
+		} else {
+			moveTowardsBuildingZone(5.3, 1.0, 999);
+			distanceToBaseplate = 20;
 		}
 
-		// Lower the arm in front of the skystone
-		robot.arm.lowerArm(false);
+		robot.drivetrain.runDistance(-6.5, -6.5);
+
+		grabStone();
+
+		sleep(500);
+
+		robot.drivetrain.runDistance(3.2, 3.2);
+
+		moveTowardsBuildingZone(distanceToBaseplate, 1.0, 999);
+
+		robot.grabber.raise();
+
+		sleep(500);
+		// TODO : turn
+
+		distanceToBaseplate += 1000;
+		/*
+		moveTowardsLoadingZone(distanceToBaseplate, 1.0);
+
+		robot.drivetrain.runDistance(-2, -2);
 
 		if(position == SKYSTONE_SIDE) {
-			robot.drivetrain.runDistance(-2, 2, 2, -2, 1.0, 1);
+			grabSkystoneSide();
 		} else {
-			robot.drivetrain.runDistance(-3, 3, 3, -3, 1.0, 1);
+			grabBaseplateSide();
 		}
 
+		sleep(500);
+
+		robot.drivetrain.runDistance(2, 2);
+
+		moveTowardsBuildingZone(distanceToBaseplate, 1.0);
+
+		robot.grabber.raise();
+
+		moveTowardsLoadingZone(1000, 1.0);
+		 */
+
+/*
 		// Grab the skystone
 		robot.arm.grabHand();
 
@@ -200,8 +201,6 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 
 		distanceToBaseplateSide += distanceToMidline;
 
-		// Grab the stone
-		robot.grabber.grab();
 
 		// Drive away from the stones
 		robot.drivetrain.runDistance(-3, -3, 1.0, 0.6);
