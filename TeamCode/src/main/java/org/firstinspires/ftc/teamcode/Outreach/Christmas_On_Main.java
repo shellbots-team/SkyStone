@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Outreach;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Robot.Robot;
 /**
  * Created by shell on 09/10/2019.
  */
-
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Outreach", name = "Christmas on main")
 public class Christmas_On_Main extends OpMode {
 

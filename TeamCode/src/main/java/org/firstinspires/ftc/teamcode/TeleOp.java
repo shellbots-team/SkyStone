@@ -15,6 +15,7 @@ public class TeleOp extends OpMode {
 	private Logger logger = null;
 
 	private double speed = 1.0;
+	private double armSpeed = 1.0;
 
 	/**
 	 * Run once after INIT is pushed
@@ -103,12 +104,15 @@ public class TeleOp extends OpMode {
 		}
 
 		if (this.gamepad1.y) {
+			robot.grabber.raise();
 		}
 		if (this.gamepad1.a) {
 		}
 		if (this.gamepad1.x) {
+			robot.grabber.leftGrab();
 		}
 		if (this.gamepad1.b) {
+			robot.grabber.rightGrab();
 		}
 
 		/*
@@ -116,26 +120,22 @@ public class TeleOp extends OpMode {
 		 */
 
 		if (this.gamepad2.right_trigger > 0.5) {
-			robot.arm.extendWithPower(0.3);
+			robot.arm.extendWithPower(0.55);
 		} else if (this.gamepad2.left_trigger > 0.5) {
-			robot.arm.extendWithPower(-0.3);
+			robot.arm.extendWithPower(-0.55);
 		} else {
 			robot.arm.extendWithPower(0);
 		}
 
 		if (this.gamepad2.right_bumper) {
-			// down
+			armSpeed = 1.0;
 		}
 		if (this.gamepad2.left_bumper) {
-			// up
+			armSpeed = 0.5;
 		}
 
 		if (this.gamepad2.dpad_up) {
-			if(robot.arm.isGrabbing()) {
-				robot.arm.raiseWithPower(0.35);
-			} else {
-				robot.arm.raiseWithPower(0.25);
-			}
+			robot.arm.raiseWithPower(0.35 * armSpeed);
 		} else if (this.gamepad2.dpad_down) {
 			robot.arm.lowerWithPower(0.15);
 		} else {
@@ -175,8 +175,8 @@ public class TeleOp extends OpMode {
 
 	private void singleJoystickDrive() {
 		// New robot powering math...
-		double leftX = this.gamepad1.left_stick_x;
-		double leftY = this.gamepad1.left_stick_y;
+		double leftX = -this.gamepad1.left_stick_x;
+		double leftY = -this.gamepad1.left_stick_y;
 		double rightX = this.gamepad1.right_stick_x;
 		double rightY = this.gamepad1.right_stick_y;
 

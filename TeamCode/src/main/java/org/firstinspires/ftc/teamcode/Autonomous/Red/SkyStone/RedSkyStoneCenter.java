@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BasicSkyStoneGrabber;
 /**
  * Created by shell on 11/13/2019.
  */
-
+@Disabled
 @Autonomous(group = "Red:SkyStone", name = "Red: SkyStone Center")
 public class RedSkyStoneCenter extends BasicSkyStoneGrabber {
 	@Override
