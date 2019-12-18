@@ -24,16 +24,16 @@ public class Grabber extends RobotComponent {
 	}
 
 	public void leftGrab() {
-		setServoPosition(leftServo, 0.42);
+		setServoPosition(leftServo, 0.435);
 	}
 
 	public void rightGrab() {
-		setServoPosition(rightServo, 0.76);
+		setServoPosition(rightServo, 0.68);
 	}
 
 	public void raise() {
 		setServoPosition(leftServo, 1);
-		setServoPosition(rightServo, 0.1);
+		setServoPosition(rightServo, 0.13);
 	}
 
 
