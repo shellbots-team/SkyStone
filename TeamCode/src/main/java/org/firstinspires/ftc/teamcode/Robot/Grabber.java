@@ -33,7 +33,7 @@ public class Grabber extends RobotComponent {
 
 	public void raise() {
 		setServoPosition(leftServo, 1);
-		setServoPosition(rightServo, 0.13);
+		setServoPosition(rightServo, 0.2);
 	}
 
 
