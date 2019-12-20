@@ -98,13 +98,13 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 // Move to be aligned with skystone
 // Setup distace to baseplate accordingly
 		if (position == SKYSTONE_SIDE) {
-			moveTowardsLoadingZone(1.85, 1.0, 999);
+			moveTowardsLoadingZone(1.85, 1.0, 1);
 			distanceToBaseplate = 25;
 		} else if (position == MIDDLE_SIDE) {
-			moveTowardsBuildingZone(2.62, 1.0, 999);
+			moveTowardsBuildingZone(2.62, 1.0, 1);
 			distanceToBaseplate = 23;
 		} else {
-			moveTowardsBuildingZone(6.08, 1.0, 999);
+			moveTowardsBuildingZone(6.175, 1.0, 1);
 			distanceToBaseplate = 21;
 		}
 
@@ -120,8 +120,10 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 // Pull the block away from other blocks
 		if(position == SKYSTONE_SIDE) {
 			robot.drivetrain.runDistance(3.0, 3.0);
+		}else if(position==MIDDLE_SIDE) {
+			robot.drivetrain.runDistance(2.2, 2.2);
 		} else {
-			robot.drivetrain.runDistance(2.48, 2.22);
+			robot.drivetrain.runDistance(2.525, 2.22);
 		}
 
 // Drive to the baseplate side
@@ -136,7 +138,9 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		double distanceToMidline = 10.35;
 
 		if(position == BASEPLATE_SIDE) {
-			distanceToMidline = 10.45;
+			distanceToMidline = 10.4;
+		} else if(position == MIDDLE_SIDE) {
+			distanceToMidline = 10;
 		}
 
 // Run to be aligned on the colored line
@@ -180,7 +184,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		moveTowardsLoadingZone(-distanceToSkyStone, 1.0, 2);
 
 // Drive to be next to the block
-		robot.drivetrain.runDistance(-2.152, -2.152);
+		robot.drivetrain.runDistance(-2.156, -2.152);
 
 // Grab the skystone
 		grabStone();
