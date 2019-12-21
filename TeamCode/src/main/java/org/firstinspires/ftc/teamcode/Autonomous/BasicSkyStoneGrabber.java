@@ -81,10 +81,19 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		final byte MIDDLE_SIDE = 0;
 		final byte SKYSTONE_SIDE = -1;
 
-		if (stone.getRight() < 300) {
-			position = -1;
-		} else if (stone.getRight() > 700) {
-			position = 1;
+		if(getColor() == Color.RED) {
+			if (stone.getRight() < 300) {
+				position = -1;
+			} else if (stone.getRight() > 700) {
+				position = 1;
+			}
+		} else {
+			if (stone.getRight() < 400) {
+				position = -1;
+			} else if (stone.getRight() > 780) {
+				position = 1;
+			}
+			if(stone.getRight() == 500) { position = 1; }
 		}
 
 // Invert position if on blue side
@@ -97,15 +106,28 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 
 // Move to be aligned with skystone
 // Setup distace to baseplate accordingly
-		if (position == SKYSTONE_SIDE) {
-			moveTowardsLoadingZone(1.85, 1.0, 1);
-			distanceToBaseplate = 25;
-		} else if (position == MIDDLE_SIDE) {
-			moveTowardsBuildingZone(2.62, 1.0, 1);
-			distanceToBaseplate = 23;
+		if(getColor() == Color.RED) {
+			if (position == SKYSTONE_SIDE) {
+				moveTowardsLoadingZone(1.85, 1.0, 1);
+				distanceToBaseplate = 25;
+			} else if (position == MIDDLE_SIDE) {
+				moveTowardsBuildingZone(2.62, 1.0, 1);
+				distanceToBaseplate = 23;
+			} else {
+				moveTowardsBuildingZone(6.175, 1.0, 1);
+				distanceToBaseplate = 21;
+			}
 		} else {
-			moveTowardsBuildingZone(6.175, 1.0, 1);
-			distanceToBaseplate = 21;
+			if (position == SKYSTONE_SIDE) {
+				moveTowardsLoadingZone(2.62, 1.0, 1);
+				distanceToBaseplate = 25;
+			} else if (position == MIDDLE_SIDE) {
+				moveTowardsBuildingZone(1.22, 1.0, 1);
+				distanceToBaseplate = 23;
+			} else {
+				moveTowardsBuildingZone(4.4, 1.0, 1);
+				distanceToBaseplate = 21;
+			}
 		}
 
 // Move to be right next to the stone
@@ -118,13 +140,18 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		sleep(500);
 
 // Pull the block away from other blocks
-		if(position == SKYSTONE_SIDE) {
-			robot.drivetrain.runDistance(3.0, 3.0);
-		}else if(position==MIDDLE_SIDE) {
-			robot.drivetrain.runDistance(2.2, 2.2);
-		} else {
-			robot.drivetrain.runDistance(2.525, 2.22);
-		}
+			if(getColor() == Color.RED) {
+				if(position == SKYSTONE_SIDE) {
+					robot.drivetrain.runDistance(3.0, 3.0);
+				}else if(position==MIDDLE_SIDE) {
+					robot.drivetrain.runDistance(2.2, 2.2);
+				} else {
+					robot.drivetrain.runDistance(2.525, 2.22);
+				}
+			} else {
+					robot.drivetrain.runDistance(5.4, 5.0);
+			}
+
 
 // Drive to the baseplate side
 		moveTowardsBuildingZone(distanceToBaseplate, 1.0, 3);
@@ -138,7 +165,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		double distanceToMidline = 10.35;
 
 		if(position == BASEPLATE_SIDE) {
-			distanceToMidline = 10.4;
+			distanceToMidline = 10.88;
 		} else if(position == MIDDLE_SIDE) {
 			distanceToMidline = 10;
 		}
@@ -147,73 +174,80 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		moveTowardsLoadingZone(distanceToMidline, 1.0, 3);
 
 // Drive into the bridge leg to re-orientate itself
-		robot.drivetrain.runDistance(-4, -4, 0.5, 1);
+		if(getColor() == Color.RED) {
+			robot.drivetrain.runDistance(-4, -4, 0.4, 1);
+		} else {
+			robot.drivetrain.runDistance(-4.5, -4.5, 0.4, 1);
+		}
 
 // Wait to reduce momentum
 		sleep(500);
 
+		if(getColor() == Color.RED) {
+
 // Drive slightly away from the bridge leg
-		robot.drivetrain.runDistance(2, 2, 0.5, 1);
+			robot.drivetrain.runDistance(2, 2, 0.5, 1);
 
-		distanceToBaseplate -= 0.8;
+			distanceToBaseplate -= 0.8;
 
-		double change = 0.0;
+			double change = 0.0;
 
-		if(position == SKYSTONE_SIDE) {
-			change = 0;
-		} else if(position == MIDDLE_SIDE) {
-			change = 3.225;
-		} else {
-			change = 6.4;
-		}
+			if (position == SKYSTONE_SIDE) {
+				change = 0;
+			} else if (position == MIDDLE_SIDE) {
+				change = 3.225;
+			} else {
+				change = 6.4;
+			}
 
 // Drive to the second skystone
-		moveTowardsLoadingZone(distanceToBaseplate + change, 1.0, 4);
-		moveTowardsLoadingZone(2.25, 0.6, 1);
+			moveTowardsLoadingZone(distanceToBaseplate + change, 1.0, 4);
+			moveTowardsLoadingZone(2.25, 0.6, 1);
 
-		double distanceToSkyStone;
+			double distanceToSkyStone;
 
-		if(position == SKYSTONE_SIDE) {
-			distanceToSkyStone = 0;
-		} else if(position == MIDDLE_SIDE) {
-			distanceToSkyStone = 4.3;
-		} else {
-			distanceToSkyStone = 7.9;
-		}
+			if (position == SKYSTONE_SIDE) {
+				distanceToSkyStone = 0;
+			} else if (position == MIDDLE_SIDE) {
+				distanceToSkyStone = 4.3;
+			} else {
+				distanceToSkyStone = 7.8;
+			}
 
-		moveTowardsLoadingZone(-distanceToSkyStone, 1.0, 2);
+			moveTowardsLoadingZone(-distanceToSkyStone, 1.0, 2);
 
 // Drive to be next to the block
-		robot.drivetrain.runDistance(-2.156, -2.152);
+			robot.drivetrain.runDistance(-2.156, -2.152);
 
 // Grab the skystone
-		grabStone();
+			grabStone();
 
 // Allow time for the servo to move
-		sleep(500);
+			sleep(500);
 
 // Pull the block away from stones
-		if(position == MIDDLE_SIDE) {
-			robot.drivetrain.runDistance(2.485, 2.45);
-		} else {
-			robot.drivetrain.runDistance(2.45, 2.45);
-		}
+			if (position == MIDDLE_SIDE) {
+				robot.drivetrain.runDistance(2.485, 2.45);
+			} else {
+				robot.drivetrain.runDistance(2.45, 2.45);
+			}
 
 // Account for the distance driven to midline
-		distanceToBaseplate += 9;
+			distanceToBaseplate += 9;
 
 // Drive back to the baseplate side
-		moveTowardsBuildingZone(distanceToBaseplate, 1.0, 4);
+			moveTowardsBuildingZone(distanceToBaseplate, 1.0, 4);
 
 // Release the skystone
-		robot.grabber.raise();
+			robot.grabber.raise();
 
 // Allow time for the block to be relased
-		sleep(500);
+			sleep(500);
 
 // Drive back onto the midline
-		moveTowardsLoadingZone(9, 1.0, 2);
+			moveTowardsLoadingZone(9, 1.0, 2);
 
-		robot.drivetrain.runDistance(-2, -2, 0.5, 1);
+			robot.drivetrain.runDistance(-2, -2, 0.5, 1);
+		}
 	}
 }

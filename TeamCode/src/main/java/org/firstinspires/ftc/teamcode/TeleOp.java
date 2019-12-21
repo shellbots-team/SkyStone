@@ -17,6 +17,8 @@ public class TeleOp extends OpMode {
 	private double speed = 1.0;
 	private double armSpeed = 1.0;
 
+	private boolean grabbersAreFront = true;
+
 	/**
 	 * Run once after INIT is pushed
 	 */
@@ -90,9 +92,11 @@ public class TeleOp extends OpMode {
 			speed = 0.5;
 		}
 
-		if (this.gamepad1.right_bumper) {
+		if (this.gamepad1.start && this.gamepad1.right_bumper) {
+			grabbersAreFront = true;
 		}
-		if (this.gamepad1.left_bumper) {
+		if (this.gamepad1.start && this.gamepad1.left_bumper) {
+			grabbersAreFront = false;
 		}
 
 		if (this.gamepad1.dpad_up) {
@@ -160,6 +164,7 @@ public class TeleOp extends OpMode {
 
 		robot.arm.logTeleOpData();
 		logger.numberLog("Speed", speed);
+		logger.completeLog("Grabbers Are Front?", grabbersAreFront ? "True" : "False");
 		logger.update();
 	}
 
@@ -175,8 +180,12 @@ public class TeleOp extends OpMode {
 
 	private void singleJoystickDrive() {
 		// New robot powering math...
-		double leftX = -this.gamepad1.left_stick_x;
-		double leftY = -this.gamepad1.left_stick_y;
+		double leftX = this.gamepad1.left_stick_x;
+		double leftY = this.gamepad1.left_stick_y;
+		if(grabbersAreFront) {
+			leftX *= -1;
+			leftY *= -1;
+		}
 		double rightX = this.gamepad1.right_stick_x;
 		double rightY = this.gamepad1.right_stick_y;
 
