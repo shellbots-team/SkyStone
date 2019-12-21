@@ -51,7 +51,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 6 - Drag baseplate to the corner
 		logger.statusLog(step++, "Dragging the baseplate to the corner");
-		robot.drivetrain.runDistance(-(DISTANCE_TO_BASEPLATE + 3.5), -(DISTANCE_TO_BASEPLATE + 3.5));
+		robot.drivetrain.runDistance(-(DISTANCE_TO_BASEPLATE + 4), -(DISTANCE_TO_BASEPLATE + 4));
 
 		// Step 7 - Release the baseplate
 		logger.statusLog(step++, "Releasing the baseplate");
