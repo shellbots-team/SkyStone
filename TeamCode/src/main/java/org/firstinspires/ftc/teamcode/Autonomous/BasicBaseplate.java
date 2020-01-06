@@ -60,7 +60,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 8 - Move away from build zone
 		logger.statusLog(step++, "Moving away from the build zone");
-		moveTowardsLoadingZone(1300, 1.0);
+		moveTowardsLoadingZone(1100, 1.0);
 
 		// Step 9 - Moving next to the baseplate
 		logger.statusLog(step++, "Moving next to the baseplate");
@@ -68,7 +68,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 10 - Pushing baseplate into wall
 		logger.statusLog(step++, "Pushing baseplate into the wall");
-		moveTowardsBuildingZone(550, 1.0);
+		moveTowardsBuildingZone(350, 1.0);
 
 		// Step 11 - Moving away from the baseplate
 		logger.statusLog(step++, "Moving away from the baseplate");
@@ -77,7 +77,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 		// Step 12 - Moving to wall, or to center
 		if (getFinalPlacement() == Placement.CENTER) {
 			logger.statusLog(step++, "Moving to the center");
-			robot.drivetrain.runDistance(4.35, 4.35);
+			robot.drivetrain.runDistance(4.55, 4.55);
 		} else {
 			logger.statusLog(step++, "Moving to the wall");
 			robot.drivetrain.runDistance(-7, -7);
@@ -86,7 +86,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 
 		// Step 13 - Driving until on the color line
 		logger.statusLog(step++, "Driving until on the colored line");
-		moveTowardsLoadingZone(800, 1.0);
+		moveTowardsLoadingZone(550, 1.0);
 
 		// Step 14 - Fixing positioning on the line
 		logger.statusLog(step++, "Fixing positioning on the line");

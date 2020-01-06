@@ -82,15 +82,15 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		final byte SKYSTONE_SIDE = -1;
 
 		if(getColor() == Color.RED) {
-			if (stone.getRight() < 300) {
+			if (stone.getRight() > 700) {
 				position = -1;
-			} else if (stone.getRight() > 700) {
+			} else if (stone.getRight() < 400) {
 				position = 1;
 			}
 		} else {
-			if (stone.getRight() < 400) {
+			if (stone.getRight() < 700) {
 				position = -1;
-			} else if (stone.getRight() > 780) {
+			} else if (stone.getRight() > 400) {
 				position = 1;
 			}
 			if(stone.getRight() == 500) { position = 1; }
@@ -109,12 +109,12 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		if(getColor() == Color.RED) {
 			if (position == SKYSTONE_SIDE) {
 				moveTowardsLoadingZone(1.85, 1.0, 1);
-				distanceToBaseplate = 25;
+				distanceToBaseplate = 27;
 			} else if (position == MIDDLE_SIDE) {
 				moveTowardsBuildingZone(2.62, 1.0, 1);
 				distanceToBaseplate = 23;
 			} else {
-				moveTowardsBuildingZone(6.175, 1.0, 1);
+				moveTowardsBuildingZone(6.34, 1.0, 1);
 				distanceToBaseplate = 21;
 			}
 		} else {
@@ -142,11 +142,11 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 // Pull the block away from other blocks
 			if(getColor() == Color.RED) {
 				if(position == SKYSTONE_SIDE) {
-					robot.drivetrain.runDistance(3.0, 3.0);
+					robot.drivetrain.runDistance(3.4, 3.4);
 				}else if(position==MIDDLE_SIDE) {
 					robot.drivetrain.runDistance(2.2, 2.2);
 				} else {
-					robot.drivetrain.runDistance(2.525, 2.22);
+					robot.drivetrain.runDistance(2.545, 2.22);
 				}
 			} else {
 					robot.drivetrain.runDistance(5.4, 5.0);
@@ -162,7 +162,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 // Allow time for the block to be released
 		sleep(500);
 
-		double distanceToMidline = 10.35;
+		double distanceToMidline = 10.4;
 
 		if(position == BASEPLATE_SIDE) {
 			distanceToMidline = 10.88;
@@ -217,7 +217,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 			moveTowardsLoadingZone(-distanceToSkyStone, 1.0, 2);
 
 // Drive to be next to the block
-			robot.drivetrain.runDistance(-2.156, -2.152);
+			robot.drivetrain.runDistance(-2.135, -2.135);
 
 // Grab the skystone
 			grabStone();
@@ -227,9 +227,9 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 
 // Pull the block away from stones
 			if (position == MIDDLE_SIDE) {
-				robot.drivetrain.runDistance(2.485, 2.45);
+				robot.drivetrain.runDistance(2.47, 2.47);
 			} else {
-				robot.drivetrain.runDistance(2.45, 2.45);
+				robot.drivetrain.runDistance(2.455, 2.455);
 			}
 
 // Account for the distance driven to midline

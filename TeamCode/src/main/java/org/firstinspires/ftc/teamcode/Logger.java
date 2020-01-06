@@ -22,6 +22,7 @@ public class Logger {
 	}
 
 	public void numberLog(String description, double value) {
+
 		completeLog(description, String.valueOf(value));
 	}
 
