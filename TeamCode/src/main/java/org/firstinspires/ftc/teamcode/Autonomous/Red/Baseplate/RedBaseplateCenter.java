@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BasicBaseplate;
 /**
  * Created by shell on 10/26/2019.
  */
-
+@Disabled
 @Autonomous(group = "Red:Baseplate", name = "Red: Baseplate: Center")
 public class RedBaseplateCenter extends BasicBaseplate {
 	@Override

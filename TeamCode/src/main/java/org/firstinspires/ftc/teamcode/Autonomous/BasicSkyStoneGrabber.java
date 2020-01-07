@@ -81,20 +81,20 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		final byte MIDDLE_SIDE = 0;
 		final byte SKYSTONE_SIDE = -1;
 
-		if(getColor() == Color.RED) {
+		//if(getColor() == Color.RED) {
 			if (stone.getRight() > 700) {
 				position = -1;
 			} else if (stone.getRight() < 400) {
 				position = 1;
 			}
-		} else {
-			if (stone.getRight() < 700) {
-				position = -1;
-			} else if (stone.getRight() > 400) {
-				position = 1;
-			}
-			if(stone.getRight() == 500) { position = 1; }
-		}
+		//} else {
+		//	if (stone.getRight() > 700) {
+		//		position = -1;
+		//	} else if (stone.getRight() > 400) {
+		//		position = 1;
+		//	}
+		//	if(stone.getRight() == 500) { position = 1; }
+		//}
 
 // Invert position if on blue side
 		if (getColor() == Color.BLUE) { position *= -1; }
@@ -102,7 +102,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 // Log the final position
 		logger.completeLog("Postion", String.valueOf(position));
 
-		long distanceToBaseplate;
+		double distanceToBaseplate;
 
 // Move to be aligned with skystone
 // Setup distace to baseplate accordingly
@@ -120,7 +120,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		} else {
 			if (position == SKYSTONE_SIDE) {
 				moveTowardsLoadingZone(2.62, 1.0, 1);
-				distanceToBaseplate = 25;
+				distanceToBaseplate = 27.5;
 			} else if (position == MIDDLE_SIDE) {
 				moveTowardsBuildingZone(1.22, 1.0, 1);
 				distanceToBaseplate = 23;
@@ -149,7 +149,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 					robot.drivetrain.runDistance(2.545, 2.22);
 				}
 			} else {
-					robot.drivetrain.runDistance(5.4, 5.0);
+					robot.drivetrain.runDistance(3.75, 3.75);
 			}
 
 
@@ -188,7 +188,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 // Drive slightly away from the bridge leg
 			robot.drivetrain.runDistance(2, 2, 0.5, 1);
 
-			distanceToBaseplate -= 0.8;
+			distanceToBaseplate -= 1;
 
 			double change = 0.0;
 
