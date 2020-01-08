@@ -11,6 +11,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 	@Override
 	public void runOpMode() {
 
+		final boolean PUSH_BASEPLATE = true;
 		final double DISTANCE_TO_BASEPLATE = 14.8;
 		final double SAFE_GUARD = 2;
 
@@ -34,6 +35,8 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 		logger.statusLog(step++, "Moving to be aligned with center of baseplate");
 		moveTowardsLoadingZone(450, 1);
 		sleep(100);
+
+		robot.drivetrain.runDistance(-2.5, -2.5, 0.5, 2);
 
 		// Step 3 - Move near the baseplate
 		logger.statusLog(step++, "Moving near the baseplate");
@@ -62,31 +65,44 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 		logger.statusLog(step++, "Moving away from the build zone");
 		moveTowardsLoadingZone(1100, 1.0);
 
-		// Step 9 - Moving next to the baseplate
-		logger.statusLog(step++, "Moving next to the baseplate");
-		robot.drivetrain.runDistance(7, 7);
+		if(PUSH_BASEPLATE) {
+			// Step 9 - Moving next to the baseplate
+			logger.statusLog(step++, "Moving next to the baseplate");
+			robot.drivetrain.runDistance(7, 7);
 
-		// Step 10 - Pushing baseplate into wall
-		logger.statusLog(step++, "Pushing baseplate into the wall");
-		moveTowardsBuildingZone(350, 1.0);
+			// Step 10 - Pushing baseplate into wall
+			logger.statusLog(step++, "Pushing baseplate into the wall");
+			moveTowardsBuildingZone(450, 1.0);
 
-		// Step 11 - Moving away from the baseplate
-		logger.statusLog(step++, "Moving away from the baseplate");
-		moveTowardsLoadingZone(450, 1.0);
+			// Step 11 - Moving away from the baseplate
+			logger.statusLog(step++, "Moving away from the baseplate");
+			moveTowardsLoadingZone(250, 1.0);
 
-		// Step 12 - Moving to wall, or to center
-		if (getFinalPlacement() == Placement.CENTER) {
-			logger.statusLog(step++, "Moving to the center");
-			robot.drivetrain.runDistance(4.55, 4.55);
+			// Step 12 - Moving to wall, or to center
+			if (getFinalPlacement() == Placement.CENTER) {
+				logger.statusLog(step++, "Moving to the center");
+				robot.drivetrain.runDistance(4.55, 4.55);
+			} else {
+				logger.statusLog(step++, "Moving to the wall");
+				robot.drivetrain.runDistance(-7, -7);
+			}
+			// else if we are not pushing baseplate in
 		} else {
-			logger.statusLog(step++, "Moving to the wall");
-			robot.drivetrain.runDistance(-7, -7);
+			// Step 11 - Moving away from the baseplate
+			if (getFinalPlacement() == Placement.CENTER) {
+				logger.statusLog(step++, "Moving to the center");
+				robot.drivetrain.runDistance(11.55, 11.55);
+			} else {
+				// Step 12 - Moving to wall, or to center
+				logger.statusLog(step++, "Moving to the wall");
+				robot.drivetrain.runDistance(-2, -2);
+			}
 		}
 
 
 		// Step 13 - Driving until on the color line
 		logger.statusLog(step++, "Driving until on the colored line");
-		moveTowardsLoadingZone(550, 1.0);
+		moveTowardsLoadingZone(750, 1.0);
 
 		// Step 14 - Fixing positioning on the line
 		logger.statusLog(step++, "Fixing positioning on the line");

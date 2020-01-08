@@ -12,6 +12,8 @@ import java.util.Objects;
 @Disabled
 public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 
+	final boolean DOUBLE_STONE = true;
+
 	@Override
 	void moveTowardsLoadingZone(long milliseconds, double speed) {
 		super.moveTowardsBuildingZone(milliseconds, speed);
@@ -111,10 +113,10 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 				moveTowardsLoadingZone(1.85, 1.0, 1);
 				distanceToBaseplate = 27;
 			} else if (position == MIDDLE_SIDE) {
-				moveTowardsBuildingZone(2.62, 1.0, 1);
+				moveTowardsBuildingZone(2.7, 1.0, 1);
 				distanceToBaseplate = 23;
 			} else {
-				moveTowardsBuildingZone(6.34, 1.0, 1);
+				moveTowardsBuildingZone(6.5, 1.0, 1);
 				distanceToBaseplate = 21;
 			}
 		} else {
@@ -122,7 +124,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 				moveTowardsLoadingZone(2.62, 1.0, 1);
 				distanceToBaseplate = 27.5;
 			} else if (position == MIDDLE_SIDE) {
-				moveTowardsBuildingZone(1.22, 1.0, 1);
+				moveTowardsBuildingZone(1.1, 1.0, 1);
 				distanceToBaseplate = 23;
 			} else {
 				moveTowardsBuildingZone(4.4, 1.0, 1);
@@ -149,7 +151,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 					robot.drivetrain.runDistance(2.545, 2.22);
 				}
 			} else {
-					robot.drivetrain.runDistance(3.75, 3.75);
+					robot.drivetrain.runDistance(3.85, 3.85);
 			}
 
 
@@ -165,7 +167,7 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 		double distanceToMidline = 10.4;
 
 		if(position == BASEPLATE_SIDE) {
-			distanceToMidline = 10.88;
+			distanceToMidline = 10.95;
 		} else if(position == MIDDLE_SIDE) {
 			distanceToMidline = 10;
 		}
@@ -175,18 +177,22 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 
 // Drive into the bridge leg to re-orientate itself
 		if(getColor() == Color.RED) {
-			robot.drivetrain.runDistance(-4, -4, 0.4, 1);
+			robot.drivetrain.runDistance(-4.2, -4.2, 0.5, 1);
 		} else {
-			robot.drivetrain.runDistance(-4.5, -4.5, 0.4, 1);
+			robot.drivetrain.runDistance(-4.5, -4.5, 0.5, 1);
 		}
 
 // Wait to reduce momentum
 		sleep(500);
 
-		if(getColor() == Color.RED) {
+		if(DOUBLE_STONE) {
 
 // Drive slightly away from the bridge leg
-			robot.drivetrain.runDistance(2, 2, 0.5, 1);
+			if(getColor() == Color.RED) {
+				robot.drivetrain.runDistance(2, 2, 0.5, 1);
+			} else {
+				robot.drivetrain.runDistance(0.5, 0.5, 0.5, 1);
+			}
 
 			distanceToBaseplate -= 1;
 
@@ -195,14 +201,18 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 			if (position == SKYSTONE_SIDE) {
 				change = 0;
 			} else if (position == MIDDLE_SIDE) {
-				change = 3.225;
+				change = 3.25;
 			} else {
 				change = 6.4;
 			}
 
 // Drive to the second skystone
 			moveTowardsLoadingZone(distanceToBaseplate + change, 1.0, 4);
-			moveTowardsLoadingZone(2.25, 0.6, 1);
+			if(getColor() == Color.RED) {
+				moveTowardsLoadingZone(2.25, 0.6, 1);
+			} else {
+				moveTowardsLoadingZone(3, 0.6, 1);
+			}
 
 			double distanceToSkyStone;
 
@@ -217,7 +227,11 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 			moveTowardsLoadingZone(-distanceToSkyStone, 1.0, 2);
 
 // Drive to be next to the block
-			robot.drivetrain.runDistance(-2.135, -2.135);
+			if(getColor() == Color.RED) {
+				robot.drivetrain.runDistance(-2.135, -2.135);
+			} else {
+				robot.drivetrain.runDistance(-2.8, -2.8 );
+			}
 
 // Grab the skystone
 			grabStone();
@@ -226,10 +240,18 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 			sleep(500);
 
 // Pull the block away from stones
-			if (position == MIDDLE_SIDE) {
-				robot.drivetrain.runDistance(2.47, 2.47);
+			if(getColor() == Color.RED) {
+				if (position == MIDDLE_SIDE) {
+					robot.drivetrain.runDistance(2.5, 2.5);
+				} else {
+					robot.drivetrain.runDistance(2.455, 2.455);
+				}
 			} else {
-				robot.drivetrain.runDistance(2.455, 2.455);
+				if (position == MIDDLE_SIDE) {
+					robot.drivetrain.runDistance(2.5, 2.5);
+				} else {
+					robot.drivetrain.runDistance(2.5, 2.5);
+				}
 			}
 
 // Account for the distance driven to midline

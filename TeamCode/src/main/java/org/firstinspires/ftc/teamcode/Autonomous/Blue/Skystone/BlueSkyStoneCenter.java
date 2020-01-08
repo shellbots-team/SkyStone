@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BasicSkyStoneGrabber;
  * Created by shell on 10/26/2019.
  */
 
-@Autonomous(group = "Blue:SkyStone", name = "Blue: Single SkyStone: Center")
+@Autonomous(group = "Blue:SkyStone", name = "Blue: SkyStone: Center")
 public class BlueSkyStoneCenter extends BasicSkyStoneGrabber {
 	@Override
 	protected Color getColor() {
