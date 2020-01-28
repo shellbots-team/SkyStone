@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BasicBaseplate;
 /**
  * Created by shell on 10/26/2019.
  */
-@Disabled
+
 @Autonomous(group = "Blue:Baseplate", name = "Blue: Baseplate: Wall")
 public class BlueBaseplateWall extends BasicBaseplate {
 	@Override

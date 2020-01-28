@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -67,6 +68,8 @@ public class Robot {
 	public Arm arm = null;
 	public ObjectDetection objectDetection = null;
 	public Grabber grabber = null;
+	public TouchSensor minTouch = null;
+	public TouchSensor maxTouch = null;
 
 	public CRServo leftGrip = null;
 	public CRServo rightGrip = null;
@@ -107,7 +110,8 @@ public class Robot {
 				this.hardwareMap.get(DcMotor.class, "leftArm"),
 				this.hardwareMap.get(DcMotor.class, "rightArm"),
 				this.hardwareMap.get(DcMotor.class, "extendArm"),
-				this.hardwareMap.get(CRServo.class, "rightHand")
+				this.hardwareMap.get(CRServo.class, "rightHand"),
+				this.hardwareMap.get(DcMotor.class, "elevateArm")
 		);
 
 		grabber.init(
@@ -119,15 +123,19 @@ public class Robot {
 		// Define and initialize ALL installed servos.
 		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
 		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
+
+		minTouch = this.hardwareMap.get(TouchSensor.class, "minTouch");
+		maxTouch = this.hardwareMap.get(TouchSensor.class, "maxTouch");
+
 	}
 
 	public void grabBaseplate() {
-		setServoPosition(leftGrip, 0.5);
+		setServoPosition(leftGrip, 1);
 		setServoPosition(rightGrip, 0);
 	}
 
 	public void releaseBaseplate() {
-		setServoPosition(leftGrip, 1);
+		setServoPosition(leftGrip, 0);
 		setServoPosition(rightGrip, 1);
 	}
 

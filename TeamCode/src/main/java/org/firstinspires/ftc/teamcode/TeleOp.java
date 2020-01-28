@@ -14,10 +14,13 @@ public class TeleOp extends OpMode {
 
 	private Robot robot = new Robot();
 	private Logger logger = null;
+	private String elevatorLimit = "";
+	private int switchCount = 0;
 
 	private double speed = 1.0;
 	private double armSpeed = 1.0;
 
+	private boolean manualOverride = false;
 	private boolean grabbersAreFront = true;
 
 	/**
@@ -90,6 +93,7 @@ public class TeleOp extends OpMode {
 		if (this.gamepad1.right_trigger > 0.5) {
 			speed = 1.0;
 		} else if (this.gamepad1.left_trigger > 0.5) {
+			if(speed == 1.0) { switchCount += 1; }
 			speed = 0.5;
 		}
 
@@ -124,6 +128,10 @@ public class TeleOp extends OpMode {
 		 * Controller 2 settings
 		 */
 
+		if(this.gamepad2.right_stick_button && this.gamepad2.x) {
+			manualOverride = true;
+		}
+
 		if (this.gamepad2.right_trigger > 0.5) {
 			robot.arm.extendWithPower(0.55);
 		} else if (this.gamepad2.left_trigger > 0.5) {
@@ -136,11 +144,11 @@ public class TeleOp extends OpMode {
 			armSpeed = 1.0;
 		}
 		if (this.gamepad2.left_bumper) {
-			armSpeed = 0.5;
+			armSpeed = 0.27;
 		}
 
 		if (this.gamepad2.dpad_up) {
-			robot.arm.raiseWithPower(0.35 * armSpeed);
+			robot.arm.raiseWithPower(0.4 * armSpeed);
 		} else if (this.gamepad2.dpad_down) {
 			robot.arm.lowerWithPower(0.15);
 		} else {
@@ -152,25 +160,44 @@ public class TeleOp extends OpMode {
 		if (this.gamepad2.dpad_right) {
 		}
 
-		if (this.gamepad2.y) {
+		if(this.gamepad2.y) {
 			robot.arm.grabHand();
 		} else if (this.gamepad2.a) {
 			robot.arm.releaseHand();
 		}
+
 		if (this.gamepad2.x) {
 		}
 		if (this.gamepad2.b) {
 		}
 
+		if (this.gamepad2.right_stick_button && (manualOverride || !robot.maxTouch.isPressed())) { // Up
+			robot.arm.elevateWithPower(-1.0);
+		} else if (this.gamepad2.left_stick_button && (manualOverride || !robot.minTouch.isPressed())) { // Down
+			robot.arm.elevateWithPower(1.0);
+		} else {
+			robot.arm.elevateWithPower(0);
+		}
 
-		robot.arm.logTeleOpData();
+		elevatorLimit = "None";
+		if(robot.minTouch.isPressed() && robot.maxTouch.isPressed()) {
+			elevatorLimit = "Error";
+		} else if(robot.minTouch.isPressed()) {
+			elevatorLimit = "Minimum";
+		} else if(robot.maxTouch.isPressed()) {
+			elevatorLimit = "Maximum";
+		}
+
 		logger.numberLog("Speed", speed);
-		logger.completeLog("Grabbers Are Front?", grabbersAreFront ? "True" : "False");
+		logger.completeLog("Elevator Limit?", elevatorLimit);
+		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
+		logger.numberLog("Switches full-half speed", switchCount);
 		logger.update();
+
 	}
 
 	/**
-	 * Runxs once after STOP is pushed
+	 * Runs once after STOP is pushed
 	 */
 	@Override
 	public void stop() {
