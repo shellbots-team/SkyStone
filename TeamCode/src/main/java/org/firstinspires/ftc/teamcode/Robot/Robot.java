@@ -116,8 +116,8 @@ public class Robot {
 
 		grabber.init(
 				telemetry,
-				this.hardwareMap.get(CRServo.class, "rightGrabber"),
-				this.hardwareMap.get(CRServo.class, "leftGrabber")
+				this.hardwareMap.get(CRServo.class, "leftGrabber"),
+				this.hardwareMap.get(CRServo.class, "rightGrabber")
 		);
 
 		// Define and initialize ALL installed servos.

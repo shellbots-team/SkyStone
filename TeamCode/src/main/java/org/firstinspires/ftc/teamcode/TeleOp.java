@@ -91,6 +91,7 @@ public class TeleOp extends OpMode {
 		singleJoystickDrive();
 
 		if (this.gamepad1.right_trigger > 0.5) {
+			if(speed == 0.5) { switchCount += 1; }
 			speed = 1.0;
 		} else if (this.gamepad1.left_trigger > 0.5) {
 			if(speed == 1.0) { switchCount += 1; }
@@ -133,9 +134,9 @@ public class TeleOp extends OpMode {
 		}
 
 		if (this.gamepad2.right_trigger > 0.5) {
-			robot.arm.extendWithPower(0.55);
-		} else if (this.gamepad2.left_trigger > 0.5) {
 			robot.arm.extendWithPower(-0.55);
+		} else if (this.gamepad2.left_trigger > 0.5) {
+			robot.arm.extendWithPower(0.55);
 		} else {
 			robot.arm.extendWithPower(0);
 		}

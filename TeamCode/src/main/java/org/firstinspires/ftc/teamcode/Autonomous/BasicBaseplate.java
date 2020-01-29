@@ -11,7 +11,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 	@Override
 	public void runOpMode() {
 
-		final boolean PUSH_BASEPLATE = true;
+		final boolean PUSH_BASEPLATE = false;
 		final double DISTANCE_TO_BASEPLATE = 14.8;
 		final double SAFE_GUARD = 2;
 
@@ -88,6 +88,10 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 			}
 			// else if we are not pushing baseplate in
 		} else {
+			// Step 8 - Move away from build zone
+			logger.statusLog(step++, "Moving away from the build zone");
+			moveTowardsLoadingZone(275, 1.0);
+
 			// Step 11 - Moving away from the baseplate
 			if (getFinalPlacement() == Placement.CENTER) {
 				logger.statusLog(step++, "Moving to the center");
@@ -111,7 +115,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 		// Step 15 - Run into wall or into bridge
 		if (getFinalPlacement() == Placement.CENTER) {
 			logger.statusLog(step++, "Running into bridge");
-			robot.drivetrain.runDistance(1, 1);
+			robot.drivetrain.runDistance(2, 2);
 		} else {
 			logger.statusLog(step++, "Running into wall");
 			robot.drivetrain.runDistance(-2, -2);

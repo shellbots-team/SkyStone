@@ -13,27 +13,27 @@ public class Grabber extends RobotComponent {
 	}
 
 	Logger logger = null;
-	CRServo leftServo = null;
 	CRServo rightServo = null;
+	CRServo leftServo = null;
 
 	void init(Telemetry telemetry, CRServo leftServo, CRServo rightServo) {
 		logger = new Logger(telemetry);
-		this.leftServo = leftServo;
-		this.rightServo = rightServo;
+		this.rightServo = leftServo;
+		this.leftServo = rightServo;
 
 	}
 
 	public void leftGrab() {
-		setServoPosition(leftServo, 0.435);
+		setServoPosition(leftServo, 0.185);
 	}
 
 	public void rightGrab() {
-		setServoPosition(rightServo, 0.68);
+		setServoPosition(rightServo, 0.975);
 	}
 
 	public void raise() {
-		setServoPosition(leftServo, 0.9);
-		setServoPosition(rightServo, 0.2);
+		setServoPosition(rightServo, 0.45);
+		setServoPosition(leftServo, 0.65);
 	}
 
 
@@ -44,9 +44,9 @@ public class Grabber extends RobotComponent {
 
 	@Override
 	void logTeleOpData() {
-		ServoController sc = leftServo.getController();
+		ServoController sc = rightServo.getController();
 
-		logger.completeLog("Left Grabber", String.valueOf(sc.getServoPosition(leftServo.getPortNumber())));
-		logger.completeLog("Right Grabber", String.valueOf(sc.getServoPosition(rightServo.getPortNumber())));
+		logger.completeLog("Left Grabber", String.valueOf(sc.getServoPosition(rightServo.getPortNumber())));
+		logger.completeLog("Right Grabber", String.valueOf(sc.getServoPosition(leftServo.getPortNumber())));
 	}
 }
