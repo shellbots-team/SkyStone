@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Logger;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ObjectDetection {
@@ -56,6 +57,7 @@ public class ObjectDetection {
 
 	public Recognition getSkyStone() {
 		List<Recognition> updatedRecognitions = null;
+		List<Recognition> sortedRecognitions = new ArrayList<Recognition>();
 		float firstRight = -1000;
 		float secondRight = 1000;
 		if (tfod != null) {
@@ -64,6 +66,16 @@ public class ObjectDetection {
 			updatedRecognitions = tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
 				logger.numberLog("# Object Detected", updatedRecognitions.size());
+				updatedRecognitions.sort(new Comparator<Recognition>() {
+					@Override
+					public int compare(Recognition r1, Recognition r2) {
+						if(r1.getConfidence() > r2.getConfidence()) {
+							return -1;
+						} else {
+							return 1;
+						}
+					}
+				});
 				int i = 0;
 				for (Recognition recognition : updatedRecognitions) {
 					logger.completeLog("ObjectDetection",

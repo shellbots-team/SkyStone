@@ -31,16 +31,24 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import android.util.Log;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorBNO055IMUCalibration;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Logger;
 
 import java.util.Locale;
@@ -71,6 +79,8 @@ public class Robot {
 	public TouchSensor minTouch = null;
 	public TouchSensor maxTouch = null;
 
+	public BNO055IMU imu = null;
+
 	public CRServo leftGrip = null;
 	public CRServo rightGrip = null;
 
@@ -86,16 +96,27 @@ public class Robot {
 
 	/* Initialize standard Hardware interfaces */
 	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode) {
-		//Save reference to Hardware map
 		this.hardwareMap = hardwareMap;
 		this.telemetry = telemetry;
 		this.opmode = opmode;
 
 		logger = new Logger(telemetry);
+
+		BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+		parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+		parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+		parameters.loggingEnabled = true;
+		parameters.loggingTag = "14736:IMU";
+		parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+		imu = this.hardwareMap.get(BNO055IMU.class, "imu");
+		imu.initialize(parameters);
+
 		drivetrain = new Drivetrain(opmode);
 		arm = new Arm(opmode);
 		objectDetection = new ObjectDetection(hardwareMap, telemetry);
 		grabber = new Grabber(opmode);
+		imu = this.hardwareMap.get(BNO055IMU.class, "imu");
 
 		drivetrain.init(
 				telemetry,
@@ -127,6 +148,10 @@ public class Robot {
 		minTouch = this.hardwareMap.get(TouchSensor.class, "minTouch");
 		maxTouch = this.hardwareMap.get(TouchSensor.class, "maxTouch");
 
+	}
+
+	public float getAngle() {
+		return imu.getAngularOrientation().firstAngle;
 	}
 
 	public void grabBaseplate() {

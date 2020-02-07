@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 
@@ -189,6 +193,7 @@ public class TeleOp extends OpMode {
 			elevatorLimit = "Maximum";
 		}
 
+		logger.numberLog("Imu", robot.getAngle());
 		logger.numberLog("Speed", speed);
 		logger.completeLog("Elevator Limit?", elevatorLimit);
 		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
@@ -202,15 +207,15 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void stop() {
-		robot.stopAllMotors();
+		//robot.stopAllMotors();
 		logger.completeLog("Status", "Stopped");
 		logger.update();
 	}
 
 	private void singleJoystickDrive() {
 		// New robot powering math...
-		double leftX = this.gamepad1.left_stick_x;
-		double leftY = this.gamepad1.left_stick_y;
+		double leftX = -this.gamepad1.left_stick_x;
+		double leftY = -this.gamepad1.left_stick_y;
 		if(grabbersAreFront) {
 			leftX *= -1;
 			leftY *= -1;
@@ -218,11 +223,40 @@ public class TeleOp extends OpMode {
 		double rightX = this.gamepad1.right_stick_x;
 		double rightY = this.gamepad1.right_stick_y;
 
+		//double currAngle = robot.imu.getAngularOrientation().firstAngle;
+		//double forwardBackwardChange = Math.abs(currAngle % 180) / 180;
+		//double sideToSideChange = (currAngle % 90) / 90;
+
+		//leftY -= forwardBackwardChange;
+		//leftX *= sideToSideChange;
+
+		//logger.numberLog("Angle", currAngle);
+		//logger.numberLog("FBChange", forwardBackwardChange);
+		//logger.numberLog("SSChange", sideToSideChange);
+		//logger.numberLog("LeftX", leftX);
+		//logger.numberLog("LeftY", leftY);
+
+		//double imu_radians = robot.imu.getAngularOrientation().firstAngle * Math.PI/180;
+		//double temp = leftY * Math.cos(imu_radians) - leftX * Math.sin(imu_radians);
+		//leftX =       leftY * Math.sin(imu_radians) + leftX * Math.cos(imu_radians);
+		//leftY = temp;
+
+		//logger.numberLog("angle", imu_radians);
+
+		//rightX *= 0.4;
+
 		double[] motorPowers = new double[4];
-		motorPowers[0] = (-leftY+leftX+rightX) * speed;
-		motorPowers[1] = (-leftY-leftX-rightX) * speed;
-		motorPowers[2] = (-leftY-leftX+rightX) * speed;
-		motorPowers[3] = (-leftY+leftX-rightX) * speed;
+		motorPowers[0] = (leftY-leftX+rightX) * speed;// -+
+		motorPowers[1] = (leftY+leftX-rightX) * speed;// +-
+		motorPowers[2] = (leftY+leftX+rightX) * speed;// ++
+		motorPowers[3] = (leftY-leftX-rightX) * speed;// --
+
+		double max = Math.abs(getLargestAbsVal(motorPowers));
+		if(max < 1) { max = 1; }
+
+		for(int i = 0; i < motorPowers.length; i++) {
+			motorPowers[i] /= max;
+		}
 
 		for(int i = 0; i < motorPowers.length; i++) {
 			if(motorPowers[i] < 0.05 && motorPowers[i] > -0.05) { motorPowers[i] = 0.0; }
@@ -231,6 +265,14 @@ public class TeleOp extends OpMode {
 		}
 
 		robot.drivetrain.setIndividualPowers(motorPowers);
+	}
+
+	private double getLargestAbsVal(double[] values) {
+		double max = 0;
+		for(double val : values) {
+			if(Math.abs(val) > Math.abs(max)) { max = val; }
+		}
+		return max;
 	}
 
 }

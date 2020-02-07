@@ -95,7 +95,7 @@ public abstract class BasicBaseplate extends BaseAutonomous {
 			// Step 11 - Moving away from the baseplate
 			if (getFinalPlacement() == Placement.CENTER) {
 				logger.statusLog(step++, "Moving to the center");
-				robot.drivetrain.runDistance(11.5, 11.5);
+				robot.drivetrain.runDistance(11, 11);
 			} else {
 				// Step 12 - Moving to wall, or to center
 				logger.statusLog(step++, "Moving to the wall");
