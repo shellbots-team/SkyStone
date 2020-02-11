@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by shell on 09/10/2019.
@@ -26,6 +28,8 @@ public class TeleOp extends OpMode {
 
 	private boolean manualOverride = false;
 	private boolean grabbersAreFront = true;
+
+	private ArrayList<Float> userInputs = new ArrayList<>();
 
 	/**
 	 * Run once after INIT is pushed
@@ -192,13 +196,19 @@ public class TeleOp extends OpMode {
 		} else if(robot.maxTouch.isPressed()) {
 			elevatorLimit = "Maximum";
 		}
-
+/*
 		logger.numberLog("Imu", robot.getAngle());
 		logger.numberLog("Speed", speed);
 		logger.completeLog("Elevator Limit?", elevatorLimit);
 		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
 		logger.numberLog("Switches full-half speed", switchCount);
+ */
+		robot.logTeleOpData();
 		logger.update();
+
+		userInputs.add(this.gamepad1.left_stick_x);
+		userInputs.add(this.gamepad1.left_stick_y);
+		userInputs.add(this.gamepad1.right_stick_x);
 
 	}
 
@@ -208,19 +218,20 @@ public class TeleOp extends OpMode {
 	@Override
 	public void stop() {
 		//robot.stopAllMotors();
+		logger.completeLog("inputs", userInputs.toString());
 		logger.completeLog("Status", "Stopped");
 		logger.update();
 	}
 
 	private void singleJoystickDrive() {
 		// New robot powering math...
-		double leftX = -this.gamepad1.left_stick_x;
-		double leftY = -this.gamepad1.left_stick_y;
+		double leftX = this.gamepad1.left_stick_x;
+		double leftY = this.gamepad1.left_stick_y;
 		if(grabbersAreFront) {
 			leftX *= -1;
 			leftY *= -1;
 		}
-		double rightX = this.gamepad1.right_stick_x;
+		double rightX = -this.gamepad1.right_stick_x;
 		double rightY = this.gamepad1.right_stick_y;
 
 		//double currAngle = robot.imu.getAngularOrientation().firstAngle;
@@ -250,18 +261,19 @@ public class TeleOp extends OpMode {
 		motorPowers[1] = (leftY+leftX-rightX) * speed;// +-
 		motorPowers[2] = (leftY+leftX+rightX) * speed;// ++
 		motorPowers[3] = (leftY-leftX-rightX) * speed;// --
-
+/*
 		double max = Math.abs(getLargestAbsVal(motorPowers));
 		if(max < 1) { max = 1; }
 
 		for(int i = 0; i < motorPowers.length; i++) {
 			motorPowers[i] /= max;
 		}
-
+*/
 		for(int i = 0; i < motorPowers.length; i++) {
 			if(motorPowers[i] < 0.05 && motorPowers[i] > -0.05) { motorPowers[i] = 0.0; }
 			if(motorPowers[i] > 1.0) { motorPowers[i] = 1.0; }
 			if(motorPowers[i] < -1.0) { motorPowers[i] = -1.0; }
+			logger.numberLog("Motor" + i, motorPowers[i]);
 		}
 
 		robot.drivetrain.setIndividualPowers(motorPowers);

@@ -33,33 +33,30 @@ public abstract class BaseAutonomous extends LinearOpMode {
 		BLUE
 	}
 
-	void moveTowardsLoadingZone(long milliseconds, double speed) {
-		if (getColor() == Color.BLUE) {
-			robot.drivetrain.setPowerRight(speed);
-		} else if (getColor() == Color.RED) {
-			robot.drivetrain.setPowerLeft(speed);
-		} else {
-			logger.completeLog("Color", "Color not found");
-		}
-		if (milliseconds == 0) {
-			return;
-		}
-		sleep(milliseconds);
-		robot.drivetrain.setAllPowers(0);
+	void moveTowardsLoadingZone(double distance, double maxSeconds) {
+		moveTowardsLoadingZone(distance, robot.drivetrain.defaultSpeed, maxSeconds);
 	}
 
-	void moveTowardsBuildingZone(long milliseconds, double speed) {
-		if (getColor() == Color.BLUE) {
-			robot.drivetrain.setPowerLeft(speed);
+	void moveTowardsLoadingZone(double distance, double maxSeconds, double speed) {
+		distance *= 2.25;
+		if(getColor() == Color.RED) {
+			robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
+		} else {
+			robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
 		}
-		if (getColor() == Color.RED) {
-			robot.drivetrain.setPowerRight(speed);
+	}
+
+	void moveTowardsBuildingZone(double distance, double maxSeconds) {
+		moveTowardsBuildingZone(distance, robot.drivetrain.defaultSpeed, maxSeconds);
+	}
+
+	void moveTowardsBuildingZone(double distance, double maxSeconds, double speed) {
+		distance *= 2.25;
+		if(getColor() == Color.BLUE) {
+			robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
+		} else {
+			robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
 		}
-		if (milliseconds == 0) {
-			return;
-		}
-		sleep(milliseconds);
-		robot.drivetrain.setAllPowers(0);
 	}
 
 	@Override

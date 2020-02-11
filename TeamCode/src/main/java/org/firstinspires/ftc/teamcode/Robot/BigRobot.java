@@ -1,3 +1,4 @@
+package org.firstinspires.ftc.teamcode.Robot;
 /* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -27,31 +28,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Robot;
-
-import android.util.Log;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorBNO055IMUCalibration;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Logger;
-
-import java.util.Locale;
 
 /**
  * This is NOT an opmode.
@@ -69,15 +55,11 @@ import java.util.Locale;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class Robot {
+public class BigRobot {
 
 	private Logger logger = null;
 	public Drivetrain drivetrain = null;
-	public Arm arm = null;
 	public ObjectDetection objectDetection = null;
-	public Grabber grabber = null;
-	public TouchSensor minTouch = null;
-	public TouchSensor maxTouch = null;
 
 	public BNO055IMU imu = null;
 
@@ -90,7 +72,7 @@ public class Robot {
 
 
 	/* Constructor */
-	public Robot() {
+	public BigRobot() {
 
 	}
 
@@ -101,7 +83,7 @@ public class Robot {
 		this.opmode = opmode;
 
 		logger = new Logger(telemetry);
-/*
+
 		BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 		parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 		parameters.calibrationDataFile = "BNO055IMUCalibration.json";
@@ -111,12 +93,10 @@ public class Robot {
 
 		imu = this.hardwareMap.get(BNO055IMU.class, "imu");
 		imu.initialize(parameters);
-*/
+
 		drivetrain = new Drivetrain(opmode);
-		arm = new Arm(opmode);
 		objectDetection = new ObjectDetection(hardwareMap, telemetry);
-		grabber = new Grabber(opmode);
-		//imu = this.hardwareMap.get(BNO055IMU.class, "imu");
+		imu = this.hardwareMap.get(BNO055IMU.class, "imu");
 
 		drivetrain.init(
 				telemetry,
@@ -125,55 +105,12 @@ public class Robot {
 				this.hardwareMap.get(DcMotor.class, "backLeft"),
 				this.hardwareMap.get(DcMotor.class, "backRight")
 		);
-
-		arm.init(
-				telemetry,
-				this.hardwareMap.get(DcMotor.class, "leftArm"),
-				this.hardwareMap.get(DcMotor.class, "rightArm"),
-				this.hardwareMap.get(DcMotor.class, "extendArm"),
-				this.hardwareMap.get(CRServo.class, "rightHand"),
-				this.hardwareMap.get(DcMotor.class, "elevateArm")
-		);
-
-		grabber.init(
-				telemetry,
-				this.hardwareMap.get(CRServo.class, "leftGrabber"),
-				this.hardwareMap.get(CRServo.class, "rightGrabber")
-		);
-
-		// Define and initialize ALL installed servos.
-		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
-		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
-
-		minTouch = this.hardwareMap.get(TouchSensor.class, "minTouch");
-		maxTouch = this.hardwareMap.get(TouchSensor.class, "maxTouch");
-
 	}
 
 	public float getAngle() {
 		return imu.getAngularOrientation().firstAngle;
 	}
 
-	public void grabBaseplate() {
-		setServoPosition(leftGrip, 1);
-		setServoPosition(rightGrip, 0);
-	}
-
-	public void releaseBaseplate() {
-		setServoPosition(leftGrip, 0);
-		setServoPosition(rightGrip, 1);
-	}
-
-	private void setServoPosition(CRServo crservo, double position) {
-		crservo.getController().setServoPosition(crservo.getPortNumber(), position);
-	}
-
-	/**
-	 * Sets the power for all passed motors to a given power
-	 *
-	 * @param power  The power to set the motors to (-1.0 to 1.0)
-	 * @param motors The motors to set to the given power
-	 */
 	protected void setSpecificPowers(double power, DcMotor... motors) {
 		for (DcMotor motor : motors) {
 			motor.setPower(power);
@@ -195,12 +132,10 @@ public class Robot {
 
 	public void logTeleOpData() {
 		drivetrain.logTeleOpData();
-		arm.logTeleOpData();
 	}
 
 	public void stopAllMotors() {
 		drivetrain.stopAllMotors();
-		arm.stopAllMotors();
 	}
 
 }

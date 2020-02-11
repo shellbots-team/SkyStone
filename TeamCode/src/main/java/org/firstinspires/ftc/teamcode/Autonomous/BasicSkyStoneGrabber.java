@@ -14,32 +14,6 @@ public abstract class BasicSkyStoneGrabber extends BaseAutonomous {
 
 	final boolean DOUBLE_STONE = false;
 
-	@Override
-	void moveTowardsLoadingZone(long milliseconds, double speed) {
-		super.moveTowardsBuildingZone(milliseconds, speed);
-	}
-
-	void moveTowardsLoadingZone(double distance, double speed, double maxSeconds) {
-		if(getColor() == Color.RED) {
-			robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
-		} else {
-			robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
-		}
-	}
-
-	@Override
-	void moveTowardsBuildingZone(long milliseconds, double speed) {
-		super.moveTowardsLoadingZone(milliseconds, speed);
-	}
-
-	void moveTowardsBuildingZone(double distance, double speed, double maxSeconds) {
-		if(getColor() == Color.RED) {
-			robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
-		} else {
-			robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
-		}
-	}
-
 	void grabStone() {
 		if (getColor() == Color.BLUE) {
 			robot.grabber.rightGrab();

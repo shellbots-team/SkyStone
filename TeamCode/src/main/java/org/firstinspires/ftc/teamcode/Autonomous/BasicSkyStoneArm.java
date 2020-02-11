@@ -11,45 +11,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 public abstract class BasicSkyStoneArm extends BaseAutonomous {
 
 	@Override
-	void moveTowardsLoadingZone(long milliseconds, double speed) {
-		if (getColor() == Color.BLUE) {
-			robot.drivetrain.setAllPowers(speed);
-		}
-		if (getColor() == Color.RED) {
-			robot.drivetrain.setAllPowers(-speed);
-		}
-		if (milliseconds == 0) {
-			return;
-		}
-		sleep(milliseconds);
-		robot.drivetrain.setAllPowers(0);
-	}
-
-	private void moveTowardsLoadingZone(double leftInches, double rightInches) {
-		robot.drivetrain.runDistance(-leftInches, -rightInches);
-	}
-
-	@Override
-	// TODO: Test this and movetowardsloading zone
-	void moveTowardsBuildingZone(long milliseconds, double speed) {
-		if (getColor() == Color.BLUE) {
-			robot.drivetrain.setAllPowers(-speed);
-		}
-		if (getColor() == Color.RED) {
-			robot.drivetrain.setAllPowers(speed);
-		}
-		if (milliseconds == 0) {
-			return;
-		}
-		sleep(milliseconds);
-		robot.drivetrain.setAllPowers(0);
-	}
-
-	private void moveTowardsBuildingZone(double leftInches, double rightInches) {
-		robot.drivetrain.runDistance(leftInches, rightInches);
-	}
-
-	@Override
 	public void runOpMode() {
 
 		boolean isBlue = getColor() == Color.BLUE;

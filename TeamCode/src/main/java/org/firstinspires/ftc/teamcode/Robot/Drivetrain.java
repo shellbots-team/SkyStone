@@ -18,6 +18,7 @@ public class Drivetrain extends RobotComponent {
 	private DcMotor backRight;
 
 	private Logger logger = null;
+	public double defaultSpeed = 0.2;
 
 	Drivetrain(OpMode opmode) {
 		super(opmode);
@@ -50,9 +51,14 @@ public class Drivetrain extends RobotComponent {
 	@Override
 	void logTeleOpData() {
 		logger.numberLog("Frontleft", frontLeft.getPower());
+		logger.numberLog("Frontleft", frontLeft.getCurrentPosition());
 		logger.numberLog("Frontright", frontRight.getPower());
+		logger.numberLog("Frontright", frontRight.getCurrentPosition());
 		logger.numberLog("Backleft", backLeft.getPower());
+		logger.numberLog("Backleft", backLeft.getCurrentPosition());
 		logger.numberLog("Backright", backRight.getPower());
+		logger.numberLog("Backright", backRight.getCurrentPosition());
+
 	}
 
 	/**
@@ -82,11 +88,11 @@ public class Drivetrain extends RobotComponent {
 	}
 
 	public void runDistance(double leftInches, double rightInches) {
-		runDistance(leftInches, rightInches, DEFAULT_DRIVE_SPEED, 999);
+		runDistance(leftInches, rightInches, defaultSpeed, 999);
 	}
 
-	public void runDistance(double leftInches, double rightInches, double speed) {
-		runDistance(leftInches, rightInches, speed, 999);
+	public void runDistance(double leftInches, double rightInches, double seconds) {
+		runDistance(leftInches, rightInches, defaultSpeed, seconds);
 	}
 
 	/**
@@ -106,6 +112,8 @@ public class Drivetrain extends RobotComponent {
 		if (!opModeIsActive()) {
 			return;
 		}
+
+		int offset = 100;
 
 		// Reset encoder values
 		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
@@ -133,21 +141,36 @@ public class Drivetrain extends RobotComponent {
 		// While game is still going, maxtime has not been reached, and none of the motors have reached their position
 		while (opModeIsActive() && (runtime.seconds() < maxSeconds) &&
 				(frontLeft.isBusy() && backLeft.isBusy()) &&
-				(frontRight.isBusy() && backRight.isBusy()) &&
-				(checkDist(10, frontLeft, frontRight, backLeft, backRight))) {
+				(frontRight.isBusy() && backRight.isBusy())) {
 
-			/*
+
 			logger.addData("Path1", String.format(Locale.US,
 					"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
-			logger.occasionalLog("Path2", String.format(Locale.US,
+			logger.addData("Path2", String.format(Locale.US,
 					"Running at FL:%7d BL:%7d FR:%7d BR:%7d",
 					frontLeft.getCurrentPosition(),
 					frontRight.getCurrentPosition(),
 					backLeft.getCurrentPosition(),
 					backRight.getCurrentPosition()));
 			logger.update();
-			 */
+
+			if(Math.abs(frontLeft.getTargetPosition() - frontLeft.getCurrentPosition()) < 100) {
+				double decrease = 0.1;
+				frontLeft.setPower(frontLeft.getPower()		* (1 - decrease));
+				frontRight.setPower(frontRight.getPower()	* (1 - decrease));
+				backLeft.setPower(backLeft.getPower() 		* (1 - decrease));
+				backRight.setPower(backRight.getPower()		* (1 - decrease));
+			}
+
 		}
+
+		logger.completeLog("Is busy? FL", frontLeft.isBusy() ? "yes" : "no");
+		logger.completeLog("Is busy? FR", frontRight.isBusy() ? "yes" : "no");
+		logger.completeLog("Is busy? BL", backLeft.isBusy() ? "yes" : "no");
+		logger.completeLog("Is busy? BR", backRight.isBusy() ? "yes" : "no");
+		logger.numberLog("Curr Time", runtime.seconds());
+		logger.numberLog("Max Time", maxSeconds);
+		logger.completeLog("Opmode is active? ", opModeIsActive() ? "yes" : "no");
 
 		// Stop all motion
 		setAllPowers(0);
@@ -157,16 +180,6 @@ public class Drivetrain extends RobotComponent {
 
 		// Stop all motion
 		setAllPowers(0);
-	}
-
-	private boolean checkDist(int max, DcMotor... motorList) {
-		for(DcMotor motor : motorList) {
-			if(Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) < max) {
-				logger.completeLog("Pos", "Close enough");
-				return false;
-			}
-		}
-		return true;
 	}
 
 	public void setPowerLeft(double power) {
