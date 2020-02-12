@@ -1,14 +1,24 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Timer;
 
 
 /**
@@ -29,7 +39,12 @@ public class TeleOp extends OpMode {
 	private boolean manualOverride = false;
 	private boolean grabbersAreFront = true;
 
-	private ArrayList<Float> userInputs = new ArrayList<>();
+	private ArrayList<Float> leftYInputs      = new ArrayList<>();
+	private ArrayList<Float> leftXInputs      = new ArrayList<>();
+	private ArrayList<Float> rightXInputs     = new ArrayList<>();
+	private ArrayList<Boolean> upDPadInputs   = new ArrayList<>();
+	private ArrayList<Boolean> downDPadInputs = new ArrayList<>();
+	private ArrayList<Double> timeInputs      = new ArrayList<>();
 
 	/**
 	 * Run once after INIT is pushed
@@ -52,6 +67,8 @@ public class TeleOp extends OpMode {
 
 	}
 
+	ElapsedTime timer = new ElapsedTime();
+
 	/**
 	 * Runs once after PLAY is pushed
 	 */
@@ -63,6 +80,8 @@ public class TeleOp extends OpMode {
 
 	@Override
 	public void loop() {
+
+		timer.reset();
 
 		/* Controller Layouts
 		 *
@@ -206,10 +225,45 @@ public class TeleOp extends OpMode {
 		robot.logTeleOpData();
 		logger.update();
 
-		userInputs.add(this.gamepad1.left_stick_x);
-		userInputs.add(this.gamepad1.left_stick_y);
-		userInputs.add(this.gamepad1.right_stick_x);
+		leftXInputs.add(this.gamepad1.left_stick_x);
+		leftYInputs.add(this.gamepad1.left_stick_y);
+		rightXInputs.add(this.gamepad1.right_stick_x);
+		upDPadInputs.add(this.gamepad1.dpad_up);
+		downDPadInputs.add(this.gamepad1.dpad_down);
+		timeInputs.add(timer.milliseconds());
 
+	}
+
+	public String processFloat(ArrayList<Float> arr, String name, String spaces) {
+		String output = "double[] " + name + spaces + " = new double[] {";
+		for(int i = 0; i < arr.size(); i++) {
+			output += arr.get(i);
+			if(i == arr.size() - 1) { break; }
+			output += ", ";
+		}
+		output += "};";
+		return output;
+	}
+	public String processDouble(ArrayList<Double> arr, String name, String spaces) {
+		String output = "double[] " + name + spaces + " = new double[] {";
+		for(int i = 0; i < arr.size(); i++) {
+			output += arr.get(i);
+			if(i == arr.size() - 1) { break; }
+			output += ", ";
+		}
+		output += "};";
+		return output;
+	}
+
+	public String processBoolean(ArrayList<Boolean> arr, String name, String spaces) {
+		String output = "boolean[] " + name + spaces + " = new boolean[] {";
+		for(int i = 0; i < arr.size(); i++) {
+			output += arr.get(i) ? "true" : "false";
+			if(i == arr.size() - 1) { break; }
+			output += ", ";
+		}
+		output += "};";
+		return output;
 	}
 
 	/**
@@ -218,7 +272,33 @@ public class TeleOp extends OpMode {
 	@Override
 	public void stop() {
 		//robot.stopAllMotors();
-		logger.completeLog("inputs", userInputs.toString());
+
+		final File path = Environment.getExternalStoragePublicDirectory(
+				Environment.DIRECTORY_DCIM + "/14736/"
+		);
+		if(!path.exists()) {
+			path.mkdirs();
+		}
+		final File file = new File(path, "config.txt");
+		try {
+			file.createNewFile();
+			FileOutputStream fOut = new FileOutputStream(file);
+			OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+			myOutWriter.append(processFloat(leftXInputs, "leftXValues", " ")            + "\n");
+			myOutWriter.append(processFloat(leftYInputs, "leftYValues", " ")            + "\n");
+			myOutWriter.append(processFloat(rightXInputs, "rightXValues", "")           + "\n");
+			myOutWriter.append(processBoolean(upDPadInputs, "upDPadInputs", "     ")    + "\n");
+			myOutWriter.append(processBoolean(downDPadInputs, "downDPadInputs", "    ") + "\n");
+			myOutWriter.append(processDouble(timeInputs, "time", "        ")                  );
+
+			myOutWriter.close();
+			fOut.flush();
+			fOut.close();
+		}
+		catch(IOException e) {
+			Log.e("Exception", "File write failed: " + e.toString());
+		}
+
 		logger.completeLog("Status", "Stopped");
 		logger.update();
 	}
@@ -257,10 +337,10 @@ public class TeleOp extends OpMode {
 		//rightX *= 0.4;
 
 		double[] motorPowers = new double[4];
-		motorPowers[0] = (leftY-leftX+rightX) * speed;// -+
-		motorPowers[1] = (leftY+leftX-rightX) * speed;// +-
-		motorPowers[2] = (leftY+leftX+rightX) * speed;// ++
-		motorPowers[3] = (leftY-leftX-rightX) * speed;// --
+		motorPowers[0] = (leftY-leftX+rightX);// -+
+		motorPowers[1] = (leftY+leftX-rightX);// +-
+		motorPowers[2] = (leftY+leftX+rightX);// ++
+		motorPowers[3] = (leftY-leftX-rightX);// --
 /*
 		double max = Math.abs(getLargestAbsVal(motorPowers));
 		if(max < 1) { max = 1; }
@@ -273,6 +353,7 @@ public class TeleOp extends OpMode {
 			if(motorPowers[i] < 0.05 && motorPowers[i] > -0.05) { motorPowers[i] = 0.0; }
 			if(motorPowers[i] > 1.0) { motorPowers[i] = 1.0; }
 			if(motorPowers[i] < -1.0) { motorPowers[i] = -1.0; }
+			motorPowers[i] *= speed;
 			logger.numberLog("Motor" + i, motorPowers[i]);
 		}
 

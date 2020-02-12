@@ -45,7 +45,7 @@ public class Drivetrain extends RobotComponent {
 
 		setAllPowers(0);
 
-		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeft, frontRight, backLeft, backRight);
+		setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, frontLeft, frontRight, backLeft, backRight);
 	}
 
 	@Override

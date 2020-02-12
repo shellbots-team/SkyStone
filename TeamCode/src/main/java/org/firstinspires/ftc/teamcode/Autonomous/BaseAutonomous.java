@@ -1,68 +1,79 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Logger;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 /**
- * Created by shell on 10/05/2019.
+ * Created by shell on 02/11/2020.
  */
-
-@Disabled
-@Autonomous(group = "Base", name = "Base: Autonomous")
+@Autonomous(group = "Auto", name = "Manual Based Autonomous")
 public abstract class BaseAutonomous extends LinearOpMode {
 
-	protected abstract Color getColor();
+	protected abstract double[]  getLeftXValues();
+	protected abstract double[]  getLeftYValues();
+	protected abstract double[]  getRightXValues();
+	protected abstract double[]  getTime();
 
-	protected abstract Placement getFinalPlacement();
+	protected abstract void fakeAutonomous(int i);
 
-	Robot robot = new Robot();
-	Logger logger = null;
-	int step = 0;
-
-	protected enum Placement {
-		WALL,
-		CENTER
-	}
-
-	protected enum Color {
-		RED,
-		BLUE
-	}
-
-	void moveTowardsLoadingZone(double distance, double maxSeconds) {
-		moveTowardsLoadingZone(distance, robot.drivetrain.defaultSpeed, maxSeconds);
-	}
-
-	void moveTowardsLoadingZone(double distance, double maxSeconds, double speed) {
-		distance *= 2.25;
-		if(getColor() == Color.RED) {
-			robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
-		} else {
-			robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
-		}
-	}
-
-	void moveTowardsBuildingZone(double distance, double maxSeconds) {
-		moveTowardsBuildingZone(distance, robot.drivetrain.defaultSpeed, maxSeconds);
-	}
-
-	void moveTowardsBuildingZone(double distance, double maxSeconds, double speed) {
-		distance *= 2.25;
-		if(getColor() == Color.BLUE) {
-			robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
-		} else {
-			robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
-		}
-	}
+	protected Robot robot = new Robot();
+	protected Logger logger = null;
 
 	@Override
 	public void runOpMode() {
-		// Initialize motors/servos
-		robot.init(hardwareMap, telemetry, this);
 		logger = new Logger(telemetry);
+		robot.init(hardwareMap, telemetry, this);
+
+		double[] leftXValues = getLeftXValues();
+		double[] leftYValues = getLeftYValues();
+		double[] rightXValues = getRightXValues();
+		double[] time = getTime();
+
+		ElapsedTime timer = new ElapsedTime();
+
+		waitForStart();
+
+		int i = 0;
+		while (opModeIsActive() && i < leftXValues.length) {
+			timer.reset();
+			logger.numberLog("I", i);
+
+			double leftX = leftXValues[i] * -1;
+			double leftY = leftYValues[i] * -1;
+			double rightX = rightXValues[i] * -1;
+
+			double[] motorPowers = new double[4];
+			double speed = 0.5;
+			motorPowers[0] = (leftY - leftX + rightX);
+			motorPowers[1] = (leftY + leftX - rightX);
+			motorPowers[2] = (leftY + leftX + rightX);
+			motorPowers[3] = (leftY - leftX - rightX);
+
+			for (int j = 0; j < motorPowers.length; j++) {
+				if (motorPowers[j] < 0.05 && motorPowers[j] > -0.05) {
+					motorPowers[j] = 0.0;
+				}
+				if (motorPowers[j] > 1.0) {
+					motorPowers[j] = 1.0;
+				}
+				if (motorPowers[j] < -1.0) {
+					motorPowers[j] = -1.0;
+				}
+
+				motorPowers[j] *= speed;
+				logger.numberLog("motorPower["+j+"]", motorPowers[j]);
+			}
+
+			robot.drivetrain.setIndividualPowers(motorPowers);
+
+			fakeAutonomous(i);
+
+			while(timer.milliseconds() < time[i]) {}
+			i++;
+		}
 	}
 }
