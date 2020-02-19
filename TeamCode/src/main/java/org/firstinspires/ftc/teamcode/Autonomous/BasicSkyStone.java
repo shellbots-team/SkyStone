@@ -26,6 +26,8 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 
 	public abstract void noDevices(byte skystoneLocation);
 
+	public abstract int getColor();
+
 	@Override
 	public void initializerz() {
 		xInputs = getXInputs();
@@ -102,30 +104,24 @@ public abstract class BasicSkyStone extends BaseAutonomous {
 		robot.objectDetection.initializeTFOD();
 		robot.objectDetection.initializeObjectDetection();
 		sleep(2000);
-		double skystoneLocation = robot.objectDetection.getSkyStone().getRight();
+		double skystoneRight = robot.objectDetection.getSkyStone().getRight();
 
-		Recognition stone = robot.objectDetection.getSkyStone();
-		logger.completeLog("Right Side", String.valueOf(stone.getRight()));
-
-// Set the stones position
 		byte position = 0;
-		final byte BASEPLATE_SIDE = 1;
-		final byte MIDDLE_SIDE = 0;
-		final byte SKYSTONE_SIDE = -1;
 
-		if (stone.getRight() > 700) {
+		if (skystoneRight > 700) {
 			position = 1;
-		} else if (stone.getRight() < 480) {
+		} else if (skystoneRight < 480) {
 			position = -1;
 		}
-		if (stone.getRight() > 750) {
+		if (skystoneRight > 750) {
 			position = 1;
-		} else if (stone.getRight() < 500) {
+		} else if (skystoneRight < 500) {
 			position = -1;
 		}
-		if(stone.getRight() == 500) { position = 1; }
+		if(skystoneRight == 500) { position = 1; }
 
 // Invert position if on blue side
+		if(getColor() == Color.BLUE) { position *= -1; }
 
 		noDevices(position);
 

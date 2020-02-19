@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous.Red.SkyStone;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
@@ -20,6 +22,9 @@ public class RedSkyStoneCenter extends BasicSkyStone {
 	boolean[] yInputs;
 	boolean[] bInputs;
 	double[] time;
+
+	@Override
+	public int getColor() { return Color.RED; }
 
 	public void noDevices(byte skystoneLocation) {
 		if(skystoneLocation == -1) {
