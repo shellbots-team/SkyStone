@@ -39,11 +39,12 @@ public class Arm extends RobotComponent {
 		this.extendArm = extendArm;
 		this.elevateArm = elevateArm;
 
-		leftArm.setDirection(DcMotor.Direction.REVERSE);
+		leftArm.setDirection(DcMotor.Direction.FORWARD);
 		rightArm.setDirection(DcMotor.Direction.REVERSE);
 		extendArm.setDirection(DcMotor.Direction.FORWARD);
 
 		leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		rightArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		extendArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		elevateArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -69,19 +70,11 @@ public class Arm extends RobotComponent {
 	public void extendWithPower(double power) {extendArm.setPower(power);}
 
 	public void raiseWithPower(double power) {
-		if (armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
-			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
-			armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
-		}
 		leftArm.setPower(power);
 		rightArm.setPower(power);
 	}
 
 	public void lowerWithPower(double power) {
-		if (armRunMode != DcMotor.RunMode.RUN_USING_ENCODER) {
-			setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, leftArm, rightArm);
-			armRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
-		}
 		leftArm.setPower(-power);
 		rightArm.setPower(-power);
 	}

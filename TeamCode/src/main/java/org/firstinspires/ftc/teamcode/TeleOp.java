@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.Robot.Grabber;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 import java.io.File;
@@ -33,18 +34,33 @@ public class TeleOp extends OpMode {
 	private String elevatorLimit = "";
 	private int switchCount = 0;
 
-	private double speed = 1.0;
+	private double speed = 0.5;
 	private double armSpeed = 1.0;
+
+	private boolean last_x = false;
+	private boolean last_a = false;
+	private boolean last_y = false;
+	private boolean last_b = false;
 
 	private boolean manualOverride = false;
 	private boolean grabbersAreFront = true;
 
-	private ArrayList<Float> leftYInputs      = new ArrayList<>();
-	private ArrayList<Float> leftXInputs      = new ArrayList<>();
-	private ArrayList<Float> rightXInputs     = new ArrayList<>();
-	private ArrayList<Boolean> upDPadInputs   = new ArrayList<>();
-	private ArrayList<Boolean> downDPadInputs = new ArrayList<>();
-	private ArrayList<Double> timeInputs      = new ArrayList<>();
+	private ArrayList<Float> leftYInputs        = new ArrayList<>();
+	private ArrayList<Float> leftXInputs        = new ArrayList<>();
+	private ArrayList<Float> rightXInputs       = new ArrayList<>();
+	private ArrayList<Boolean> upDPadInputs     = new ArrayList<>();
+	private ArrayList<Boolean> downDPadInputs   = new ArrayList<>();
+	private ArrayList<Double> timeInputs        = new ArrayList<>();
+	private ArrayList<Boolean> AInputs          = new ArrayList<>();
+	private ArrayList<Boolean> YInputs          = new ArrayList<>();
+	private ArrayList<Boolean> XInputs          = new ArrayList<>();
+	private ArrayList<Boolean> BInputs          = new ArrayList<>();
+
+		/*
+	extend out
+	move servo
+	lift
+	 */
 
 	/**
 	 * Run once after INIT is pushed
@@ -53,6 +69,7 @@ public class TeleOp extends OpMode {
 	public void init() {
 		robot.init(hardwareMap, telemetry, this);
 		logger = new Logger(telemetry);
+		this.msStuckDetectStop = 60000;
 
 		// Step 0 - Initialized
 		logger.statusLog(0, "Initialized");
@@ -136,21 +153,33 @@ public class TeleOp extends OpMode {
 			robot.releaseBaseplate();
 		} else if (this.gamepad1.dpad_down) {
 			robot.grabBaseplate();
-		} else if (this.gamepad1.dpad_left) {
-		} else if (this.gamepad1.dpad_right) {
 		}
 
-		if (this.gamepad1.y) {
-			robot.grabber.raise();
+		if (this.gamepad1.dpad_left) {
+			robot.lowerCapstone();
+		} else if (this.gamepad1.dpad_right) {
+			robot.raiseCapstone();
+		} else {
+			robot.stopCapstone();
 		}
-		if (this.gamepad1.a) {
+
+		if (this.gamepad1.x && this.gamepad1.x != last_x) { // Left Big Arm
+			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.LEFT);
 		}
-		if (this.gamepad1.x) {
-			robot.grabber.leftGrab();
+		if (this.gamepad1.a && this.gamepad1.a != last_a) { // Left Little Arm
+			robot.grabber.flip(Grabber.Level.ALT, Grabber.Side.LEFT);
 		}
-		if (this.gamepad1.b) {
-			robot.grabber.rightGrab();
+		if (this.gamepad1.y && this.gamepad1.y != last_y) { // Right Big Arm
+			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.RIGHT);
 		}
+		if (this.gamepad1.b && this.gamepad1.b != last_b) { // Right Little Arm
+			robot.grabber.flip(Grabber.Level.ALT, Grabber.Side.RIGHT);
+		}
+
+		last_x = this.gamepad1.x;
+		last_a = this.gamepad1.a;
+		last_y = this.gamepad1.y;
+		last_b = this.gamepad1.b;
 
 		/*
 		 * Controller 2 settings
@@ -172,13 +201,13 @@ public class TeleOp extends OpMode {
 			armSpeed = 1.0;
 		}
 		if (this.gamepad2.left_bumper) {
-			armSpeed = 0.27;
+			armSpeed = 0.5;
 		}
 
 		if (this.gamepad2.dpad_up) {
-			robot.arm.raiseWithPower(0.4 * armSpeed);
+			robot.arm.raiseWithPower(1 * armSpeed);
 		} else if (this.gamepad2.dpad_down) {
-			robot.arm.lowerWithPower(0.15);
+			robot.arm.lowerWithPower(0.20);
 		} else {
 			robot.arm.raiseWithPower(0);
 		}
@@ -215,6 +244,7 @@ public class TeleOp extends OpMode {
 		} else if(robot.maxTouch.isPressed()) {
 			elevatorLimit = "Maximum";
 		}
+
 /*
 		logger.numberLog("Imu", robot.getAngle());
 		logger.numberLog("Speed", speed);
@@ -225,11 +255,17 @@ public class TeleOp extends OpMode {
 		robot.logTeleOpData();
 		logger.update();
 
+
+
 		leftXInputs.add(this.gamepad1.left_stick_x);
 		leftYInputs.add(this.gamepad1.left_stick_y);
 		rightXInputs.add(this.gamepad1.right_stick_x);
 		upDPadInputs.add(this.gamepad1.dpad_up);
 		downDPadInputs.add(this.gamepad1.dpad_down);
+		XInputs.add(this.gamepad1.x);
+		AInputs.add(this.gamepad1.a);
+		YInputs.add(this.gamepad1.y);
+		BInputs.add(this.gamepad1.b);
 		timeInputs.add(timer.milliseconds());
 
 	}
@@ -244,6 +280,7 @@ public class TeleOp extends OpMode {
 		output += "};";
 		return output;
 	}
+
 	public String processDouble(ArrayList<Double> arr, String name, String spaces) {
 		String output = "double[] " + name + spaces + " = new double[] {";
 		for(int i = 0; i < arr.size(); i++) {
@@ -271,7 +308,9 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void stop() {
-		//robot.stopAllMotors();
+		robot.stopAllMotors();
+		logger.completeLog("Status", "Stopping and logging inputs...");
+		logger.update();
 
 		final File path = Environment.getExternalStoragePublicDirectory(
 				Environment.DIRECTORY_DCIM + "/14736/"
@@ -281,15 +320,20 @@ public class TeleOp extends OpMode {
 		}
 		final File file = new File(path, "config.txt");
 		try {
+
 			file.createNewFile();
 			FileOutputStream fOut = new FileOutputStream(file);
 			OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-			myOutWriter.append(processFloat(leftXInputs, "leftXValues", " ")            + "\n");
-			myOutWriter.append(processFloat(leftYInputs, "leftYValues", " ")            + "\n");
-			myOutWriter.append(processFloat(rightXInputs, "rightXValues", "")           + "\n");
-			myOutWriter.append(processBoolean(upDPadInputs, "upDPadInputs", "     ")    + "\n");
-			myOutWriter.append(processBoolean(downDPadInputs, "downDPadInputs", "    ") + "\n");
-			myOutWriter.append(processDouble(timeInputs, "time", "        ")                  );
+			myOutWriter.append(processFloat(leftXInputs, "leftXValues", " ")					+ "\n");
+			myOutWriter.append(processFloat(leftYInputs, "leftYValues", " ")					+ "\n");
+			myOutWriter.append(processFloat(rightXInputs, "rightXValues", "")					+ "\n");
+			myOutWriter.append(processBoolean(XInputs, "xInputs", " ")						+ "\n");
+			myOutWriter.append(processBoolean(AInputs, "aInputs", " ")						+ "\n");
+			myOutWriter.append(processBoolean(YInputs, "yInputs", " ")						+ "\n");
+			myOutWriter.append(processBoolean(BInputs, "bInputs", " ")						+ "\n");
+			//myOutWriter.append(processBoolean(upDPadInputs, "upDPadInputs", "     ")						+ "\n");
+			//myOutWriter.append(processBoolean(downDPadInputs, "downDPadInputs", "    ")					+ "\n");
+			myOutWriter.append(processDouble(timeInputs, "time", "        ")						  );
 
 			myOutWriter.close();
 			fOut.flush();
@@ -311,30 +355,8 @@ public class TeleOp extends OpMode {
 			leftX *= -1;
 			leftY *= -1;
 		}
-		double rightX = -this.gamepad1.right_stick_x;
+		double rightX = this.gamepad1.right_stick_x;
 		double rightY = this.gamepad1.right_stick_y;
-
-		//double currAngle = robot.imu.getAngularOrientation().firstAngle;
-		//double forwardBackwardChange = Math.abs(currAngle % 180) / 180;
-		//double sideToSideChange = (currAngle % 90) / 90;
-
-		//leftY -= forwardBackwardChange;
-		//leftX *= sideToSideChange;
-
-		//logger.numberLog("Angle", currAngle);
-		//logger.numberLog("FBChange", forwardBackwardChange);
-		//logger.numberLog("SSChange", sideToSideChange);
-		//logger.numberLog("LeftX", leftX);
-		//logger.numberLog("LeftY", leftY);
-
-		//double imu_radians = robot.imu.getAngularOrientation().firstAngle * Math.PI/180;
-		//double temp = leftY * Math.cos(imu_radians) - leftX * Math.sin(imu_radians);
-		//leftX =       leftY * Math.sin(imu_radians) + leftX * Math.cos(imu_radians);
-		//leftY = temp;
-
-		//logger.numberLog("angle", imu_radians);
-
-		//rightX *= 0.4;
 
 		double[] motorPowers = new double[4];
 		motorPowers[0] = (leftY-leftX+rightX);// -+

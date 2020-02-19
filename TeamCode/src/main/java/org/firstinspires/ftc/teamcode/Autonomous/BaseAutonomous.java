@@ -23,19 +23,26 @@ public abstract class BaseAutonomous extends LinearOpMode {
 	protected Robot robot = new Robot();
 	protected Logger logger = null;
 
+	public abstract void initializerz();
+	public abstract void prerun();
+
 	@Override
 	public void runOpMode() {
 		logger = new Logger(telemetry);
 		robot.init(hardwareMap, telemetry, this);
 
-		double[] leftXValues = getLeftXValues();
-		double[] leftYValues = getLeftYValues();
-		double[] rightXValues = getRightXValues();
-		double[] time = getTime();
+		initializerz();
 
 		ElapsedTime timer = new ElapsedTime();
 
 		waitForStart();
+
+		prerun();
+
+		double[] leftXValues = getLeftXValues();
+		double[] leftYValues = getLeftYValues();
+		double[] rightXValues = getRightXValues();
+		double[] time = getTime();
 
 		int i = 0;
 		while (opModeIsActive() && i < leftXValues.length) {
@@ -44,7 +51,7 @@ public abstract class BaseAutonomous extends LinearOpMode {
 
 			double leftX = leftXValues[i] * -1;
 			double leftY = leftYValues[i] * -1;
-			double rightX = rightXValues[i] * -1;
+			double rightX = rightXValues[i];
 
 			double[] motorPowers = new double[4];
 			double speed = 0.5;

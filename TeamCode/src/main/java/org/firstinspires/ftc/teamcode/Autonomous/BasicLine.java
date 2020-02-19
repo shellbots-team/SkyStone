@@ -7,6 +7,12 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 public abstract class BasicLine extends BaseAutonomous {
 
 	@Override
+	public void initializerz() {}
+
+	@Override
+	public void prerun() {}
+
+	@Override
 	public void runOpMode() { super.runOpMode(); }
 
 	@Override

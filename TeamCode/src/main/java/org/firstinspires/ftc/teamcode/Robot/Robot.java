@@ -78,6 +78,7 @@ public class Robot {
 	public Grabber grabber = null;
 	public TouchSensor minTouch = null;
 	public TouchSensor maxTouch = null;
+	public CRServo capstoneServo = null;
 
 	public BNO055IMU imu = null;
 
@@ -137,18 +138,35 @@ public class Robot {
 
 		grabber.init(
 				telemetry,
-				this.hardwareMap.get(CRServo.class, "leftGrabber"),
-				this.hardwareMap.get(CRServo.class, "rightGrabber")
+				this.hardwareMap.get(CRServo.class, "baseRightServo"),
+				this.hardwareMap.get(CRServo.class, "altRightServo"),
+				this.hardwareMap.get(CRServo.class, "baseLeftServo"),
+				this.hardwareMap.get(CRServo.class, "altLeftServo")
 		);
 
 		// Define and initialize ALL installed servos.
 		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
 		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
 
+		capstoneServo = this.hardwareMap.get(CRServo.class, "capstoneServo");
+
 		minTouch = this.hardwareMap.get(TouchSensor.class, "minTouch");
 		maxTouch = this.hardwareMap.get(TouchSensor.class, "maxTouch");
 
 	}
+
+	public void raiseCapstone() {
+		capstoneServo.setPower(1.0);
+	}
+
+	public void lowerCapstone() {
+		capstoneServo.setPower(-1.0);
+	}
+
+	public void stopCapstone() {
+		capstoneServo.setPower(0.0);
+	}
+
 
 	public float getAngle() {
 		return imu.getAngularOrientation().firstAngle;
@@ -164,7 +182,7 @@ public class Robot {
 		setServoPosition(rightGrip, 1);
 	}
 
-	private void setServoPosition(CRServo crservo, double position) {
+	public static void setServoPosition(CRServo crservo, double position) {
 		crservo.getController().setServoPosition(crservo.getPortNumber(), position);
 	}
 
