@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode.Autonomous.Blue.Skystone;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.Autonomous.BasicSkyStoneArm;
-import org.firstinspires.ftc.teamcode.Autonomous.BasicSkyStoneGrabber;
+import org.firstinspires.ftc.teamcode.Autonomous.BasicSkyStone;
 
 /**
  * Created by shell on 10/26/2019.
  */
 
 @Autonomous(group = "Blue:SkyStone", name = "Blue: SkyStone: Center")
-public class BlueSkyStoneCenter extends BasicSkyStoneGrabber {
+public class BlueSkyStoneCenter extends BasicSkyStone {
 	@Override
 	protected Color getColor() {
 		return Color.BLUE;

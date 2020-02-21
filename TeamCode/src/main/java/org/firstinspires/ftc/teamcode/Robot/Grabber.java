@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Logger;
@@ -13,29 +12,100 @@ public class Grabber extends RobotComponent {
 	}
 
 	Logger logger = null;
-	CRServo rightServo = null;
-	CRServo leftServo = null;
+	CRGrabber baseRightGrabber = new CRGrabber();
+	CRGrabber altRightGrabber = new CRGrabber();
+	CRGrabber baseLeftGrabber = new CRGrabber();
+	CRGrabber altLeftGrabber = new CRGrabber();
+	Side side = null;
 
-	void init(Telemetry telemetry, CRServo leftServo, CRServo rightServo) {
+	void init(Telemetry telemetry, CRServo baseRightServo, CRServo altRightServo, CRServo baseLeftServo, CRServo altLeftServo) {
 		logger = new Logger(telemetry);
-		this.rightServo = leftServo;
-		this.leftServo = rightServo;
-
+		this.baseRightGrabber.set(baseRightServo);
+		baseRightGrabber.definePositions(0, 0.45);
+		this.altRightGrabber.set(altRightServo);
+		altRightGrabber.definePositions(0.25, 0.9);
+		this.baseLeftGrabber.set(baseLeftServo);
+		baseLeftGrabber.definePositions(1, 0.4);
+		this.altLeftGrabber.set(altLeftServo);
+		altLeftGrabber.definePositions(1, 0);
 	}
 
-	public void leftGrab() {
-		setServoPosition(leftServo, 0.185);
+	public static enum Side {
+		LEFT, RIGHT
 	}
 
-	public void rightGrab() {
-		setServoPosition(rightServo, 0.975);
+	public static enum Level {
+		BASE, ALT
+	}
+
+	public void flip(Level level, Side side) {
+		if(level == Level.BASE) {
+			if(side == Side.RIGHT) {
+				baseRightGrabber.flip();
+			} else {
+				baseLeftGrabber.flip();
+			}
+		} else {
+			if(side == Side.RIGHT) {
+				altRightGrabber.flip();
+			} else {
+				altLeftGrabber.flip();
+			}
+		}
 	}
 
 	public void raise() {
-		setServoPosition(rightServo, 0.45);
-		setServoPosition(leftServo, 0.65);
+		baseRightGrabber.raise();
+		altRightGrabber.raise();
+		baseLeftGrabber.raise();
+		altLeftGrabber.raise();
 	}
 
+	public void setSide(Side side) {
+		this.side = side;
+	}
+
+	public void prepareForStone() {
+		if(side == Side.RIGHT) {
+			baseRightGrabber.lower();
+			altRightGrabber.raise();
+		} else {
+			baseLeftGrabber.lower();
+			altLeftGrabber.raise();
+		}
+	}
+
+	public void grabStone() {
+		if(side == Side.RIGHT) {
+			altRightGrabber.lower();
+		} else {
+			altLeftGrabber.lower();
+		}
+	}
+
+	public void raiseStone() {
+		if(side == Side.RIGHT) {
+			baseRightGrabber.raise();
+		} else {
+			baseLeftGrabber.raise();
+		}
+	}
+
+	public void dropBase() {
+		if(side == Side.RIGHT) {
+			baseRightGrabber.lower();
+		} else {
+			baseLeftGrabber.lower();
+		}
+	}
+
+	public void dropAlt() {
+		if(side == Side.RIGHT) {
+			altRightGrabber.raise();
+		} else {
+			altLeftGrabber.raise();
+		}
+	}
 
 	@Override
 	public void stopAllMotors() {
@@ -44,9 +114,9 @@ public class Grabber extends RobotComponent {
 
 	@Override
 	void logTeleOpData() {
-		ServoController sc = rightServo.getController();
-
-		logger.completeLog("Left Grabber", String.valueOf(sc.getServoPosition(rightServo.getPortNumber())));
-		logger.completeLog("Right Grabber", String.valueOf(sc.getServoPosition(leftServo.getPortNumber())));
+		logger.completeLog("Base Right Grabber", String.valueOf(baseRightGrabber.getPosition()));
+		logger.completeLog("Alt Right Grabber", String.valueOf(altRightGrabber.getPosition()));
+		logger.completeLog("Base Left Grabber", String.valueOf(baseLeftGrabber.getPosition()));
+		logger.completeLog("Alt Left Grabber", String.valueOf(altLeftGrabber.getPosition()));
 	}
 }

@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.Robot.Grabber;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
-
-import java.util.ArrayList;
 
 
 /**
@@ -23,13 +19,15 @@ public class TeleOp extends OpMode {
 	private String elevatorLimit = "";
 	private int switchCount = 0;
 
-	private double speed = 1.0;
+	private double speed = 0.5;
 	private double armSpeed = 1.0;
 
-	private boolean manualOverride = false;
-	private boolean grabbersAreFront = true;
+	private boolean last_x = false;
+	private boolean last_a = false;
+	private boolean last_y = false;
+	private boolean last_b = false;
 
-	private ArrayList<Float> userInputs = new ArrayList<>();
+	private boolean manualOverride = false;
 
 	/**
 	 * Run once after INIT is pushed
@@ -38,6 +36,7 @@ public class TeleOp extends OpMode {
 	public void init() {
 		robot.init(hardwareMap, telemetry, this);
 		logger = new Logger(telemetry);
+		this.msStuckDetectStop = 60000;
 
 		// Step 0 - Initialized
 		logger.statusLog(0, "Initialized");
@@ -52,6 +51,8 @@ public class TeleOp extends OpMode {
 
 	}
 
+	ElapsedTime timer = new ElapsedTime();
+
 	/**
 	 * Runs once after PLAY is pushed
 	 */
@@ -64,14 +65,16 @@ public class TeleOp extends OpMode {
 	@Override
 	public void loop() {
 
+		timer.reset();
+
 		/* Controller Layouts
 		 *
 		 * Controller 1 - "Body Controller"
 		 *      Left Trigger     - Set full speed
 		 *      Right Trigger    - Set half speed
 		 *
-		 *      Dpad Up          - Release baseplate / Move lower servos up
-		 *      Dpad Down        - Grab baseplate / Move lower servos down
+		 *      Dpad Up          - Release Foundation / Move lower servos up
+		 *      Dpad Down        - Grab Foundation / Move lower servos down
 		 *
 		 *      Left Joystick Y  - Move the robot forward/backward
 		 *      Left Joystick X  - Move the robot left/right
@@ -106,32 +109,37 @@ public class TeleOp extends OpMode {
 			speed = 0.5;
 		}
 
-		if (this.gamepad1.start && this.gamepad1.right_bumper) {
-			grabbersAreFront = true;
-		}
-		if (this.gamepad1.start && this.gamepad1.left_bumper) {
-			grabbersAreFront = false;
-		}
-
 		if (this.gamepad1.dpad_up) {
-			robot.releaseBaseplate();
+			robot.releaseFoundation();
 		} else if (this.gamepad1.dpad_down) {
-			robot.grabBaseplate();
-		} else if (this.gamepad1.dpad_left) {
-		} else if (this.gamepad1.dpad_right) {
+			robot.grabFoundation();
 		}
 
-		if (this.gamepad1.y) {
-			robot.grabber.raise();
+		if (this.gamepad1.dpad_left) {
+			robot.lowerCapstone();
+		} else if (this.gamepad1.dpad_right) {
+			robot.raiseCapstone();
+		} else {
+			robot.stopCapstone();
 		}
-		if (this.gamepad1.a) {
+
+		if (this.gamepad1.x && this.gamepad1.x != last_x) { // Left Big Arm
+			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.LEFT);
 		}
-		if (this.gamepad1.x) {
-			robot.grabber.leftGrab();
+		if (this.gamepad1.a && this.gamepad1.a != last_a) { // Left Little Arm
+			robot.grabber.flip(Grabber.Level.ALT, Grabber.Side.LEFT);
 		}
-		if (this.gamepad1.b) {
-			robot.grabber.rightGrab();
+		if (this.gamepad1.y && this.gamepad1.y != last_y) { // Right Big Arm
+			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.RIGHT);
 		}
+		if (this.gamepad1.b && this.gamepad1.b != last_b) { // Right Little Arm
+			robot.grabber.flip(Grabber.Level.ALT, Grabber.Side.RIGHT);
+		}
+
+		last_x = this.gamepad1.x;
+		last_a = this.gamepad1.a;
+		last_y = this.gamepad1.y;
+		last_b = this.gamepad1.b;
 
 		/*
 		 * Controller 2 settings
@@ -153,13 +161,13 @@ public class TeleOp extends OpMode {
 			armSpeed = 1.0;
 		}
 		if (this.gamepad2.left_bumper) {
-			armSpeed = 0.27;
+			armSpeed = 0.5;
 		}
 
 		if (this.gamepad2.dpad_up) {
-			robot.arm.raiseWithPower(0.4 * armSpeed);
+			robot.arm.raiseWithPower(1 * armSpeed);
 		} else if (this.gamepad2.dpad_down) {
-			robot.arm.lowerWithPower(0.15);
+			robot.arm.lowerWithPower(0.20);
 		} else {
 			robot.arm.raiseWithPower(0);
 		}
@@ -196,19 +204,13 @@ public class TeleOp extends OpMode {
 		} else if(robot.maxTouch.isPressed()) {
 			elevatorLimit = "Maximum";
 		}
-/*
-		logger.numberLog("Imu", robot.getAngle());
+
 		logger.numberLog("Speed", speed);
 		logger.completeLog("Elevator Limit?", elevatorLimit);
 		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
 		logger.numberLog("Switches full-half speed", switchCount);
- */
 		robot.logTeleOpData();
 		logger.update();
-
-		userInputs.add(this.gamepad1.left_stick_x);
-		userInputs.add(this.gamepad1.left_stick_y);
-		userInputs.add(this.gamepad1.right_stick_x);
 
 	}
 
@@ -217,62 +219,34 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void stop() {
-		//robot.stopAllMotors();
-		logger.completeLog("inputs", userInputs.toString());
+		robot.stopAllMotors();
 		logger.completeLog("Status", "Stopped");
 		logger.update();
 	}
 
 	private void singleJoystickDrive() {
-		// New robot powering math...
-		double leftX = this.gamepad1.left_stick_x;
-		double leftY = this.gamepad1.left_stick_y;
-		if(grabbersAreFront) {
-			leftX *= -1;
-			leftY *= -1;
-		}
-		double rightX = -this.gamepad1.right_stick_x;
-		double rightY = this.gamepad1.right_stick_y;
-
-		//double currAngle = robot.imu.getAngularOrientation().firstAngle;
-		//double forwardBackwardChange = Math.abs(currAngle % 180) / 180;
-		//double sideToSideChange = (currAngle % 90) / 90;
-
-		//leftY -= forwardBackwardChange;
-		//leftX *= sideToSideChange;
-
-		//logger.numberLog("Angle", currAngle);
-		//logger.numberLog("FBChange", forwardBackwardChange);
-		//logger.numberLog("SSChange", sideToSideChange);
-		//logger.numberLog("LeftX", leftX);
-		//logger.numberLog("LeftY", leftY);
-
-		//double imu_radians = robot.imu.getAngularOrientation().firstAngle * Math.PI/180;
-		//double temp = leftY * Math.cos(imu_radians) - leftX * Math.sin(imu_radians);
-		//leftX =       leftY * Math.sin(imu_radians) + leftX * Math.cos(imu_radians);
-		//leftY = temp;
-
-		//logger.numberLog("angle", imu_radians);
-
-		//rightX *= 0.4;
+		double leftX = -this.gamepad1.left_stick_x;
+		double leftY = -this.gamepad1.left_stick_y;
+		double rightX = this.gamepad1.right_stick_x;
 
 		double[] motorPowers = new double[4];
-		motorPowers[0] = (leftY-leftX+rightX) * speed;// -+
-		motorPowers[1] = (leftY+leftX-rightX) * speed;// +-
-		motorPowers[2] = (leftY+leftX+rightX) * speed;// ++
-		motorPowers[3] = (leftY-leftX-rightX) * speed;// --
-/*
+		motorPowers[0] = (leftY-leftX-rightX);// -+
+		motorPowers[1] = (leftY+leftX+rightX);// +-
+		motorPowers[2] = (leftY+leftX-rightX);// ++
+		motorPowers[3] = (leftY-leftX+rightX);// --
+
 		double max = Math.abs(getLargestAbsVal(motorPowers));
 		if(max < 1) { max = 1; }
 
 		for(int i = 0; i < motorPowers.length; i++) {
 			motorPowers[i] /= max;
 		}
-*/
+
 		for(int i = 0; i < motorPowers.length; i++) {
 			if(motorPowers[i] < 0.05 && motorPowers[i] > -0.05) { motorPowers[i] = 0.0; }
 			if(motorPowers[i] > 1.0) { motorPowers[i] = 1.0; }
 			if(motorPowers[i] < -1.0) { motorPowers[i] = -1.0; }
+			motorPowers[i] *= speed;
 			logger.numberLog("Motor" + i, motorPowers[i]);
 		}
 
@@ -282,7 +256,7 @@ public class TeleOp extends OpMode {
 	private double getLargestAbsVal(double[] values) {
 		double max = 0;
 		for(double val : values) {
-			if(Math.abs(val) > Math.abs(max)) { max = val; }
+			if(Math.abs(val) > max) { max = Math.abs(val); }
 		}
 		return max;
 	}

@@ -78,6 +78,7 @@ public class Robot {
 	public Grabber grabber = null;
 	public TouchSensor minTouch = null;
 	public TouchSensor maxTouch = null;
+	public CRServo capstoneServo = null;
 
 	public BNO055IMU imu = null;
 
@@ -101,22 +102,10 @@ public class Robot {
 		this.opmode = opmode;
 
 		logger = new Logger(telemetry);
-/*
-		BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-		parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-		parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-		parameters.loggingEnabled = true;
-		parameters.loggingTag = "14736:IMU";
-		parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-		imu = this.hardwareMap.get(BNO055IMU.class, "imu");
-		imu.initialize(parameters);
-*/
 		drivetrain = new Drivetrain(opmode);
 		arm = new Arm(opmode);
 		objectDetection = new ObjectDetection(hardwareMap, telemetry);
 		grabber = new Grabber(opmode);
-		//imu = this.hardwareMap.get(BNO055IMU.class, "imu");
 
 		drivetrain.init(
 				telemetry,
@@ -137,34 +126,46 @@ public class Robot {
 
 		grabber.init(
 				telemetry,
-				this.hardwareMap.get(CRServo.class, "leftGrabber"),
-				this.hardwareMap.get(CRServo.class, "rightGrabber")
+				this.hardwareMap.get(CRServo.class, "baseRightServo"),
+				this.hardwareMap.get(CRServo.class, "altRightServo"),
+				this.hardwareMap.get(CRServo.class, "baseLeftServo"),
+				this.hardwareMap.get(CRServo.class, "altLeftServo")
 		);
 
 		// Define and initialize ALL installed servos.
 		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
 		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
 
+		capstoneServo = this.hardwareMap.get(CRServo.class, "capstoneServo");
+
 		minTouch = this.hardwareMap.get(TouchSensor.class, "minTouch");
 		maxTouch = this.hardwareMap.get(TouchSensor.class, "maxTouch");
 
 	}
 
-	public float getAngle() {
-		return imu.getAngularOrientation().firstAngle;
+	public void raiseCapstone() {
+		capstoneServo.setPower(1.0);
 	}
 
-	public void grabBaseplate() {
+	public void lowerCapstone() {
+		capstoneServo.setPower(-1.0);
+	}
+
+	public void stopCapstone() {
+		capstoneServo.setPower(0.0);
+	}
+
+	public void grabFoundation() {
 		setServoPosition(leftGrip, 1);
 		setServoPosition(rightGrip, 0);
 	}
 
-	public void releaseBaseplate() {
+	public void releaseFoundation() {
 		setServoPosition(leftGrip, 0);
 		setServoPosition(rightGrip, 1);
 	}
 
-	private void setServoPosition(CRServo crservo, double position) {
+	public static void setServoPosition(CRServo crservo, double position) {
 		crservo.getController().setServoPosition(crservo.getPortNumber(), position);
 	}
 

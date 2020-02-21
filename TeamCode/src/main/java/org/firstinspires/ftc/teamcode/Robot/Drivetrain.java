@@ -88,11 +88,11 @@ public class Drivetrain extends RobotComponent {
 	}
 
 	public void runDistance(double leftInches, double rightInches) {
-		runDistance(leftInches, rightInches, defaultSpeed, 999);
+		runDistance(leftInches, rightInches, 999, defaultSpeed);
 	}
 
 	public void runDistance(double leftInches, double rightInches, double seconds) {
-		runDistance(leftInches, rightInches, defaultSpeed, seconds);
+		runDistance(leftInches, rightInches, seconds, defaultSpeed);
 	}
 
 	/**
@@ -104,11 +104,11 @@ public class Drivetrain extends RobotComponent {
 	 * @param maxSeconds  The maximum amount of time for the function to take
 	 * @param speed       The speed for all of the motors to be set at
 	 */
-	public void runDistance(double leftInches, double rightInches, double speed, double maxSeconds) {
-		runDistance(leftInches, leftInches, rightInches, rightInches, speed, maxSeconds);
+	public void runDistance(double leftInches, double rightInches, double maxSeconds, double speed) {
+		runDistance(leftInches, leftInches, rightInches, rightInches, maxSeconds, speed);
 	}
 
-	public void runDistance(double frontLeftInches, double backLeftInches, double frontRightInches, double backRightInches, double speed, double maxSeconds) {
+	public void runDistance(double frontLeftInches, double backLeftInches, double frontRightInches, double backRightInches, double maxSeconds, double speed) {
 		if (!opModeIsActive()) {
 			return;
 		}
@@ -118,10 +118,10 @@ public class Drivetrain extends RobotComponent {
 		// Reset encoder values
 		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
 		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeft, frontRight, backLeft, backRight);
-		int newFrontLeftTarget = frontLeft.getCurrentPosition() + (int) (frontLeftInches * COUNTS_PER_INCH);
-		int newBackLeftTarget = backLeft.getCurrentPosition() + (int) (backLeftInches * COUNTS_PER_INCH);
-		int newFrontRightTarget = frontRight.getCurrentPosition() + (int) (frontRightInches * COUNTS_PER_INCH);
-		int newBackRightTarget = backRight.getCurrentPosition() + (int) (backRightInches * COUNTS_PER_INCH);
+		int newFrontLeftTarget = frontLeft.getCurrentPosition() + (int) (-frontLeftInches * COUNTS_PER_INCH);
+		int newBackLeftTarget = backLeft.getCurrentPosition() + (int) (-backLeftInches * COUNTS_PER_INCH);
+		int newFrontRightTarget = frontRight.getCurrentPosition() + (int) (-frontRightInches * COUNTS_PER_INCH);
+		int newBackRightTarget = backRight.getCurrentPosition() + (int) (-backRightInches * COUNTS_PER_INCH);
 		frontLeft.setTargetPosition(newFrontLeftTarget);
 		backLeft.setTargetPosition(newBackLeftTarget);
 		frontRight.setTargetPosition(newFrontRightTarget);
@@ -153,15 +153,6 @@ public class Drivetrain extends RobotComponent {
 					backLeft.getCurrentPosition(),
 					backRight.getCurrentPosition()));
 			logger.update();
-
-			if(Math.abs(frontLeft.getTargetPosition() - frontLeft.getCurrentPosition()) < 100) {
-				double decrease = 0.1;
-				frontLeft.setPower(frontLeft.getPower()		* (1 - decrease));
-				frontRight.setPower(frontRight.getPower()	* (1 - decrease));
-				backLeft.setPower(backLeft.getPower() 		* (1 - decrease));
-				backRight.setPower(backRight.getPower()		* (1 - decrease));
-			}
-
 		}
 
 		logger.completeLog("Is busy? FL", frontLeft.isBusy() ? "yes" : "no");

@@ -104,8 +104,8 @@ public class Christmas_On_Main extends OpMode {
 			 *      Left Trigger     - Set full speed
 			 *      Right Trigger    - Set half speed
 			 *
-			 *      Dpad Up          - Release baseplate / Move lower servos up
-			 *      Dpad Down        - Grab baseplate / Move lower servos down
+			 *      Dpad Up          - Release Foundation / Move lower servos up
+			 *      Dpad Down        - Grab Foundation / Move lower servos down
 			 *
 			 *      Left Joystick Y  - Move the robot forward/backward
 			 *      Left Joystick X  - Move the robot left/right
@@ -144,9 +144,9 @@ public class Christmas_On_Main extends OpMode {
 			}
 
 			if (this.gamepad1.dpad_up) {
-				robot.releaseBaseplate();
+				robot.releaseFoundation();
 			} else if (this.gamepad1.dpad_down) {
-				robot.grabBaseplate();
+				robot.grabFoundation();
 			} else if (this.gamepad1.dpad_left) {
 			} else if (this.gamepad1.dpad_right) {
 			}

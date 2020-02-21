@@ -8,12 +8,11 @@ import org.firstinspires.ftc.teamcode.Autonomous.BasicLine;
 /**
  * Created by shell on 10/26/2019.
  */
-@Disabled
-@Autonomous(group = "Blue:ZLine:Baseplate", name = "Blue: Line: Baseplate Center")
-public class BlueBaseplateLineCenter extends BasicLine {
+@Autonomous(group = "Blue:ZLine", name = "Blue: Line: Foundation: Center")
+public class BlueFoundationLineCenter extends BasicLine {
 	@Override
 	protected Side getStartingSide() {
-		return Side.BASEPLATE;
+		return Side.Foundation;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.Blue.Line;
+package org.firstinspires.ftc.teamcode.Autonomous.Red.Line;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -8,21 +8,20 @@ import org.firstinspires.ftc.teamcode.Autonomous.BasicLine;
 /**
  * Created by shell on 10/26/2019.
  */
-@Disabled
-@Autonomous(group = "Blue:ZLine:Baseplate", name = "Blue: Line: Baseplate Wall")
-public class BlueBaseplateLineWall extends BasicLine {
+@Autonomous(group = "Red:ZLine", name = "Red: Line: Foundation: Center")
+public class RedFoundationLineCenter extends BasicLine {
 	@Override
 	protected Side getStartingSide() {
-		return Side.BASEPLATE;
+		return Side.Foundation;
 	}
 
 	@Override
 	protected Color getColor() {
-		return Color.BLUE;
+		return Color.RED;
 	}
 
 	@Override
 	protected Placement getFinalPlacement() {
-		return Placement.WALL;
+		return Placement.CENTER;
 	}
 }
