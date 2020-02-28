@@ -17,6 +17,7 @@ public abstract class BasicFoundationTurn extends BaseAutonomous {
 	public void runOpMode() {
 
 		super.runOpMode();
+
 		robot.drivetrain.defaultSpeed = 0.4;
 
 		// Step 0 - Ready to run
@@ -29,17 +30,11 @@ public abstract class BasicFoundationTurn extends BaseAutonomous {
 		logger.statusLog(step++, "Making sure Foundation servos are up");
 		robot.releaseFoundation();
 
-		moveTowardsBuildingZone(14, 999); // Run into wall
+		moveTowardsBuildingZone(4, 999);
 
-		moveTowardsLoadingZone(7, 999); // Move to be positioned at center of Foundation
+		robot.drivetrain.runDistance(34, 34); // Run into Foundation
 
-		robot.drivetrain.runDistance(-2, -2, 999, 0.4); // align on wall
-
-		robot.drivetrain.runDistance(36, 36); // Run into Foundation
-
-		if (getColor() == Color.BLUE) {
-			robot.drivetrain.runDistance(2, 2, 999, 0.2);
-		}
+		robot.drivetrain.runDistance(4, 4, 999, 0.2);
 
 		robot.grabFoundation(); // Grab the Foundation
 
@@ -50,7 +45,7 @@ public abstract class BasicFoundationTurn extends BaseAutonomous {
 		if (getColor() == RED) {
 			robot.drivetrain.turnDegrees(410, true, 0.6);
 		} else {
-			robot.drivetrain.turnDegrees(430, false, 0.6);
+			robot.drivetrain.turnDegrees(460, false, 0.6);
 		}
 
 		robot.releaseFoundation();
@@ -60,12 +55,14 @@ public abstract class BasicFoundationTurn extends BaseAutonomous {
 		robot.drivetrain.runDistance(-4, -4);
 
 		if (getColor() == RED) {
-			moveTowardsBuildingZone(2, 999);
+			moveTowardsBuildingZone(5, 999);
 		} else {
 			moveTowardsBuildingZone(5, 999);
 		}
 
 		robot.drivetrain.runDistance(-43, -43);
+
+		moveTowardsBuildingZone(3, 999);
 
 		// Step 16 - Finished
 		logger.statusLog(step++, "Finished");

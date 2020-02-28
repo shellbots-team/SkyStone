@@ -39,7 +39,7 @@ public class Arm extends RobotComponent {
 		this.extendArm = extendArm;
 		this.elevateArm = elevateArm;
 
-		leftArm.setDirection(DcMotor.Direction.REVERSE);
+		leftArm.setDirection(DcMotor.Direction.FORWARD);
 		rightArm.setDirection(DcMotor.Direction.REVERSE);
 		extendArm.setDirection(DcMotor.Direction.FORWARD);
 

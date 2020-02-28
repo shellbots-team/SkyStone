@@ -43,6 +43,11 @@ public class Drivetrain extends RobotComponent {
 		frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
 		backRight.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
+		frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// Set to FORWARD if using AndyMark motors
+		frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// Set to FORWARD if using AndyMark motors
+		backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// Set to FORWARD if using AndyMark motors
+		backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// Set to FORWARD if using AndyMark motors
+
 		setAllPowers(0);
 
 		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeft, frontRight, backLeft, backRight);
@@ -108,12 +113,10 @@ public class Drivetrain extends RobotComponent {
 		runDistance(leftInches, leftInches, rightInches, rightInches, maxSeconds, speed);
 	}
 
-	public void runDistance(double frontLeftInches, double backLeftInches, double frontRightInches, double backRightInches, double maxSeconds, double speed) {
+	public void runDistance(double frontLeftInches, double backLeftInches, double frontRightInches, double backRightInches, double maxSeconds, double maxSpeed) {
 		if (!opModeIsActive()) {
 			return;
 		}
-
-		int offset = 100;
 
 		// Reset encoder values
 		setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeft, frontRight, backLeft, backRight);
@@ -132,17 +135,16 @@ public class Drivetrain extends RobotComponent {
 
 		// reset the timeout time and start motion.
 		ElapsedTime runtime = new ElapsedTime();
-		setAllPowers(Math.abs(speed));
 
 		// Log the path
 		logger.completeLog("Path1", String.format(Locale.US,
 				"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
 
+		setAllPowers(maxSpeed);
 		// While game is still going, maxtime has not been reached, and none of the motors have reached their position
 		while (opModeIsActive() && (runtime.seconds() < maxSeconds) &&
 				(frontLeft.isBusy() && backLeft.isBusy()) &&
 				(frontRight.isBusy() && backRight.isBusy())) {
-
 
 			logger.addData("Path1", String.format(Locale.US,
 					"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));

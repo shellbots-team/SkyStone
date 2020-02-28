@@ -34,28 +34,28 @@ public abstract class BaseAutonomous extends LinearOpMode {
 	}
 
 	void moveTowardsLoadingZone(double distance, double maxSeconds) {
-		moveTowardsLoadingZone(distance, robot.drivetrain.defaultSpeed, maxSeconds);
+		moveTowardsLoadingZone(distance, maxSeconds, robot.drivetrain.defaultSpeed);
 	}
 
 	void moveTowardsLoadingZone(double distance, double maxSeconds, double speed) {
 		distance *= 2.25;
 		if(getColor() == Color.RED) {
-			robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
+			robot.drivetrain.runDistance(-distance, distance, distance, -distance, maxSeconds, speed);
 		} else {
-			robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
+			robot.drivetrain.runDistance(distance, -distance, -distance, distance, maxSeconds, speed);
 		}
 	}
 
 	void moveTowardsBuildingZone(double distance, double maxSeconds) {
-		moveTowardsBuildingZone(distance, robot.drivetrain.defaultSpeed, maxSeconds);
+		moveTowardsBuildingZone(distance, maxSeconds, robot.drivetrain.defaultSpeed);
 	}
 
 	void moveTowardsBuildingZone(double distance, double maxSeconds, double speed) {
 		distance *= 2.25;
 		if(getColor() == Color.RED) {
-			robot.drivetrain.runDistance(distance, -distance, -distance, distance, speed, maxSeconds);
+			robot.drivetrain.runDistance(distance, -distance, -distance, distance, maxSeconds, speed);
 		} else {
-			robot.drivetrain.runDistance(-distance, distance, distance, -distance, speed, maxSeconds);
+			robot.drivetrain.runDistance(-distance, distance, distance, -distance, maxSeconds, speed);
 		}
 	}
 

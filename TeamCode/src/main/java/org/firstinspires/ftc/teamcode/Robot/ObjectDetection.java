@@ -43,6 +43,12 @@ public class ObjectDetection {
 		}
 	}
 
+	public void stopTFOD() {
+		if(tfod != null) {
+			tfod.deactivate();
+		}
+	}
+
 	public void initializeObjectDetection() {
 
 		initVuforia();

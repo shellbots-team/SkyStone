@@ -21,13 +21,13 @@ public class Grabber extends RobotComponent {
 	void init(Telemetry telemetry, CRServo baseRightServo, CRServo altRightServo, CRServo baseLeftServo, CRServo altLeftServo) {
 		logger = new Logger(telemetry);
 		this.baseRightGrabber.set(baseRightServo);
-		baseRightGrabber.definePositions(0, 0.45);
+		baseRightGrabber.definePositions(0, 0.45, 0);
 		this.altRightGrabber.set(altRightServo);
-		altRightGrabber.definePositions(0.25, 0.9);
+		altRightGrabber.definePositions(0.25, 0.9, 0.8);
 		this.baseLeftGrabber.set(baseLeftServo);
-		baseLeftGrabber.definePositions(1, 0.4);
+		baseLeftGrabber.definePositions(1, 0.4, 1);
 		this.altLeftGrabber.set(altLeftServo);
-		altLeftGrabber.definePositions(1, 0);
+		altLeftGrabber.definePositions(1, 0, 0.1);
 	}
 
 	public static enum Side {
@@ -105,6 +105,14 @@ public class Grabber extends RobotComponent {
 		} else {
 			altLeftGrabber.raise();
 		}
+	}
+
+	public void home() {
+		baseRightGrabber.home();
+		altRightGrabber.home();
+		baseLeftGrabber.home();
+		altLeftGrabber.home();
+
 	}
 
 	@Override

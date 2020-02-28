@@ -7,6 +7,7 @@ public class CRGrabber {
 	private boolean isUp = true;
 	private double upPosition = 0;
 	private double downPosition = 0;
+	private double homePosition = 0;
 	private CRServo servo = null;
 
 	public CRGrabber() {
@@ -16,9 +17,10 @@ public class CRGrabber {
 		this.servo = servo;
 	}
 
-	public void definePositions(double upPosition, double downPosition) {
+	public void definePositions(double upPosition, double downPosition, double homePosition) {
 		this.upPosition = upPosition;
 		this.downPosition = downPosition;
+		this.homePosition = homePosition;
 	}
 
 	public void raise() {
@@ -27,6 +29,11 @@ public class CRGrabber {
 
 	public void lower() {
 		setServoPosition(downPosition);
+	}
+
+	public void home() {
+		setServoPosition(homePosition);
+		isUp = true;
 	}
 
 	public void flip() {

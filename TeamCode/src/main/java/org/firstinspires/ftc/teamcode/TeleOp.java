@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Robot.Grabber;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
@@ -107,6 +108,12 @@ public class TeleOp extends OpMode {
 		} else if (this.gamepad1.left_trigger > 0.5) {
 			if(speed == 1.0) { switchCount += 1; }
 			speed = 0.5;
+		} else if (this.gamepad1.right_bumper) {
+			speed = 0.25;
+		}
+
+		if (this.gamepad1.left_bumper) {
+			robot.grabber.home();
 		}
 
 		if (this.gamepad1.dpad_up) {
@@ -118,6 +125,10 @@ public class TeleOp extends OpMode {
 		if (this.gamepad1.dpad_left) {
 			robot.lowerCapstone();
 		} else if (this.gamepad1.dpad_right) {
+			robot.raiseCapstone();
+		} else if(this.gamepad2.x) {
+			robot.lowerCapstone();
+		} else if(this.gamepad2.b) {
 			robot.raiseCapstone();
 		} else {
 			robot.stopCapstone();
@@ -150,9 +161,9 @@ public class TeleOp extends OpMode {
 		}
 
 		if (this.gamepad2.right_trigger > 0.5) {
-			robot.arm.extendWithPower(-0.55);
-		} else if (this.gamepad2.left_trigger > 0.5) {
 			robot.arm.extendWithPower(0.55);
+		} else if (this.gamepad2.left_trigger > 0.5) {
+			robot.arm.extendWithPower(-0.55);
 		} else {
 			robot.arm.extendWithPower(0);
 		}
@@ -205,11 +216,13 @@ public class TeleOp extends OpMode {
 			elevatorLimit = "Maximum";
 		}
 
-		logger.numberLog("Speed", speed);
-		logger.completeLog("Elevator Limit?", elevatorLimit);
-		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
-		logger.numberLog("Switches full-half speed", switchCount);
-		robot.logTeleOpData();
+//		logger.numberLog("Speed", speed);
+//		logger.completeLog("Elevator Limit?", elevatorLimit);
+//		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
+//		logger.numberLog("Switches full-half speed", switchCount);
+//		robot.logTeleOpData();
+		logger.numberLog("LeftDistance", robot.leftDistanceSensor.getDistance(DistanceUnit.INCH));
+		logger.numberLog("RightDistance", robot.rightDistanceSensor.getDistance(DistanceUnit.INCH) - 1.6);
 		logger.update();
 
 	}
@@ -225,8 +238,8 @@ public class TeleOp extends OpMode {
 	}
 
 	private void singleJoystickDrive() {
-		double leftX = -this.gamepad1.left_stick_x;
-		double leftY = -this.gamepad1.left_stick_y;
+		double leftX = this.gamepad1.left_stick_x;
+		double leftY = this.gamepad1.left_stick_y;
 		double rightX = this.gamepad1.right_stick_x;
 
 		double[] motorPowers = new double[4];

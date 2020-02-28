@@ -9,6 +9,8 @@ public abstract class BasicFoundationPull extends BaseAutonomous {
 	@Override
 	public void runOpMode() {
 
+		super.runOpMode();
+
 		robot.drivetrain.defaultSpeed = 0.4;
 
 		// Step 0 - Ready to run
@@ -27,7 +29,9 @@ public abstract class BasicFoundationPull extends BaseAutonomous {
 
 		robot.drivetrain.runDistance(-2, -2, 999, 0.4); // align on wall
 
-		robot.drivetrain.runDistance(36, 36); // Run into Foundation
+		robot.drivetrain.runDistance(34, 34); // Run into Foundation
+
+		robot.drivetrain.runDistance(4, 4, 999, 0.2);
 
 		robot.grabFoundation(); // Grab the Foundation
 

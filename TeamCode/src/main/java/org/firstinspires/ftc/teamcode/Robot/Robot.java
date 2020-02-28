@@ -38,20 +38,29 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorBNO055IMUCalibration;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Logger;
 
 import java.util.Locale;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.INCH;
 
 /**
  * This is NOT an opmode.
@@ -79,8 +88,8 @@ public class Robot {
 	public TouchSensor minTouch = null;
 	public TouchSensor maxTouch = null;
 	public CRServo capstoneServo = null;
-
-	public BNO055IMU imu = null;
+	public DistanceSensor leftDistanceSensor = null;
+	public DistanceSensor rightDistanceSensor = null;
 
 	public CRServo leftGrip = null;
 	public CRServo rightGrip = null;
@@ -138,31 +147,34 @@ public class Robot {
 
 		capstoneServo = this.hardwareMap.get(CRServo.class, "capstoneServo");
 
+		leftDistanceSensor = this.hardwareMap.get(DistanceSensor.class, "leftDistance");
+		rightDistanceSensor = this.hardwareMap.get(DistanceSensor.class, "rightDistance");
+
 		minTouch = this.hardwareMap.get(TouchSensor.class, "minTouch");
 		maxTouch = this.hardwareMap.get(TouchSensor.class, "maxTouch");
 
 	}
 
 	public void raiseCapstone() {
-		capstoneServo.setPower(1.0);
+		capstoneServo.setPower(-1.0);
 	}
 
 	public void lowerCapstone() {
-		capstoneServo.setPower(-1.0);
+		capstoneServo.setPower(1.0);
 	}
 
 	public void stopCapstone() {
 		capstoneServo.setPower(0.0);
 	}
 
-	public void grabFoundation() {
+	public void releaseFoundation() {
 		setServoPosition(leftGrip, 1);
 		setServoPosition(rightGrip, 0);
 	}
 
-	public void releaseFoundation() {
+	public void grabFoundation() {
 		setServoPosition(leftGrip, 0);
-		setServoPosition(rightGrip, 1);
+		setServoPosition(rightGrip, 0.9);
 	}
 
 	public static void setServoPosition(CRServo crservo, double position) {
@@ -197,6 +209,34 @@ public class Robot {
 	public void logTeleOpData() {
 		drivetrain.logTeleOpData();
 		arm.logTeleOpData();
+	}
+
+	public void driveUntilDistance(double speed, double distance) {
+		driveUntilDistance(speed, distance, distance);
+	}
+
+	public void driveUntilDistance(double speed, double leftFinalDistance, double rightFinalDistance) {
+		logger.completeLog("Status", "Began reading distance");
+		while(opModeIsActive()) {
+			double leftDistance = leftDistanceSensor.getDistance(INCH);
+			double rightDistance = rightDistanceSensor.getDistance(INCH) - 1.6;
+
+			double chance = 2;
+			if(Math.abs(leftDistance - leftFinalDistance) < chance && Math.abs(rightDistance - rightFinalDistance) < chance) { break; }
+			if(leftDistance < leftFinalDistance && rightDistance < rightFinalDistance) {
+				drivetrain.setAllPowers(speed);
+			} else if(leftDistance < leftFinalDistance) {
+				drivetrain.setIndividualPowers(speed, -speed, speed, -speed);
+			} else if(rightDistance < rightFinalDistance) {
+				drivetrain.setIndividualPowers(-speed, speed, -speed, speed);
+			} else {
+				drivetrain.setAllPowers(-speed);
+			}
+			logger.numberLog("Left Distance", leftDistance);
+			logger.numberLog("Right Distance", rightDistance);
+			if(rightDistance > 200 || leftDistance > 200) { throw new RuntimeException("Distance sensor broken"); }
+		}
+		drivetrain.setAllPowers(0);
 	}
 
 	public void stopAllMotors() {
